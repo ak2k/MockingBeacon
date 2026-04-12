@@ -40,6 +40,11 @@ extern "C" {
 #endif
 }
 
+// ---- Globals needed by lis2dw12.c (was in settings.c) ----
+extern "C" {
+int accelThreshold = 800;
+}
+
 // ---- Battery check (ADC) ----
 #if !DT_NODE_EXISTS(DT_PATH(zephyr_user)) || !DT_NODE_HAS_PROP(DT_PATH(zephyr_user), io_channels)
 #ifndef NO_BATTERY_CHECK
@@ -72,9 +77,6 @@ const struct device* const i2c_dev = DEVICE_DT_GET(DT_NODELABEL(i2c0));
 #ifdef USE_BUTTON
 static const struct gpio_dt_spec sw0 = GPIO_DT_SPEC_GET(DT_ALIAS(sw0), gpios);
 #endif
-
-// ---- Last battery voltage (for non-BQ boards) ----
-static int lastBatteryVoltage = 0;
 
 namespace beacon {
 
@@ -222,7 +224,6 @@ int ZephyrHardware::battery_voltage() {
         printk("Warning: Can't turn off adc0 (err %d)\n", err);
     }
 #endif
-    lastBatteryVoltage = val_mv;
     return val_mv;
 #else
     return 0;
