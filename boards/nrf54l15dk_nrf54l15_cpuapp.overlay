@@ -1,4 +1,8 @@
 / {
+  aliases {
+    watchdog0 = &wdt31;
+  };
+
   zephyr,user {
     io-channels = <&adc 0>;
   };
@@ -25,5 +29,3 @@
 &wdt31 {
 	status = "okay";
 };
-
-

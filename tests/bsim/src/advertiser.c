@@ -6,6 +6,7 @@
 
 #include <zephyr/kernel.h>
 #include <zephyr/bluetooth/bluetooth.h>
+#include <zephyr/bluetooth/controller.h>
 #include <zephyr/bluetooth/hci.h>
 #include <zephyr/logging/log.h>
 
@@ -59,8 +60,24 @@ void entrypoint_advertiser(void)
 
     TEST_START("advertiser");
 
+    /* Set MAC derived from key 0 — same path as real firmware */
+    uint8_t mac[6];
+    beacon_derive_mac(test_keys[0], mac);
+    bt_ctlr_set_public_addr(mac);
+    LOG_INF("Set MAC from key 0: %02X:%02X:%02X:%02X:%02X:%02X",
+            mac[5], mac[4], mac[3], mac[2], mac[1], mac[0]);
+
     err = bt_enable(NULL);
     TEST_ASSERT(err == 0, "bt_enable failed (err %d)", err);
+
+    /* Verify MAC was applied */
+    bt_addr_le_t addrs[CONFIG_BT_ID_MAX];
+    size_t count = CONFIG_BT_ID_MAX;
+    bt_id_get(addrs, &count);
+    TEST_ASSERT(count > 0, "No BT identities after bt_enable");
+    TEST_ASSERT(memcmp(addrs[0].a.val, mac, 6) == 0,
+                "bt_ctlr_set_public_addr failed: MAC not applied");
+    LOG_INF("MAC verified — bt_ctlr_set_public_addr works");
 
     /* Prepare and start with key 0 */
     prepare_key(0);
