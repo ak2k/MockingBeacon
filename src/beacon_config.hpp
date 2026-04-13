@@ -133,6 +133,9 @@ class SettingsManager {
     void set_fmdn_key(const uint8_t* data, size_t len);     // len must be 20
     void set_settings_mac(const uint8_t* data, size_t len); // len must be 6
     void set_auth_code(const uint8_t* data, size_t len);    // len must be 8
+    // Write a 14-byte half of a key. key_idx in [0..39], offset 0 or 14.
+    void set_key_chunk(int key_idx, size_t offset, const uint8_t* data, size_t len);
+    void set_num_keys(uint8_t n);  // [0..40]
 
     int64_t get_time(uint32_t uptime_sec) const;
     void update_time_offset(int64_t new_time, uint32_t uptime_sec);

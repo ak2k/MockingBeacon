@@ -55,9 +55,13 @@ int main(void) {
     gpio_pin_configure_dt(&gate_spec, GPIO_OUTPUT_ACTIVE);
 #endif
 
-    // Initialize NVS and load settings
-    nvs.init();
-    settings.load();
+    // Initialize NVS and load settings (continue with defaults on failure)
+    if (nvs.init() != 0) {
+        printk("Warning: NVS init failed, using defaults\n");
+    }
+    if (settings.load() != 0) {
+        printk("Warning: settings load failed, using defaults\n");
+    }
 
     // Set up GATT glue pointers
     glue_init(&settings, &sm);

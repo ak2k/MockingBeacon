@@ -12,32 +12,40 @@ StateMachine::StateMachine(IHardware& hw, SettingsManager& settings, MovementTra
 
 void StateMachine::set_mac_from_current_key() {
     const auto& cfg = settings_.config();
-    if (current_key_ >= 0 && current_key_ < cfg.num_keys) {
+    if (current_key_ < cfg.num_keys) {
         derive_mac_from_key(cfg.keys[static_cast<size_t>(current_key_)].data(), ble_addr_);
     }
 }
 
 void StateMachine::update_battery() {
     hw_.bq_reinit(false);
-    last_battery_voltage_ = hw_.battery_voltage();
+    last_battery_voltage_ = static_cast<uint16_t>(hw_.battery_voltage());
 }
 
 void StateMachine::update_status() {
     const auto& cfg = settings_.config();
-    what_in_status_++;
-    if (what_in_status_ > 2) {
-        what_in_status_ = 0;
+    // Cycle through telemetry modes
+    switch (what_in_status_) {
+    case WhatInStatus::Voltage:
+        what_in_status_ = WhatInStatus::Accel;
+        break;
+    case WhatInStatus::Accel:
+        what_in_status_ = WhatInStatus::Temperature;
+        break;
+    case WhatInStatus::Temperature:
+    default:
+        what_in_status_ = WhatInStatus::Voltage;
+        break;
     }
     StatusInput in{};
     in.status_flags = cfg.status_flags;
     in.battery_voltage = last_battery_voltage_;
     in.keys_changes = keys_changes_;
-    in.what_in_status = what_in_status_;
+    in.what_in_status = static_cast<uint8_t>(what_in_status_);
     in.accel_byte = accel_.compute_accel_byte();
     in.temperature = accel_.temperature();
-    // compute_status stores in the StatusOutput; the actual adv data update
-    // happens via hw_.prepare_airtag/prepare_fmdn + hw_.adv_update_*
-    (void)compute_status(in);
+    StatusOutput status = compute_status(in);
+    hw_.set_status_bytes(status.airtag_status, status.fmdn_status);
 }
 
 void StateMachine::broadcast() {
@@ -89,7 +97,7 @@ void StateMachine::initialize() {
     // Settings are already loaded by caller (SettingsManager::load())
 
     if (button_at_start) {
-        settings_.config_mut().turned_on = true;
+        settings_.set_turned_on(true);
         hw_.update_turned_on(true);
     } else {
         if (!cfg.turned_on) {
@@ -323,7 +331,7 @@ void StateMachine::handle_max_power_burst() {
     if (cfg.tx_power != 2 && cfg.flag_fmdn && cfg.flag_airtag) {
         if (now >= timers_.max_power + static_cast<uint32_t>(kIntervalMaxPower)) {
             timers_.max_power = now;
-            timers_.end_max_power = now + static_cast<uint32_t>(2 * cfg.mult_period);
+            timers_.end_max_power = now + static_cast<uint32_t>(2U * cfg.mult_period);
             hw_.set_tx_power(2);
         }
     }
@@ -390,7 +398,7 @@ bool StateMachine::handle_button_longpress() {
         hw_.wdt_feed();
     }
 
-    settings_.config_mut().turned_on = false;
+    settings_.set_turned_on(false);
     hw_.update_turned_on(false);
     hw_.sleep_ms(500);
     hw_.adv_stop();

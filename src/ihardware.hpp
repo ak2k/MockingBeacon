@@ -80,6 +80,11 @@ class IHardware {
     /// Persist turned_on flag to NVS (called after button wake/shutdown).
     virtual void update_turned_on(bool on) = 0;
 
+    /// Write the computed status bytes into the advertisement data stores.
+    /// Called after compute_status() to propagate results to BLE payloads.
+    /// airtag_status -> airtag_data_store[6], fmdn_status -> fmdn_data_store[23]
+    virtual void set_status_bytes(uint8_t airtag_status, uint8_t fmdn_status) = 0;
+
   protected:
     ~IHardware() = default;
 };

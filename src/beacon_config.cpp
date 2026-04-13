@@ -247,6 +247,20 @@ void SettingsManager::set_auth_code(const uint8_t* data, size_t len) {
     }
 }
 
+void SettingsManager::set_key_chunk(int key_idx, size_t offset, const uint8_t* data, size_t len) {
+    if (key_idx < 0 || key_idx >= kMaxKeysInMemory || len != 14 ||
+        (offset != 0 && offset != 14) || offset + len > kKeySize) {
+        return;
+    }
+    std::memcpy(config_.keys[static_cast<size_t>(key_idx)].data() + offset, data, len);
+}
+
+void SettingsManager::set_num_keys(uint8_t n) {
+    if (n <= kMaxKeysInMemory) {
+        config_.num_keys = n;
+    }
+}
+
 int64_t SettingsManager::get_time(uint32_t uptime_sec) const {
     return config_.time_offset + static_cast<int64_t>(uptime_sec);
 }
