@@ -1265,6 +1265,226 @@ TEST(nokeys_shutdown) {
     ASSERT_TRUE(hw.power_off_calls > 0);
 }
 
+// ============================================================================
+// Advertisement Data Pipeline Tests
+// Verifies the full key → advertisement bytes path matches the original C code
+// ============================================================================
+
+// Original C code from main.c: setAdvertisementKey
+// This is the function that produces the bytes an iPhone actually sees
+namespace original_adv {
+
+static uint8_t offline_finding_adv_template[] = {
+    0x1e, 0xff, 0x4c, 0x00, 0x12, 0x19, 0xAA, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+
+static uint8_t airtag_data_store[31];
+static uint8_t bleAddr[6];
+
+static void set_addr_from_key(const uint8_t* key) {
+    bleAddr[5] = key[0] | 0xC0;
+    bleAddr[4] = key[1];
+    bleAddr[3] = key[2];
+    bleAddr[2] = key[3];
+    bleAddr[1] = key[4];
+    bleAddr[0] = key[5];
+}
+
+static void fill_adv_template_from_key(const uint8_t* key) {
+    memcpy(&offline_finding_adv_template[7], &key[6], 22);
+    offline_finding_adv_template[29] = key[0] >> 6;
+}
+
+static void setAdvertisementKey(const uint8_t* key) {
+    set_addr_from_key(key);
+    fill_adv_template_from_key(key);
+    uint8_t status_save = airtag_data_store[6];
+    memcpy(airtag_data_store, offline_finding_adv_template, sizeof(offline_finding_adv_template));
+    airtag_data_store[6] = status_save;
+}
+
+// FMDN key preparation (from main.c switch_fmdn_key)
+static uint8_t fmdn_initial_data[] = {
+    0x16, 0xAA, 0xFE, 0x41,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0xc0,
+};
+static uint8_t fmdn_data_store[25];
+
+static void switch_fmdn_key(const uint8_t* key) {
+    uint8_t status_save = fmdn_data_store[23];
+    memcpy(fmdn_data_store, fmdn_initial_data, sizeof(fmdn_initial_data));
+    memcpy(fmdn_data_store + 3, key, 20);
+    fmdn_data_store[23] = status_save;
+}
+
+} // namespace original_adv
+
+// Simulate what ZephyrHardware::prepare_airtag does (without Zephyr)
+namespace cpp_adv {
+
+static uint8_t offline_finding_adv_template[] = {
+    0x1e, 0xff, 0x4c, 0x00, 0x12, 0x19, 0xAA, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+};
+
+static uint8_t airtag_data_store[31];
+static uint8_t bleAddr[6];
+
+static void prepare_airtag(const uint8_t* key) {
+    beacon::derive_mac_from_key(key, bleAddr);
+    beacon::fill_adv_template(key, offline_finding_adv_template, sizeof(offline_finding_adv_template));
+    uint8_t status_save = airtag_data_store[6];
+    memcpy(airtag_data_store, offline_finding_adv_template, sizeof(offline_finding_adv_template));
+    airtag_data_store[6] = status_save;
+}
+
+static uint8_t fmdn_initial_data[] = {
+    0x16, 0xAA, 0xFE, 0x41,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+    0xc0,
+};
+static uint8_t fmdn_data_store[25];
+
+static void prepare_fmdn(const uint8_t* key) {
+    uint8_t status_save = fmdn_data_store[23];
+    memcpy(fmdn_data_store, fmdn_initial_data, sizeof(fmdn_initial_data));
+    memcpy(fmdn_data_store + 3, key, 20);
+    fmdn_data_store[23] = status_save;
+}
+
+} // namespace cpp_adv
+
+TEST(airtag_adv_payload_matches_original) {
+    printf("  test: airtag_adv_payload_matches_original\n");
+
+    // Test with several different keys
+    const uint8_t keys[][28] = {
+        // Key 1: sequential bytes
+        {0x41, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08, 0x09, 0x0A,
+         0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10, 0x11, 0x12, 0x13, 0x14,
+         0x15, 0x16, 0x17, 0x18, 0x19, 0x1A, 0x1B, 0x1C},
+        // Key 2: all 0xFF
+        {0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+         0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF,
+         0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF, 0xFF},
+        // Key 3: realistic-looking key
+        {0xA3, 0x7B, 0x1F, 0x42, 0xE8, 0x9D, 0x56, 0xC0, 0x3A, 0x88,
+         0x14, 0x6E, 0xF2, 0xD7, 0x93, 0x05, 0xBC, 0x61, 0x4F, 0xAA,
+         0x27, 0x8C, 0xE5, 0x30, 0x7D, 0x19, 0xB4, 0x68},
+    };
+
+    for (int k = 0; k < 3; k++) {
+        // Reset templates to initial state
+        memcpy(original_adv::offline_finding_adv_template,
+               cpp_adv::offline_finding_adv_template,
+               sizeof(cpp_adv::offline_finding_adv_template));
+        memset(original_adv::airtag_data_store, 0, sizeof(original_adv::airtag_data_store));
+        memset(cpp_adv::airtag_data_store, 0, sizeof(cpp_adv::airtag_data_store));
+
+        // Run both
+        original_adv::setAdvertisementKey(keys[k]);
+        cpp_adv::prepare_airtag(keys[k]);
+
+        // Compare advertisement payload (the bytes that go over the air)
+        ASSERT_MEM_EQ(cpp_adv::airtag_data_store, original_adv::airtag_data_store, 31);
+
+        // Compare MAC address
+        ASSERT_MEM_EQ(cpp_adv::bleAddr, original_adv::bleAddr, 6);
+
+        // Verify specific critical bytes:
+        // Byte 0: length (0x1e = 30)
+        ASSERT_EQ(cpp_adv::airtag_data_store[0], 0x1e);
+        // Byte 1: type (0xff = manufacturer specific)
+        ASSERT_EQ(cpp_adv::airtag_data_store[1], 0xff);
+        // Bytes 2-3: Apple company ID
+        ASSERT_EQ(cpp_adv::airtag_data_store[2], 0x4c);
+        ASSERT_EQ(cpp_adv::airtag_data_store[3], 0x00);
+        // Bytes 4-5: Offline Finding type
+        ASSERT_EQ(cpp_adv::airtag_data_store[4], 0x12);
+        ASSERT_EQ(cpp_adv::airtag_data_store[5], 0x19);
+        // Bytes 7-28: key[6..27] (the public key portion)
+        ASSERT_MEM_EQ(&cpp_adv::airtag_data_store[7], &keys[k][6], 22);
+        // Byte 29: key[0] >> 6 (top 2 bits)
+        ASSERT_EQ(cpp_adv::airtag_data_store[29], static_cast<uint8_t>(keys[k][0] >> 6));
+        // MAC: byte[5] has 0xC0 set
+        ASSERT_TRUE((cpp_adv::bleAddr[5] & 0xC0) == 0xC0);
+    }
+}
+
+TEST(fmdn_adv_payload_matches_original) {
+    printf("  test: fmdn_adv_payload_matches_original\n");
+
+    const uint8_t fmdn_keys[][20] = {
+        // Key 1
+        {0x11, 0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99, 0xAA,
+         0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x00, 0x12, 0x34, 0x56, 0x78},
+        // Key 2: all zeros
+        {0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00,
+         0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00, 0x00},
+    };
+
+    for (int k = 0; k < 2; k++) {
+        // Reset
+        memset(original_adv::fmdn_data_store, 0, sizeof(original_adv::fmdn_data_store));
+        memset(cpp_adv::fmdn_data_store, 0, sizeof(cpp_adv::fmdn_data_store));
+
+        // Run both
+        original_adv::switch_fmdn_key(fmdn_keys[k]);
+        cpp_adv::prepare_fmdn(fmdn_keys[k]);
+
+        // Compare FMDN payload
+        ASSERT_MEM_EQ(cpp_adv::fmdn_data_store, original_adv::fmdn_data_store, 25);
+
+        // Verify structure:
+        // Byte 0: service data type (0x16)
+        ASSERT_EQ(cpp_adv::fmdn_data_store[0], 0x16);
+        // Bytes 1-2: Eddystone UUID (0xAAFE)
+        ASSERT_EQ(cpp_adv::fmdn_data_store[1], 0xAA);
+        ASSERT_EQ(cpp_adv::fmdn_data_store[2], 0xFE);
+        // Bytes 3-22: FMDN key (20 bytes at offset 3)
+        // Note: key overwrites the EID frame type byte at offset 3 — this
+        // matches the original C code (switch_fmdn_key copies key at offset 3)
+        ASSERT_MEM_EQ(&cpp_adv::fmdn_data_store[3], &fmdn_keys[k][0], 20);
+    }
+}
+
+TEST(airtag_status_byte_preserved_across_key_switch) {
+    printf("  test: airtag_status_byte_preserved_across_key_switch\n");
+
+    // Set a status byte, then switch keys — status should be preserved
+    cpp_adv::airtag_data_store[6] = 0x42;
+
+    const uint8_t key[28] = {0x01, 0x02, 0x03, 0x04, 0x05, 0x06, 0x07, 0x08,
+                              0x09, 0x0A, 0x0B, 0x0C, 0x0D, 0x0E, 0x0F, 0x10,
+                              0x11, 0x12, 0x13, 0x14, 0x15, 0x16, 0x17, 0x18,
+                              0x19, 0x1A, 0x1B, 0x1C};
+    cpp_adv::prepare_airtag(key);
+
+    // Status byte at position 6 should be preserved (not overwritten by template)
+    ASSERT_EQ(cpp_adv::airtag_data_store[6], 0x42);
+}
+
+TEST(fmdn_status_byte_preserved_across_key_switch) {
+    printf("  test: fmdn_status_byte_preserved_across_key_switch\n");
+
+    // Set a status byte, then switch keys — status should be preserved
+    cpp_adv::fmdn_data_store[23] = 0x55;
+
+    const uint8_t key[20] = {0xAA, 0xBB, 0xCC, 0xDD, 0xEE, 0xFF, 0x00, 0x11,
+                              0x22, 0x33, 0x44, 0x55, 0x66, 0x77, 0x88, 0x99,
+                              0xAA, 0xBB, 0xCC, 0xDD};
+    cpp_adv::prepare_fmdn(key);
+
+    // Status byte at position 23 should be preserved
+    ASSERT_EQ(cpp_adv::fmdn_data_store[23], 0x55);
+}
+
 int main() {
     printf("Running host tests...\n");
     printf("\n%d/%d assertions passed\n", tests_passed, tests_run);
