@@ -9,12 +9,9 @@ namespace beacon {
 void MovementTracker::record_reading(const int16_t samples[][3], int count, int threshold,
                                      uint32_t uptime_sec) {
     // Determine starting index for comparison.
-    // If last_sample_ is the sentinel {-1,-1,-1}, we have no previous reading
-    // so we skip the first comparison (start from index 2 instead of 1).
-    int first = 1;
-    if (last_sample_[0] == -1 && last_sample_[1] == -1 && last_sample_[2] == -1) {
-        first = 2;
-    }
+    // If we have no previous reading, skip the first comparison
+    // (start from index 2 instead of 1).
+    int first = has_previous_ ? 1 : 2;
 
     // The original C code stores the previous last sample in samples[0]
     // and reads new data into samples[1..32]. We replicate that logic:
@@ -62,6 +59,7 @@ void MovementTracker::record_reading(const int16_t samples[][3], int count, int 
         last_sample_[0] = samples[count - 1][0];
         last_sample_[1] = samples[count - 1][1];
         last_sample_[2] = samples[count - 1][2];
+        has_previous_ = true;
     }
 }
 

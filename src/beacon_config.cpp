@@ -3,16 +3,25 @@
 
 namespace beacon {
 
+// ---- StatusFlags ----
+
+uint32_t StatusFlags::pack() const {
+    return static_cast<uint32_t>(airtag_base) | (static_cast<uint32_t>(fmdn_base) << 8) |
+           (static_cast<uint32_t>(airtag_mode) << 16) | (static_cast<uint32_t>(fmdn_mode) << 20);
+}
+
+StatusFlags StatusFlags::unpack(uint32_t raw) {
+    StatusFlags f;
+    f.airtag_base = static_cast<uint8_t>(raw & 0xFF);
+    f.fmdn_base = static_cast<uint8_t>((raw >> 8) & 0xFF);
+    f.airtag_mode = static_cast<StatusMode>((raw >> 16) & 0xF);
+    f.fmdn_mode = static_cast<StatusMode>((raw >> 20) & 0xF);
+    return f;
+}
+
 // ---- SettingsManager ----
 
 SettingsManager::SettingsManager(INvsStorage& nvs) : nvs_(nvs) {}
-
-void SettingsManager::read_int(uint16_t id, int& dest) {
-    int tmp = 0;
-    if (nvs_.read(id, &tmp, sizeof(tmp)) > 0) {
-        dest = tmp;
-    }
-}
 
 void SettingsManager::read_bool(uint16_t id, bool& dest) {
     int tmp = 0;
@@ -25,15 +34,53 @@ int SettingsManager::load() {
     // Reset to defaults first
     config_ = BeaconConfig{};
 
-    // Read scalar settings from NVS (failure leaves default)
+    // Read boolean settings from NVS (stored as 4-byte int)
     read_bool(ID_fmdn_NVS, config_.flag_fmdn);
     read_bool(ID_airtag_NVS, config_.flag_airtag);
-    read_int(ID_period_NVS, config_.mult_period);
-    read_int(ID_power_NVS, config_.tx_power);
-    read_int(ID_changeInterval_NVS, config_.change_interval);
-    read_int(ID_status_NVS, config_.status_flags);
-    read_int(ID_accel_NVS, config_.accel_threshold);
     read_bool(ID_turnedOn_NVS, config_.turned_on);
+
+    // Read narrowed scalar fields with validation.
+    // NVS wire format is always 4-byte int; invalid values are rejected (keep default).
+    {
+        int tmp = 0;
+        if (nvs_.read(ID_period_NVS, &tmp, sizeof(tmp)) > 0) {
+            if (tmp == 1 || tmp == 2 || tmp == 4 || tmp == 8) {
+                config_.mult_period = static_cast<uint8_t>(tmp);
+            }
+            // else: keep default (mult_period=0 causes busy-loop, must reject)
+        }
+    }
+    {
+        int tmp = 0;
+        if (nvs_.read(ID_power_NVS, &tmp, sizeof(tmp)) > 0) {
+            if (tmp >= 0 && tmp <= 2) {
+                config_.tx_power = static_cast<uint8_t>(tmp);
+            }
+        }
+    }
+    {
+        int tmp = 0;
+        if (nvs_.read(ID_changeInterval_NVS, &tmp, sizeof(tmp)) > 0) {
+            if (tmp >= 30 && tmp <= 7200) {
+                config_.change_interval =
+                    static_cast<uint16_t>(tmp - (tmp % 8)); // Align to multiple of 8
+            }
+        }
+    }
+    {
+        int tmp = 0;
+        if (nvs_.read(ID_status_NVS, &tmp, sizeof(tmp)) > 0) {
+            config_.status_flags = static_cast<uint32_t>(tmp);
+        }
+    }
+    {
+        int tmp = 0;
+        if (nvs_.read(ID_accel_NVS, &tmp, sizeof(tmp)) > 0) {
+            if (tmp >= 0 && tmp <= 16383) {
+                config_.accel_threshold = static_cast<uint16_t>(tmp);
+            }
+        }
+    }
 
     // Time offset is int64_t
     {
@@ -48,9 +95,6 @@ int SettingsManager::load() {
 
     // Auth code
     nvs_.read(ID_auth_NVS, config_.auth_code.data(), config_.auth_code.size());
-
-    // Change interval alignment: round down to multiple of 8
-    config_.change_interval = config_.change_interval - (config_.change_interval % 8);
 
     // Load airtag keys from NVS
     if (nvs_.read(ID_key_NVS, config_.keys.data(), sizeof(config_.keys)) > 0) {
@@ -70,7 +114,7 @@ int SettingsManager::load() {
             }
             count++;
         }
-        config_.num_keys = count;
+        config_.num_keys = static_cast<uint8_t>(count);
     } else {
         config_.num_keys = 0;
     }
@@ -83,6 +127,8 @@ int SettingsManager::load() {
     return 0;
 }
 
+// NVS wire format: all scalar fields stored as 4-byte int for backward compatibility.
+// Narrowed C++ types are widened to int before writing.
 int SettingsManager::save_field(uint16_t field_id) {
     switch (field_id) {
     case ID_fmdn_NVS: {
@@ -93,26 +139,36 @@ int SettingsManager::save_field(uint16_t field_id) {
         int v = config_.flag_airtag ? 1 : 0;
         return nvs_.write(field_id, &v, sizeof(v));
     }
-    case ID_period_NVS:
-        return nvs_.write(field_id, &config_.mult_period, sizeof(config_.mult_period));
-    case ID_changeInterval_NVS:
-        return nvs_.write(field_id, &config_.change_interval, sizeof(config_.change_interval));
+    case ID_period_NVS: {
+        int v = static_cast<int>(config_.mult_period);
+        return nvs_.write(field_id, &v, sizeof(v));
+    }
+    case ID_changeInterval_NVS: {
+        int v = static_cast<int>(config_.change_interval);
+        return nvs_.write(field_id, &v, sizeof(v));
+    }
     case ID_key_NVS:
         return nvs_.write(field_id, config_.keys.data(), sizeof(config_.keys));
     case ID_auth_NVS:
         return nvs_.write(field_id, config_.auth_code.data(), config_.auth_code.size());
-    case ID_power_NVS:
-        return nvs_.write(field_id, &config_.tx_power, sizeof(config_.tx_power));
+    case ID_power_NVS: {
+        int v = static_cast<int>(config_.tx_power);
+        return nvs_.write(field_id, &v, sizeof(v));
+    }
     case ID_fmdnKey_NVS:
         return nvs_.write(field_id, config_.fmdn_key.data(), config_.fmdn_key.size());
     case ID_timeOffset_NVS:
         return nvs_.write(field_id, &config_.time_offset, sizeof(config_.time_offset));
     case ID_settingsMAC_NVS:
         return nvs_.write(field_id, config_.settings_mac.data(), config_.settings_mac.size());
-    case ID_status_NVS:
-        return nvs_.write(field_id, &config_.status_flags, sizeof(config_.status_flags));
-    case ID_accel_NVS:
-        return nvs_.write(field_id, &config_.accel_threshold, sizeof(config_.accel_threshold));
+    case ID_status_NVS: {
+        int v = static_cast<int>(config_.status_flags);
+        return nvs_.write(field_id, &v, sizeof(v));
+    }
+    case ID_accel_NVS: {
+        int v = static_cast<int>(config_.accel_threshold);
+        return nvs_.write(field_id, &v, sizeof(v));
+    }
     case ID_turnedOn_NVS: {
         int v = config_.turned_on ? 1 : 0;
         return nvs_.write(field_id, &v, sizeof(v));
@@ -126,8 +182,69 @@ const BeaconConfig& SettingsManager::config() const {
     return config_;
 }
 
-BeaconConfig& SettingsManager::config_mut() {
-    return config_;
+// ---- Validated setters ----
+
+bool SettingsManager::set_mult_period(uint8_t v) {
+    if (v != 1 && v != 2 && v != 4 && v != 8)
+        return false;
+    config_.mult_period = v;
+    return true;
+}
+
+bool SettingsManager::set_tx_power(uint8_t v) {
+    if (v > 2)
+        return false;
+    config_.tx_power = v;
+    return true;
+}
+
+bool SettingsManager::set_change_interval(uint16_t v) {
+    if (v < 30 || v > 7200)
+        return false;
+    config_.change_interval = v - (v % 8); // Align to multiple of 8
+    return true;
+}
+
+bool SettingsManager::set_status_flags(uint32_t v) {
+    config_.status_flags = v;
+    return true;
+}
+
+bool SettingsManager::set_accel_threshold(uint16_t v) {
+    if (v > 16383)
+        return false;
+    config_.accel_threshold = v;
+    return true;
+}
+
+void SettingsManager::set_flag_fmdn(bool v) {
+    config_.flag_fmdn = v;
+}
+
+void SettingsManager::set_flag_airtag(bool v) {
+    config_.flag_airtag = v;
+}
+
+void SettingsManager::set_turned_on(bool v) {
+    config_.turned_on = v;
+}
+
+void SettingsManager::set_fmdn_key(const uint8_t* data, size_t len) {
+    if (len == config_.fmdn_key.size()) {
+        std::memcpy(config_.fmdn_key.data(), data, len);
+    }
+}
+
+void SettingsManager::set_settings_mac(const uint8_t* data, size_t len) {
+    if (len == config_.settings_mac.size()) {
+        std::memcpy(config_.settings_mac.data(), data, len);
+    }
+}
+
+void SettingsManager::set_auth_code(const uint8_t* data, size_t len) {
+    if (len == config_.auth_code.size()) {
+        std::memcpy(config_.auth_code.data(), data, len);
+    }
 }
 
 int64_t SettingsManager::get_time(uint32_t uptime_sec) const {

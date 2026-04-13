@@ -35,9 +35,9 @@ StatusOutput compute_status(const StatusInput& in) {
     StatusOutput out{};
 
     auto status_airtag = static_cast<uint8_t>(in.status_flags & 0xFF);
-    auto status_fmdn = static_cast<uint8_t>((in.status_flags & 0xFF00) >> 8);
-    int b_airtag = (in.status_flags & 0xF0000) >> 16;
-    int b_fmdn = (in.status_flags & 0xF00000) >> 20;
+    auto status_fmdn = static_cast<uint8_t>((in.status_flags >> 8) & 0xFF);
+    auto b_airtag = static_cast<int>((in.status_flags >> 16) & 0xF);
+    auto b_fmdn = static_cast<int>((in.status_flags >> 20) & 0xF);
 
     // --- AirTag status ---
     switch (b_airtag) {

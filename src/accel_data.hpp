@@ -48,7 +48,8 @@ class MovementTracker {
   private:
     uint8_t moves20_[kMoves20Size] = {};
     uint8_t moves300_[kMoves300Size] = {};
-    int16_t last_sample_[3] = {-1, -1, -1};
+    int16_t last_sample_[3] = {};
+    bool has_previous_ = false;
     int16_t temperature_ = 0;
     uint32_t last_shift_time_ = 0;
 };
