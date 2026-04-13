@@ -1,0 +1,72 @@
+name: BabbleSim BLE Advertisement Test
+
+on:
+  push:
+    branches: [cpp-migration, main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  bsim-test:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          path: everytag
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y gcc-multilib g++-multilib cmake ninja-build \
+            device-tree-compiler gperf python3-pip
+          pip3 install west pyelftools pyyaml pykwalify packaging
+
+      - name: Initialize Zephyr west workspace
+        run: |
+          cd everytag
+          west init -l .
+          cd ..
+          west update --narrow -o=--depth=1
+
+      - name: Fetch + build BabbleSim
+        run: |
+          # Clone bsim into a separate directory (not inside Zephyr workspace)
+          mkdir -p /tmp/bsim-workspace
+          cp -r tools/bsim /tmp/bsim-workspace/bsim
+          cd /tmp/bsim-workspace
+          west init -l bsim
+          west update --narrow -o=--depth=1
+          cd bsim
+          export BSIM_OUT_PATH=$GITHUB_WORKSPACE/bsim_out
+          make everything -j$(nproc)
+          # Copy components back so the build can find them
+          cp -r /tmp/bsim-workspace/bsim/components $GITHUB_WORKSPACE/tools/bsim/
+
+      - name: Build bsim test
+        run: |
+          export ZEPHYR_BASE=$GITHUB_WORKSPACE/zephyr
+          export BSIM_OUT_PATH=$GITHUB_WORKSPACE/bsim_out
+          export BSIM_COMPONENTS_PATH=$GITHUB_WORKSPACE/tools/bsim/components
+          export BOARD=nrf52_bsim
+          export ZEPHYR_TOOLCHAIN_VARIANT=host
+          # Build directly with west to avoid compile.source caching issues
+          cd $GITHUB_WORKSPACE/everytag
+          west build --board nrf52_bsim -d build-bsim --pristine --no-sysbuild -s tests/bsim -- \
+            -DZEPHYR_TOOLCHAIN_VARIANT=host \
+            -DBSIM_COMPONENTS_PATH=$BSIM_COMPONENTS_PATH
+          cp build-bsim/zephyr/zephyr.exe $BSIM_OUT_PATH/bin/bs_nrf52_bsim_tests_bsim_prj_conf
+
+      - name: Run BLE advertisement + key rotation test
+        run: |
+          export BSIM_OUT_PATH=$GITHUB_WORKSPACE/bsim_out
+          cd ${BSIM_OUT_PATH}/bin
+          SIM_ID=everytag_adv_test
+          EXE=./bs_nrf52_bsim_tests_bsim_prj_conf
+          $EXE -v=2 -s=$SIM_ID -d=0 -rs=420 -testid=advertiser &
+          $EXE -v=2 -s=$SIM_ID -d=1 -rs=69  -testid=scanner &
+          PID_SCAN=$!
+          ./bs_2G4_phy_v1 -v=2 -s=$SIM_ID -D=2 -sim_length=5000000
+          # Scanner is the critical device — it verifies the payload
+          wait $PID_SCAN || { echo "Scanner FAILED"; exit 1; }
+          echo "BLE advertisement payload verification PASSED"
