@@ -67,16 +67,17 @@ class StateMachine {
 
     // Expose internals for testing
     const Timers& timers() const { return timers_; }
-    int current_key() const { return current_key_; }
-    int bad_power() const { return bad_power_; }
+    uint8_t current_key() const { return current_key_; }
+    uint8_t bad_power() const { return bad_power_; }
     int charge_lock_counter() const { return charge_lock_counter_; }
     bool broadcasting_airtag() const { return broadcasting_airtag_; }
     bool broadcasting_fmdn() const { return broadcasting_fmdn_; }
     bool broadcasting_settings() const { return broadcasting_settings_; }
     bool broadcasting_anything() const { return broadcasting_anything_; }
-    int keys_changes() const { return keys_changes_; }
-    int what_in_status() const { return what_in_status_; }
-    int last_battery_voltage() const { return last_battery_voltage_; }
+    uint16_t keys_changes() const { return keys_changes_; }
+    WhatInStatus what_in_status() const { return what_in_status_; }
+    uint8_t what_in_status_raw() const { return static_cast<uint8_t>(what_in_status_); }
+    uint16_t last_battery_voltage() const { return last_battery_voltage_; }
 
     // Allow tests to inject GATT connection/auth state
     void set_connected_gatt(bool v) { connected_gatt_ = v; }
@@ -99,13 +100,13 @@ class StateMachine {
     bool broadcasting_settings_ = false;
 
     // Key rotation
-    int current_key_ = 0;       // Index into config.keys[] for current AirTag key
-    int keys_changes_ = 0;      // Rolling counter of key switches (used by status mode 2)
-    int what_in_status_ = 2;    // Telemetry cycle: 0=voltage, 1=accel, 2=temperature
+    uint8_t current_key_ = 0;          // Index into config.keys[] for current AirTag key
+    uint16_t keys_changes_ = 0;        // Rolling counter of key switches (used by status mode 2)
+    WhatInStatus what_in_status_ = WhatInStatus::Temperature; // Telemetry cycle: Voltage, Accel, Temperature
 
     // Battery / UVLO (under-voltage lockout)
-    int last_battery_voltage_ = 0;   // Most recent battery reading in mV
-    int bad_power_ = 0;              // Consecutive low-voltage checks (shutdown at >5)
+    uint16_t last_battery_voltage_ = 0;  // Most recent battery reading in mV
+    uint8_t bad_power_ = 0;              // Consecutive low-voltage checks (shutdown at >5)
     // If charging is detected, skip UVLO shutdown for 1 hour.
     // Decremented by mult_period each tick.
     int charge_lock_counter_ = 0;

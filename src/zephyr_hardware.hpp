@@ -40,6 +40,7 @@ class ZephyrHardware : public IHardware {
     void bq_reinit(bool force) override;
     void bq_shipmode() override;
     void update_turned_on(bool on) override;
+    void set_status_bytes(uint8_t airtag_status, uint8_t fmdn_status) override;
 
   private:
     SettingsManager& settings_;
