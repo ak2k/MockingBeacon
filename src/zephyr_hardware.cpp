@@ -13,7 +13,6 @@
 #include <zephyr/drivers/adc.h>
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/i2c.h>
-#include <zephyr/drivers/timer/system_timer.h>
 #include <zephyr/irq.h>
 #include <zephyr/kernel.h>
 #include <zephyr/pm/device.h>
@@ -87,7 +86,18 @@ uint32_t ZephyrHardware::uptime_seconds() {
 }
 
 int ZephyrHardware::bt_enable() {
-    return ::bt_enable(nullptr);
+    int err = ::bt_enable(nullptr);
+    if (err == 0) {
+        bt_addr_le_t addrs[CONFIG_BT_ID_MAX];
+        size_t count = CONFIG_BT_ID_MAX;
+        ::bt_id_get(addrs, &count);
+        if (count > 0) {
+            printk("BT identity: %02X:%02X:%02X:%02X:%02X:%02X\n", addrs[0].a.val[5],
+                   addrs[0].a.val[4], addrs[0].a.val[3], addrs[0].a.val[2], addrs[0].a.val[1],
+                   addrs[0].a.val[0]);
+        }
+    }
+    return err;
 }
 
 void ZephyrHardware::bt_disable() {
@@ -282,7 +292,6 @@ void ZephyrHardware::power_off() {
     ::accel_powerdown();
 #endif
     k_sleep(K_MSEC(500));
-    sys_clock_disable();
     sys_poweroff();
 }
 
