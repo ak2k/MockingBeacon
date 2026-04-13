@@ -31,22 +31,45 @@ inline constexpr int kMaxKeysInMemory = 40;
 inline constexpr int kKeySize = 28;
 
 // ---- BeaconConfig (consolidates all globals from settings.c) ----
+//
+// All fields are persisted in NVS as 4-byte ints (wire format).
+// On load, values are validated against allowed ranges; out-of-range
+// values fall back to the defaults shown here.
 struct BeaconConfig {
-    bool flag_fmdn = false;
-    bool flag_airtag = false;
-    int mult_period = 2;
-    int tx_power = 2;
-    int change_interval = 6000;
-    int status_flags = 0x458000;
-    int accel_threshold = 800;
-    bool turned_on = false;
-    int64_t time_offset = 0;
-    std::array<uint8_t, 8> auth_code = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'};
+    bool flag_fmdn = false;           // Enable Google Find My Device Network broadcasting
+    bool flag_airtag = false;         // Enable Apple AirTag (Offline Finding) broadcasting
+    int mult_period = 2;              // Advertising interval multiplier {1,2,4,8}
+    int tx_power = 2;                 // TX power index: 0 = -8 dBm, 1 = 0 dBm, 2 = +4 dBm
+    int change_interval = 6000;       // Key rotation interval in seconds [30..7200], aligned to 8
+    int status_flags = 0x458000;      // Packed status byte config (see status_flags encoding below)
+    int accel_threshold = 800;        // Accelerometer movement threshold in mg [0..16383]
+    bool turned_on = false;           // Master broadcast enable (persisted across reboots)
+    int64_t time_offset = 0;          // Unix time offset: real_time = time_offset + uptime_seconds
+    std::array<uint8_t, 8> auth_code = {'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h'}; // GATT auth code
+    // MAC address for settings mode. If first and last bytes are zero,
+    // use the chip's factory MAC from UICR instead.
     std::array<uint8_t, 6> settings_mac = {0, 0x41, 0x42, 0x43, 0x44, 0};
-    std::array<uint8_t, 20> fmdn_key = {};
-    std::array<std::array<uint8_t, 28>, 40> keys = {};
-    int num_keys = 0;
+    std::array<uint8_t, 20> fmdn_key = {};   // Google FMDN encryption key (single key, no rotation)
+    std::array<std::array<uint8_t, 28>, 40> keys = {};  // AirTag public key ring
+    int num_keys = 0;                 // Number of valid keys in keys[] [0..40]
 };
+
+// ---- status_flags encoding (from main.c) ----
+//
+// Packed 32-bit field controlling what goes in the AirTag/FMDN status bytes:
+//   bits  0..7  — base status byte for AirTag (broadcast as-is in mode 1)
+//   bits  8..15 — base status byte for FMDN  (broadcast as-is in mode 1)
+//   bits 16..19 — AirTag status mode:
+//     0 = off (don't touch status byte)
+//     1 = broadcast base byte as-is
+//     2 = broadcast incrementing byte (keys_changes counter)
+//     3 = broadcast battery voltage (mV / 100)
+//     4 = broadcast battery level (0..3) OR'd into base byte bits 6..7
+//     5 = telemetry: cycle each minute between voltage, accel byte, temperature
+//   bits 20..23 — FMDN status mode (same encoding as AirTag)
+//
+// Default 0x458000 = AirTag mode 5 (telemetry), FMDN mode 4 (battery level),
+//                    AirTag base 0x00, FMDN base 0x80
 
 // ---- INvsStorage interface (for testing) ----
 class INvsStorage {

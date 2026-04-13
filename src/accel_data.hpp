@@ -21,8 +21,15 @@ class MovementTracker {
     /// @return true if any 5-minute slot in the range recorded movement
     bool has_movement(int start_min, int end_min) const;
 
-    /// Compute a 7-bit movement summary byte.
-    /// Each bit covers a progressively longer time window.
+    /// Compute a 7-bit movement summary byte (from calc_accel_byte in main.c).
+    /// Each bit covers a progressively longer time window:
+    ///   bit 0: movement in  0..10 minutes
+    ///   bit 1: movement in 10..30 minutes
+    ///   bit 2: movement in 30..60 minutes
+    ///   bit 3: movement in  1..3 hours
+    ///   bit 4: movement in  3..6 hours
+    ///   bit 5: movement in  6..12 hours
+    ///   bit 6: movement in 12..24 hours
     uint8_t compute_accel_byte() const;
 
     /// Get the most recent accelerometer temperature reading.

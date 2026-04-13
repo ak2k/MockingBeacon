@@ -21,14 +21,14 @@ void fill_adv_template(const uint8_t* key, uint8_t* tmpl, size_t tmpl_size);
 bool is_key_empty(const uint8_t* key, size_t len);
 
 /// Input to the status computation (replaces all globals).
+/// See status_flags encoding in beacon_config.hpp for the bitfield layout.
 struct StatusInput {
-    int status_flags;    // statusFlags: low byte = airtag base, next byte = fmdn base,
-                         // nibbles at bits 16..19 and 20..23 select mode
-    int battery_voltage; // lastBatteryVoltage in mV
-    int keys_changes;    // rolling counter of key switches
-    int what_in_status;  // 0=voltage, 1=accel, 2=temperature
-    uint8_t accel_byte;  // 7-bit accelerometer summary (from calc_accel_byte)
-    int16_t temperature; // accelTemperature in 0.1 C units (e.g. 235 = 23.5 C)
+    int status_flags;    // Packed 32-bit config (see beacon_config.hpp status_flags encoding)
+    int battery_voltage; // Battery voltage in millivolts (e.g. 3800 = 3.8V)
+    int keys_changes;    // Rolling counter of AirTag key rotations (used by mode 2)
+    int what_in_status;  // Telemetry cycle selector: 0=voltage, 1=accel, 2=temperature
+    uint8_t accel_byte;  // 7-bit movement summary from MovementTracker::compute_accel_byte()
+    int16_t temperature; // Accelerometer die temperature in 0.1C units (e.g. 235 = 23.5C)
 };
 
 /// Output of the status computation.

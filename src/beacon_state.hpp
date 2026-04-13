@@ -19,34 +19,37 @@ enum class State : uint8_t {
     ShuttingDown,
 };
 
-// ---- Timer state (replaces global tLast* variables) ----
+// ---- Timer state (replaces global tLast* variables from main.c) ----
+// All values are uptime in seconds (from k_uptime_seconds()).
 struct Timers {
-    uint32_t time_save = 0;
-    uint32_t battery_check = 0;
-    uint32_t settings_mode = 0;
-    uint32_t max_power = 0;
-    uint32_t end_max_power = 0;
-    uint32_t airtag_switch = 0;
-    uint32_t end_settings = 0;
-    uint32_t accel_read = 0;
-    uint32_t accel_reset = 0;
+    uint32_t time_save = 0;      // Last NVS time persistence (every kIntervalTimeSave)
+    uint32_t battery_check = 0;  // Last battery + status update (every kIntervalBatteryCheck)
+    uint32_t settings_mode = 0;  // Last settings mode entry (every kIntervalSettings)
+    uint32_t max_power = 0;      // Last max-power burst start (every kIntervalMaxPower)
+    uint32_t end_max_power = 0;  // Deadline to end max-power burst (0 = no burst active)
+    uint32_t airtag_switch = 0;  // Last AirTag key rotation (every change_interval)
+    uint32_t end_settings = 0;   // Deadline to exit settings mode
+    uint32_t accel_read = 0;     // Last accelerometer FIFO read (every kIntervalAccelerometer)
+    uint32_t accel_reset = 0;    // Last accelerometer re-init (every 30 read cycles)
 };
 
 // ---- Constants (from myboards.h / lis2dw12.h) ----
-inline constexpr int kBroadcastIntervalMin = 1500; // 938ms
-inline constexpr int kBroadcastIntervalMax = 1590; // 994ms
-inline constexpr int kIntervalSettings = 60;
-inline constexpr int kSettingsWait = 2;
-inline constexpr int kIntervalTimeSave = 3600;
-inline constexpr int kIntervalBatteryCheck = 60;
-inline constexpr int kIntervalMaxPower = 68;
-inline constexpr int kIntervalAccelerometer = 20;
-inline constexpr int kBatteryLowVoltage = 2800;
-inline constexpr int kSettingsAdvInterval = 400;
-inline constexpr int kShutdownNokeys = 300;
-inline constexpr int kAccelResetMultiplier = 30;
-inline constexpr int kChargeLockDuration = 3600;
-inline constexpr int kUvloBadPowerThreshold = 5;
+// BLE advertising intervals are in BLE units (1 unit = 0.625 ms).
+inline constexpr int kBroadcastIntervalMin = 1500; // 1500 * 0.625 = 937.5 ms
+inline constexpr int kBroadcastIntervalMax = 1590; // 1590 * 0.625 = 993.75 ms
+// The remaining constants are in seconds unless noted.
+inline constexpr int kIntervalSettings = 60;       // Enter settings mode every 60s
+inline constexpr int kSettingsWait = 2;             // Stay in settings mode for 2s (+ GATT delays)
+inline constexpr int kIntervalTimeSave = 3600;      // Persist time to NVS every hour
+inline constexpr int kIntervalBatteryCheck = 60;    // Re-read battery + update status every 60s
+inline constexpr int kIntervalMaxPower = 68;        // Max-power burst every 68s (when tx_power < 2)
+inline constexpr int kIntervalAccelerometer = 20;   // Read accelerometer FIFO every 20s
+inline constexpr int kBatteryLowVoltage = 2800;     // UVLO threshold in mV (Li-Ion cutoff)
+inline constexpr int kSettingsAdvInterval = 400;     // Settings mode adv interval (BLE units)
+inline constexpr int kShutdownNokeys = 300;          // Shutdown after 5 min if no keys and not charging
+inline constexpr int kAccelResetMultiplier = 30;     // Re-init accelerometer every 30 read cycles
+inline constexpr int kChargeLockDuration = 3600;     // Skip UVLO for 1 hour if charging detected
+inline constexpr int kUvloBadPowerThreshold = 5;     // Shutdown after 5 consecutive low-voltage checks
 
 // ---- StateMachine ----
 class StateMachine {
@@ -96,13 +99,15 @@ class StateMachine {
     bool broadcasting_settings_ = false;
 
     // Key rotation
-    int current_key_ = 0;
-    int keys_changes_ = 0;
-    int what_in_status_ = 2;
+    int current_key_ = 0;       // Index into config.keys[] for current AirTag key
+    int keys_changes_ = 0;      // Rolling counter of key switches (used by status mode 2)
+    int what_in_status_ = 2;    // Telemetry cycle: 0=voltage, 1=accel, 2=temperature
 
-    // Battery / UVLO
-    int last_battery_voltage_ = 0;
-    int bad_power_ = 0;
+    // Battery / UVLO (under-voltage lockout)
+    int last_battery_voltage_ = 0;   // Most recent battery reading in mV
+    int bad_power_ = 0;              // Consecutive low-voltage checks (shutdown at >5)
+    // If charging is detected, skip UVLO shutdown for 1 hour.
+    // Decremented by mult_period each tick.
     int charge_lock_counter_ = 0;
 
     // GATT state (set externally via callbacks in real firmware)
