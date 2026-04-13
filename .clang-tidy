@@ -1,0 +1,25 @@
+---
+Checks: >
+  -*,
+  bugprone-*,
+  cert-*,
+  cppcoreguidelines-pro-type-cstyle-cast,
+  cppcoreguidelines-pro-type-member-init,
+  cppcoreguidelines-pro-type-static-cast-downcast,
+  performance-*,
+  modernize-use-auto,
+  modernize-use-nullptr,
+  modernize-use-override,
+  modernize-loop-convert,
+  readability-braces-around-statements,
+  readability-const-return-type,
+  readability-implicit-bool-conversion,
+  readability-redundant-string-cstr,
+  -bugprone-easily-swappable-parameters,
+  -bugprone-narrowing-conversions,
+  -cert-err58-cpp,
+
+WarningsAsErrors: ''
+HeaderFilterRegex: 'src/.*\.hpp$'
+FormatStyle: file
+...

@@ -1,0 +1,8 @@
+build-*/
+build/
+__pycache__/
+*.pyc
+.west/
+twister-out*/
+tests/host/build/
+tests/*/build/
