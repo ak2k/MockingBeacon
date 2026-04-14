@@ -1,11 +1,23 @@
 # Everytag
 
 > **Fork note:** This fork restructures the firmware as C++ with comprehensive testing.
-> See the `cpp-migration` branch. Original upstream: [vasimv/Everytag](https://github.com/vasimv/Everytag)
+> Original upstream: [vasimv/Everytag](https://github.com/vasimv/Everytag)
 >
-> **What changed:** Pure computation extracted into testable C++ modules (`beacon_logic`, `accel_data`, `beacon_config`), explicit state machine (`beacon_state`), hardware abstracted behind `IHardware` interface. 266 host-native test assertions (ASan/UBSan) verify byte-identical output vs the original C code. BLE advertisement payloads verified end-to-end via [BabbleSim](https://babblesim.github.io/) simulation (3-key rotation over simulated radio). Binary size impact: +372 bytes (+0.2%).
+> **What changed:**
+> - C++ modules with explicit state machine and `IHardware` abstraction — pure computation is fully testable off-target
+> - 266 host-native test assertions (ASan/UBSan) verify byte-identical output vs the original C code
+> - BLE advertisement payloads verified end-to-end via [BabbleSim](https://babblesim.github.io/) simulation (3-key rotation over simulated radio)
+> - Nix flake for reproducible cross-compilation (`nix build .#firmware`) — no west setup needed
+> - nrf54l15dk board support (build-verified, BabbleSim-tested)
+> - NVS → ZMS storage migration (future-proof for nRF54 series)
+> - Binary size impact: +952 bytes (+0.6%) vs original C
 >
-> **Testing:** `cd tests/host && cmake -B build && cmake --build build && ./build/host_tests`
+> **Quick start:**
+> ```
+> nix build .#firmware          # cross-compile for all boards
+> nix run .#test                # host-native tests
+> nix run .#lint                # clang-format check
+> ```
 
 The firmware emulates Apple Airtag (up to 40 public keys rotating at default 10 minutes interval) and Google Find My Device (just one non-rotating key at the moment). It works on nRF52/54 chips and uses Zephyr. I've tried to optimize power consumption as much as could (microamperes range). MCU's watchdog is used to be sure it always works until battery dies.
 
