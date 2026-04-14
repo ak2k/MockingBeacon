@@ -57,7 +57,7 @@ jobs:
             -DBSIM_COMPONENTS_PATH=$BSIM_COMPONENTS_PATH
           cp build-bsim/zephyr/zephyr.exe $BSIM_OUT_PATH/bin/bs_nrf52_bsim_tests_bsim_prj_conf
 
-      - name: Run BLE advertisement + key rotation test
+      - name: Run BLE test (nrf52_bsim)
         run: |
           export BSIM_OUT_PATH=$GITHUB_WORKSPACE/bsim_out
           cd ${BSIM_OUT_PATH}/bin
@@ -67,6 +67,29 @@ jobs:
           $EXE -v=2 -s=$SIM_ID -d=1 -rs=69  -testid=scanner &
           PID_SCAN=$!
           ./bs_2G4_phy_v1 -v=2 -s=$SIM_ID -D=2 -sim_length=5000000
-          # Scanner is the critical device — it verifies the payload
           wait $PID_SCAN || { echo "Scanner FAILED"; exit 1; }
-          echo "BLE advertisement payload verification PASSED"
+          echo "nrf52_bsim: BLE adv + MAC verification PASSED"
+
+      - name: Build bsim test (nrf54l15bsim)
+        run: |
+          export ZEPHYR_BASE=$GITHUB_WORKSPACE/zephyr
+          export BSIM_OUT_PATH=$GITHUB_WORKSPACE/bsim_out
+          export BSIM_COMPONENTS_PATH=$GITHUB_WORKSPACE/tools/bsim/components
+          cd $GITHUB_WORKSPACE/everytag
+          west build --board nrf54l15bsim/nrf54l15/cpuapp -d build-bsim-54l --pristine --no-sysbuild -s tests/bsim -- \
+            -DZEPHYR_TOOLCHAIN_VARIANT=host \
+            -DBSIM_COMPONENTS_PATH=$BSIM_COMPONENTS_PATH
+          cp build-bsim-54l/zephyr/zephyr.exe $BSIM_OUT_PATH/bin/bs_nrf54l15bsim_nrf54l15_cpuapp_tests_bsim_prj_conf
+
+      - name: Run BLE test (nrf54l15bsim)
+        run: |
+          export BSIM_OUT_PATH=$GITHUB_WORKSPACE/bsim_out
+          cd ${BSIM_OUT_PATH}/bin
+          SIM_ID=everytag_54l_test
+          EXE=./bs_nrf54l15bsim_nrf54l15_cpuapp_tests_bsim_prj_conf
+          $EXE -v=2 -s=$SIM_ID -d=0 -rs=420 -testid=advertiser &
+          $EXE -v=2 -s=$SIM_ID -d=1 -rs=69  -testid=scanner &
+          PID_SCAN=$!
+          ./bs_2G4_phy_v1 -v=2 -s=$SIM_ID -D=2 -sim_length=5000000
+          wait $PID_SCAN || { echo "Scanner FAILED"; exit 1; }
+          echo "nrf54l15bsim: BLE adv + MAC verification PASSED"

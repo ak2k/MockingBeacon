@@ -13,6 +13,9 @@
 #include "babblekit/flags.h"
 #include "babblekit/testcase.h"
 
+/* Import C++ function via extern "C" wrapper */
+extern void beacon_derive_mac(const uint8_t *key, uint8_t *mac_out);
+
 LOG_MODULE_REGISTER(scanner, LOG_LEVEL_INF);
 
 #define NUM_KEYS 3
@@ -32,6 +35,7 @@ static const uint8_t test_keys[NUM_KEYS][28] = {
 
 static bool key_seen[NUM_KEYS];
 static int keys_verified;
+static bool mac_checked;
 
 DEFINE_FLAG(all_keys_verified);
 
@@ -63,6 +67,17 @@ static void device_found(const bt_addr_le_t *addr, int8_t rssi, uint8_t type,
             /* Check Offline Finding type */
             if (data[2] != 0x12 || data[3] != 0x19) {
                 goto next;
+            }
+
+            /* Verify advertiser's MAC matches key-0-derived MAC (first time only) */
+            if (!mac_checked) {
+                uint8_t expected_mac[6];
+                beacon_derive_mac(test_keys[0], expected_mac);
+                TEST_ASSERT(memcmp(addr->a.val, expected_mac, 6) == 0,
+                            "Advertiser MAC does not match key-derived MAC");
+                LOG_INF("Advertiser MAC matches key-derived MAC — "
+                        "bt_ctlr_set_public_addr verified over the air");
+                mac_checked = true;
             }
 
             /* Try to match against each expected key */

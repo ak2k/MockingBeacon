@@ -113,7 +113,7 @@ pkgs.testers.nixosTest {
     # Verify test binary built
     machine.succeed("test -f /root/bsim_out/bin/bs_nrf52_bsim_tests_bsim_prj_conf")
 
-    # Run the BLE advertisement + key rotation test
+    # Run the BLE advertisement + key rotation + MAC verification test (nrf52_bsim)
     machine.succeed(
       "cd /root/bsim_out/bin && "
       "./bs_nrf52_bsim_tests_bsim_prj_conf -v=2 -s=everytag_test -d=0 -rs=420 -testid=advertiser & "
@@ -122,6 +122,30 @@ pkgs.testers.nixosTest {
       "wait"
     )
 
-    machine.log("BabbleSim BLE advertisement + key rotation test PASSED")
+    machine.log("BabbleSim nrf52_bsim test PASSED")
+
+    # Build the same test for nrf54l15bsim
+    machine.succeed(
+      "export ZEPHYR_BASE=/root/zephyr && "
+      "export BSIM_OUT_PATH=/root/bsim_out && "
+      "export BSIM_COMPONENTS_PATH=/root/tools/bsim/components && "
+      "export BOARD=nrf54l15bsim/nrf54l15/cpuapp && "
+      "export ZEPHYR_TOOLCHAIN_VARIANT=host && "
+      "source $ZEPHYR_BASE/tests/bsim/compile.source && "
+      "app=tests/bsim app_root=/root/Everytag _compile"
+    )
+
+    machine.succeed("test -f /root/bsim_out/bin/bs_nrf54l15bsim_nrf54l15_cpuapp_tests_bsim_prj_conf")
+
+    # Run the same test on nrf54l15bsim
+    machine.succeed(
+      "cd /root/bsim_out/bin && "
+      "./bs_nrf54l15bsim_nrf54l15_cpuapp_tests_bsim_prj_conf -v=2 -s=everytag_54l_test -d=0 -rs=420 -testid=advertiser & "
+      "./bs_nrf54l15bsim_nrf54l15_cpuapp_tests_bsim_prj_conf -v=2 -s=everytag_54l_test -d=1 -rs=69  -testid=scanner & "
+      "./bs_2G4_phy_v1 -v=2 -s=everytag_54l_test -D=2 -sim_length=5000000 && "
+      "wait"
+    )
+
+    machine.log("BabbleSim nrf54l15bsim test PASSED")
   '';
 }
