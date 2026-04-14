@@ -60,6 +60,9 @@ jobs:
           - board: nrf52833dk/nrf52833
             nix: false
             dfu: true
+          - board: nrf54l15dk/nrf54l15/cpuapp
+            nix: false
+            dfu: true
     steps:
       - uses: actions/checkout@v4
 
