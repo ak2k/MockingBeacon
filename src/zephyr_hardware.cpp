@@ -107,17 +107,16 @@ void ZephyrHardware::bt_disable() {
     ::bt_disable();
 }
 
-int ZephyrHardware::adv_start(bool connectable, int interval_min, int interval_max) {
+int ZephyrHardware::adv_start(bool connectable, int interval_min, int interval_max, bool use_fmdn) {
     uint32_t options = BT_LE_ADV_OPT_USE_IDENTITY;
     if (connectable) {
         options |= BT_LE_ADV_OPT_CONNECTABLE;
     }
-    // Determine which adv data to use based on what we're broadcasting
-    // The caller (StateMachine) sets broadcasting_airtag/fmdn before calling
-    // We check adv_airtag vs adv_fmdn based on the data pointer
-    // For simplicity, the state machine's broadcast() method knows which to use
-    // and calls adv_start for the first start, then adv_update for updates.
-    // The actual data array is determined by what was last prepared.
+    if (use_fmdn) {
+        return ::bt_le_adv_start(BT_LE_ADV_PARAM(options, static_cast<uint32_t>(interval_min),
+                                                 static_cast<uint32_t>(interval_max), NULL),
+                                 adv_fmdn, ADV_FMDN_COUNT, NULL, 0);
+    }
     return ::bt_le_adv_start(BT_LE_ADV_PARAM(options, static_cast<uint32_t>(interval_min),
                                              static_cast<uint32_t>(interval_max), NULL),
                              adv_airtag, ADV_AIRTAG_COUNT, NULL, 0);

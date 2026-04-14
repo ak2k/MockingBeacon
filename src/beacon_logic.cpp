@@ -31,35 +31,31 @@ bool is_key_empty(const uint8_t* key, size_t len) {
     return true;
 }
 
-StatusOutput compute_status(const StatusInput& in) {
-    StatusOutput out{};
-
-    auto status_airtag = static_cast<uint8_t>(in.status_flags & 0xFF);
-    auto status_fmdn = static_cast<uint8_t>((in.status_flags >> 8) & 0xFF);
-    auto b_airtag = static_cast<int>((in.status_flags >> 16) & 0xF);
-    auto b_fmdn = static_cast<int>((in.status_flags >> 20) & 0xF);
-
-    // --- AirTag status ---
-    switch (b_airtag) {
-    case 1:
-        // Broadcast first byte from statusFlags as is
-        break;
-    case 2:
-        // Broadcast incrementing byte as status byte
-        status_airtag = static_cast<uint8_t>(in.keys_changes & 0xFF);
-        break;
-    case 3:
-    case 5:
-        // Broadcast battery voltage in status byte
-        status_airtag = static_cast<uint8_t>(in.battery_voltage / 100);
-        if ((b_airtag == 3) || (in.what_in_status == 0)) {
-            break;
+// Compute status byte for one protocol (AirTag or FMDN).
+// base_status is the default byte from StatusFlags, mode selects the computation.
+// battery_shift is 6 for AirTag (bits 6..7), 5 for FMDN (bits 5..6).
+// voltage_only_for_mode3: true for AirTag (mode 3 = voltage only),
+//   false for FMDN (mode 3 cycles through telemetry, matching original C behavior).
+static uint8_t compute_one_status(uint8_t base_status, StatusMode mode, const StatusInput& in,
+                                  int battery_shift, int battery_default,
+                                  bool voltage_only_for_mode3) {
+    switch (mode) {
+    case StatusMode::Fixed:
+        return base_status;
+    case StatusMode::Incrementing:
+        return static_cast<uint8_t>(in.keys_changes & 0xFF);
+    case StatusMode::Voltage:
+    case StatusMode::Telemetry:
+        // Start with battery voltage
+        base_status = static_cast<uint8_t>(in.battery_voltage / 100);
+        if ((mode == StatusMode::Voltage && voltage_only_for_mode3) || in.what_in_status == 0) {
+            return base_status;
         }
         if (in.what_in_status == 1) {
-            status_airtag = static_cast<uint8_t>(0x80 | in.accel_byte);
+            return static_cast<uint8_t>(0x80 | in.accel_byte);
         }
         if (in.what_in_status == 2) {
-            // Send temperature in -10..53C range as positive 6-bit integer
+            // Temperature in -10..53C range as positive 6-bit integer
             int tmp_temp = (in.temperature + 5) / 10 + 10;
             if (tmp_temp < 0) {
                 tmp_temp = 0;
@@ -67,88 +63,50 @@ StatusOutput compute_status(const StatusInput& in) {
             if (tmp_temp > 63) {
                 tmp_temp = 63;
             }
-            status_airtag = static_cast<uint8_t>(0x40 | tmp_temp);
+            return static_cast<uint8_t>(0x40 | tmp_temp);
         }
-        break;
-    case 4: {
-        // Broadcast battery status
-        int battery = 3;
-        if (in.battery_voltage > kBatteryLevelFull) {
-            battery = 0;
-        } else {
-            if (in.battery_voltage > kBatteryLevelNormal) {
+        return base_status;
+    case StatusMode::BatteryLevel: {
+        int battery = battery_default;
+        if (battery_shift == 6) {
+            // AirTag: 4-level (0=full, 1=normal, 2=low, 3=critical)
+            if (in.battery_voltage > kBatteryLevelFull) {
+                battery = 0;
+            } else if (in.battery_voltage > kBatteryLevelNormal) {
                 battery = 1;
-            } else {
-                if (in.battery_voltage > kBatteryLevelLow) {
-                    battery = 2;
-                } else {
-                    battery = 3;
-                }
-            }
-        }
-        status_airtag = static_cast<uint8_t>(status_airtag | (battery << 6));
-        break;
-    }
-    default:
-        break;
-    }
-    out.airtag_status = status_airtag;
-
-    // --- FMDN status ---
-    switch (b_fmdn) {
-    case 1:
-        // Broadcast first byte from statusFlags as is
-        break;
-    case 2:
-        // Broadcast incrementing byte as status byte
-        status_fmdn = static_cast<uint8_t>(in.keys_changes & 0xFF);
-        break;
-    case 3:
-    case 5:
-        // Broadcast battery voltage in status byte
-        status_fmdn = static_cast<uint8_t>(in.battery_voltage / 100);
-        if ((b_fmdn == 3) || (in.what_in_status == 0)) {
-            break;
-        }
-        if (in.what_in_status == 1) {
-            status_fmdn = static_cast<uint8_t>(0x80 | in.accel_byte);
-        }
-        if (in.what_in_status == 2) {
-            // Send temperature in -10..53C range as positive 6-bit integer
-            int tmp_temp = (in.temperature + 5) / 10 + 10;
-            if (tmp_temp < 0) {
-                tmp_temp = 0;
-            }
-            if (tmp_temp > 63) {
-                tmp_temp = 63;
-            }
-            status_fmdn = static_cast<uint8_t>(0x40 | tmp_temp);
-        }
-        break;
-    case 4: {
-        // Broadcast battery status
-        int battery = 0;
-        if (in.battery_voltage > kBatteryLevelNormal) {
-            battery = 1;
-        } else {
-            if (in.battery_voltage > kBatteryLevelLow) {
+            } else if (in.battery_voltage > kBatteryLevelLow) {
                 battery = 2;
             } else {
-                if (in.battery_voltage > 0) {
-                    battery = 3;
-                } else {
-                    battery = 0;
-                }
+                battery = 3;
+            }
+        } else {
+            // FMDN: 3-level (0=unknown, 1=normal, 2=low, 3=critical)
+            if (in.battery_voltage > kBatteryLevelNormal) {
+                battery = 1;
+            } else if (in.battery_voltage > kBatteryLevelLow) {
+                battery = 2;
+            } else if (in.battery_voltage > 0) {
+                battery = 3;
+            } else {
+                battery = 0;
             }
         }
-        status_fmdn = static_cast<uint8_t>(status_fmdn | (battery << 5));
-        break;
+        return static_cast<uint8_t>(base_status | (battery << battery_shift));
     }
+    case StatusMode::Off:
     default:
-        break;
+        return base_status;
     }
-    out.fmdn_status = status_fmdn;
+}
 
+StatusOutput compute_status(const StatusInput& in) {
+    StatusOutput out{};
+    // AirTag: mode 3 (Voltage) returns voltage only.
+    // FMDN: mode 3 cycles through telemetry (matches original C behavior where
+    // the FMDN case 3/5 block had no early break for mode 3).
+    out.airtag_status =
+        compute_one_status(in.status.airtag_base, in.status.airtag_mode, in, 6, 3, true);
+    out.fmdn_status = compute_one_status(in.status.fmdn_base, in.status.fmdn_mode, in, 5, 0, false);
     return out;
 }
 

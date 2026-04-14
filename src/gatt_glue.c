@@ -85,6 +85,8 @@ static void connected(struct bt_conn *conn, uint8_t err) {
 
 static void disconnected(struct bt_conn *conn, uint8_t reason) {
     connectedGatt = 0;
+    authorizedGatt = 0;
+    allowedChange = 0;
     printk("Disconnected (reason 0x%02x)\n", reason);
     (void)reason;
     // Keys write at disconnect is handled by the bridge functions

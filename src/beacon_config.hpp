@@ -53,13 +53,6 @@ struct StatusFlags {
     static StatusFlags unpack(uint32_t raw);
 };
 
-/// Telemetry cycle selector for status mode 5 (Telemetry).
-enum class WhatInStatus : uint8_t {
-    Voltage = 0,
-    Accel = 1,
-    Temperature = 2,
-};
-
 // ---- BeaconConfig (consolidates all globals from settings.c) ----
 //
 // All fields are persisted in NVS as 4-byte ints (wire format).
@@ -70,7 +63,7 @@ struct BeaconConfig {
     bool flag_airtag = false;         // Enable Apple AirTag (Offline Finding) broadcasting
     uint8_t mult_period = 2;          // Advertising interval multiplier {1,2,4,8}
     uint8_t tx_power = 2;             // TX power index: 0 = -8 dBm, 1 = 0 dBm, 2 = +4 dBm
-    uint16_t change_interval = 6000;  // Key rotation interval in seconds [30..7200], aligned to 8
+    uint16_t change_interval = 6000;  // Key rotation interval in seconds [32..7200], multiple of 8
     uint32_t status_flags = 0x458000; // Packed status byte config (see status_flags encoding below)
     uint16_t accel_threshold = 800;   // Accelerometer movement threshold in mg [0..16383]
     bool turned_on = false;           // Master broadcast enable (persisted across reboots)
@@ -124,8 +117,8 @@ class SettingsManager {
     // Validated setters — return false if value rejected, leaving config unchanged.
     bool set_mult_period(uint8_t v);      // Allowed: {1, 2, 4, 8}
     bool set_tx_power(uint8_t v);         // Allowed: 0..2
-    bool set_change_interval(uint16_t v); // Range: 30..7200, auto-aligned to multiple of 8
-    bool set_status_flags(uint32_t v);    // Any value accepted (app-level encoding)
+    bool set_change_interval(uint16_t v); // Range: 32..7200, auto-aligned to multiple of 8
+    void set_status_flags(uint32_t v);    // Any value accepted (app-level encoding)
     bool set_accel_threshold(uint16_t v); // Range: 0..16383
     void set_flag_fmdn(bool v);
     void set_flag_airtag(bool v);

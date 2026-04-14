@@ -23,6 +23,7 @@ clang-tidy src/*.cpp -p tests/host/build
 ## Binary size (nrf52810)
 # C baseline: text=151968, data=2872, bss=19930
 # C++ migration: text=152340 (+372 bytes, +0.2%)
+# C++ overhaul:  text=152920 (+952 bytes, +0.6%)
 
 ## Supported boards
 # Custom boards (in boards/arm/, need -DBOARD_ROOT=$(pwd)):
@@ -32,11 +33,11 @@ clang-tidy src/*.cpp -p tests/host/build
 # Not yet working: nrf54l15dk/nrf54l15/cpuapp (watchdog DTS issue)
 
 ## Architecture (C++ migration)
-# src/beacon_logic.hpp/cpp   — pure functions (MAC, adv template, status byte)
+# src/beacon_logic.hpp/cpp   — pure functions (MAC, adv template, status byte via StatusFlags)
 # src/accel_data.hpp/cpp     — MovementTracker class (circular buffer)
-# src/beacon_config.hpp/cpp  — BeaconConfig, SettingsManager, GATT validators
-# src/beacon_state.hpp/cpp   — StateMachine with IHardware interface
-# src/ihardware.hpp          — hardware abstraction (virtual interface)
+# src/beacon_config.hpp/cpp  — BeaconConfig (narrowed types), SettingsManager (validated setters), GATT validators
+# src/beacon_state.hpp/cpp   — StateMachine with IHardware interface, WhatInStatus enum
+# src/ihardware.hpp          — hardware abstraction (virtual interface, 29 methods)
 # src/zephyr_hardware.cpp    — IHardware impl wrapping Zephyr APIs
 # src/zephyr_nvs.cpp         — INvsStorage impl wrapping NVS
 # src/gatt_glue.c            — BT_GATT_SERVICE_DEFINE (C99, can't be C++)

@@ -14,7 +14,7 @@ class ZephyrHardware : public IHardware {
     uint32_t uptime_seconds() override;
     int bt_enable() override;
     void bt_disable() override;
-    int adv_start(bool connectable, int interval_min, int interval_max) override;
+    int adv_start(bool connectable, int interval_min, int interval_max, bool use_fmdn) override;
     int adv_stop() override;
     int adv_update_airtag() override;
     int adv_update_fmdn() override;

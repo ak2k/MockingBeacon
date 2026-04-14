@@ -30,6 +30,16 @@ void SettingsManager::read_bool(uint16_t id, bool& dest) {
     }
 }
 
+// Helper: read a 4-byte int from NVS and pass to a setter.
+// If NVS read fails or setter rejects the value, the default from BeaconConfig{} is kept.
+template <typename Setter>
+static void read_and_apply(INvsStorage& nvs, uint16_t id, Setter setter) {
+    int tmp = 0;
+    if (nvs.read(id, &tmp, sizeof(tmp)) > 0) {
+        setter(tmp);
+    }
+}
+
 int SettingsManager::load() {
     // Reset to defaults first
     config_ = BeaconConfig{};
@@ -39,48 +49,17 @@ int SettingsManager::load() {
     read_bool(ID_airtag_NVS, config_.flag_airtag);
     read_bool(ID_turnedOn_NVS, config_.turned_on);
 
-    // Read narrowed scalar fields with validation.
-    // NVS wire format is always 4-byte int; invalid values are rejected (keep default).
-    {
-        int tmp = 0;
-        if (nvs_.read(ID_period_NVS, &tmp, sizeof(tmp)) > 0) {
-            if (tmp == 1 || tmp == 2 || tmp == 4 || tmp == 8) {
-                config_.mult_period = static_cast<uint8_t>(tmp);
-            }
-            // else: keep default (mult_period=0 causes busy-loop, must reject)
-        }
-    }
-    {
-        int tmp = 0;
-        if (nvs_.read(ID_power_NVS, &tmp, sizeof(tmp)) > 0) {
-            if (tmp >= 0 && tmp <= 2) {
-                config_.tx_power = static_cast<uint8_t>(tmp);
-            }
-        }
-    }
-    {
-        int tmp = 0;
-        if (nvs_.read(ID_changeInterval_NVS, &tmp, sizeof(tmp)) > 0) {
-            if (tmp >= 30 && tmp <= 7200) {
-                config_.change_interval =
-                    static_cast<uint16_t>(tmp - (tmp % 8)); // Align to multiple of 8
-            }
-        }
-    }
-    {
-        int tmp = 0;
-        if (nvs_.read(ID_status_NVS, &tmp, sizeof(tmp)) > 0) {
-            config_.status_flags = static_cast<uint32_t>(tmp);
-        }
-    }
-    {
-        int tmp = 0;
-        if (nvs_.read(ID_accel_NVS, &tmp, sizeof(tmp)) > 0) {
-            if (tmp >= 0 && tmp <= 16383) {
-                config_.accel_threshold = static_cast<uint16_t>(tmp);
-            }
-        }
-    }
+    // Read narrowed scalar fields via validated setters.
+    // NVS wire format is always 4-byte int; rejected values keep the default.
+    read_and_apply(nvs_, ID_period_NVS,
+                   [this](int v) { set_mult_period(static_cast<uint8_t>(v)); });
+    read_and_apply(nvs_, ID_power_NVS, [this](int v) { set_tx_power(static_cast<uint8_t>(v)); });
+    read_and_apply(nvs_, ID_changeInterval_NVS,
+                   [this](int v) { set_change_interval(static_cast<uint16_t>(v)); });
+    read_and_apply(nvs_, ID_status_NVS,
+                   [this](int v) { set_status_flags(static_cast<uint32_t>(v)); });
+    read_and_apply(nvs_, ID_accel_NVS,
+                   [this](int v) { set_accel_threshold(static_cast<uint16_t>(v)); });
 
     // Time offset is int64_t
     {
@@ -199,15 +178,16 @@ bool SettingsManager::set_tx_power(uint8_t v) {
 }
 
 bool SettingsManager::set_change_interval(uint16_t v) {
-    if (v < 30 || v > 7200)
+    uint16_t aligned = v - (v % 8); // Align down to multiple of 8
+    if (aligned < 32 || v > 7200) {
         return false;
-    config_.change_interval = v - (v % 8); // Align to multiple of 8
+    }
+    config_.change_interval = aligned;
     return true;
 }
 
-bool SettingsManager::set_status_flags(uint32_t v) {
+void SettingsManager::set_status_flags(uint32_t v) {
     config_.status_flags = v;
-    return true;
 }
 
 bool SettingsManager::set_accel_threshold(uint16_t v) {

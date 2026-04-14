@@ -10,6 +10,14 @@
 
 namespace beacon {
 
+/// Telemetry cycle selector for status mode 5 (Telemetry).
+/// Used by StateMachine to rotate between voltage, accel, and temperature readings.
+enum class WhatInStatus : uint8_t {
+    Voltage = 0,
+    Accel = 1,
+    Temperature = 2,
+};
+
 // ---- State enum ----
 enum class State : uint8_t {
     Initializing,
@@ -76,7 +84,6 @@ class StateMachine {
     bool broadcasting_anything() const { return broadcasting_anything_; }
     uint16_t keys_changes() const { return keys_changes_; }
     WhatInStatus what_in_status() const { return what_in_status_; }
-    uint8_t what_in_status_raw() const { return static_cast<uint8_t>(what_in_status_); }
     uint16_t last_battery_voltage() const { return last_battery_voltage_; }
 
     // Allow tests to inject GATT connection/auth state

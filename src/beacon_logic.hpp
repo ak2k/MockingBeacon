@@ -5,6 +5,8 @@
 #include <cstddef>
 #include <cstdint>
 
+#include "beacon_config.hpp" // StatusFlags, StatusMode
+
 namespace beacon {
 
 /// Derive a BLE MAC address from a 28-byte public key.
@@ -21,9 +23,8 @@ void fill_adv_template(const uint8_t* key, uint8_t* tmpl, size_t tmpl_size);
 bool is_key_empty(const uint8_t* key, size_t len);
 
 /// Input to the status computation (replaces all globals).
-/// See status_flags encoding in beacon_config.hpp for the bitfield layout.
 struct StatusInput {
-    uint32_t status_flags;    // Packed 32-bit config (see beacon_config.hpp status_flags encoding)
+    StatusFlags status;       // Decoded status configuration
     uint16_t battery_voltage; // Battery voltage in millivolts (e.g. 3800 = 3.8V)
     uint16_t keys_changes;    // Rolling counter of AirTag key rotations (used by mode 2)
     uint8_t what_in_status;   // Telemetry cycle selector: 0=voltage, 1=accel, 2=temperature

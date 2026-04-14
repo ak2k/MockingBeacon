@@ -9,6 +9,7 @@
 #include "myboards.h"
 
 extern "C" {
+extern int accelThreshold; // defined in zephyr_hardware.cpp, used by lis2dw12.c
 #include "gatt_glue.h"
 #include "watchdog.h"
 #ifdef USE_BUTTON
@@ -62,6 +63,9 @@ int main(void) {
     if (settings.load() != 0) {
         printk("Warning: settings load failed, using defaults\n");
     }
+
+    // Sync the C global used by lis2dw12.c (NVS may have loaded a different threshold)
+    accelThreshold = static_cast<int>(settings.config().accel_threshold);
 
     // Set up GATT glue pointers
     glue_init(&settings, &sm);

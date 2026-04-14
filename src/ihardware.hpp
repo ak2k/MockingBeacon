@@ -20,7 +20,8 @@ class IHardware {
     /// @param connectable  true for settings mode (connectable), false for broadcast
     /// @param interval_min minimum interval in BLE units (1 unit = 0.625 ms)
     /// @param interval_max maximum interval in BLE units
-    virtual int adv_start(bool connectable, int interval_min, int interval_max) = 0;
+    /// @param use_fmdn  true to advertise FMDN data, false for AirTag data
+    virtual int adv_start(bool connectable, int interval_min, int interval_max, bool use_fmdn) = 0;
     virtual int adv_stop() = 0;
     /// Update in-flight advertisement payload (AirTag Offline Finding format).
     virtual int adv_update_airtag() = 0;

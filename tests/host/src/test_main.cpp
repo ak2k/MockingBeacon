@@ -282,7 +282,7 @@ TEST(is_key_empty_tests) {
 TEST(compute_status_fixed) {
     printf("  test: compute_status_fixed\n");
     beacon::StatusInput in = {};
-    in.status_flags = 0x10042; // bAirtag=1, base airtag=0x42
+    in.status = beacon::StatusFlags::unpack(0x10042); // bAirtag=1, base airtag=0x42
     auto out = beacon::compute_status(in);
     ASSERT_EQ(out.airtag_status, 0x42);
 }
@@ -290,7 +290,7 @@ TEST(compute_status_fixed) {
 TEST(compute_status_incrementing) {
     printf("  test: compute_status_incrementing\n");
     beacon::StatusInput in = {};
-    in.status_flags = 0x20000;
+    in.status = beacon::StatusFlags::unpack(0x20000);
     in.keys_changes = 0x1A3;
     auto out = beacon::compute_status(in);
     ASSERT_EQ(out.airtag_status, 0xA3);
@@ -299,7 +299,7 @@ TEST(compute_status_incrementing) {
 TEST(compute_status_voltage) {
     printf("  test: compute_status_voltage\n");
     beacon::StatusInput in = {};
-    in.status_flags = 0x30000;
+    in.status = beacon::StatusFlags::unpack(0x30000);
     in.battery_voltage = 3200;
     auto out = beacon::compute_status(in);
     ASSERT_EQ(out.airtag_status, 32);
@@ -308,7 +308,7 @@ TEST(compute_status_voltage) {
 TEST(compute_status_battery_level) {
     printf("  test: compute_status_battery_level\n");
     beacon::StatusInput in = {};
-    in.status_flags = 0x40000;
+    in.status = beacon::StatusFlags::unpack(0x40000);
 
     in.battery_voltage = 4100;
     auto out = beacon::compute_status(in);
@@ -330,7 +330,7 @@ TEST(compute_status_battery_level) {
 TEST(compute_status_accel) {
     printf("  test: compute_status_accel\n");
     beacon::StatusInput in = {};
-    in.status_flags = 0x50000;
+    in.status = beacon::StatusFlags::unpack(0x50000);
     in.what_in_status = 1;
     in.accel_byte = 0x3F;
     auto out = beacon::compute_status(in);
@@ -340,7 +340,7 @@ TEST(compute_status_accel) {
 TEST(compute_status_temp) {
     printf("  test: compute_status_temp\n");
     beacon::StatusInput in = {};
-    in.status_flags = 0x50000;
+    in.status = beacon::StatusFlags::unpack(0x50000);
     in.what_in_status = 2;
     in.temperature = 250; // 25.0C → (250+5)/10+10 = 35
     auto out = beacon::compute_status(in);
@@ -421,7 +421,7 @@ TEST(compute_status_equivalence) {
     };
     for (auto& tc : cases) {
         beacon::StatusInput in = {};
-        in.status_flags = static_cast<uint32_t>(tc.flags);
+        in.status = beacon::StatusFlags::unpack(static_cast<uint32_t>(tc.flags));
         in.battery_voltage = static_cast<uint16_t>(tc.voltage);
         in.keys_changes = static_cast<uint16_t>(tc.changes);
         in.what_in_status = static_cast<uint8_t>(tc.what);
@@ -801,7 +801,7 @@ class MockHardware : public beacon::IHardware {
         return bt_enable_result;
     }
     void bt_disable() override { bt_disable_calls++; }
-    int adv_start(bool /*connectable*/, int /*imin*/, int /*imax*/) override {
+    int adv_start(bool /*connectable*/, int /*imin*/, int /*imax*/, bool /*use_fmdn*/) override {
         adv_start_calls++;
         return 0;
     }

@@ -19,7 +19,8 @@ void StateMachine::set_mac_from_current_key() {
 
 void StateMachine::update_battery() {
     hw_.bq_reinit(false);
-    last_battery_voltage_ = static_cast<uint16_t>(hw_.battery_voltage());
+    int v = hw_.battery_voltage();
+    last_battery_voltage_ = (v > 0) ? static_cast<uint16_t>(v) : 0;
 }
 
 void StateMachine::update_status() {
@@ -38,7 +39,7 @@ void StateMachine::update_status() {
         break;
     }
     StatusInput in{};
-    in.status_flags = cfg.status_flags;
+    in.status = StatusFlags::unpack(cfg.status_flags);
     in.battery_voltage = last_battery_voltage_;
     in.keys_changes = keys_changes_;
     in.what_in_status = static_cast<uint8_t>(what_in_status_);
@@ -68,15 +69,14 @@ void StateMachine::broadcast() {
             hw_.adv_update_fmdn();
         }
     } else {
-        // Start broadcast
+        // Start broadcast — only one protocol at a time (alternation handles switching)
         int mult = cfg.mult_period;
         if (broadcasting_airtag_) {
             hw_.set_mac(ble_addr_);
-            hw_.adv_start(false, kBroadcastIntervalMin * mult, kBroadcastIntervalMax * mult);
+            hw_.adv_start(false, kBroadcastIntervalMin * mult, kBroadcastIntervalMax * mult, false);
             broadcasting_anything_ = true;
-        }
-        if (broadcasting_fmdn_) {
-            hw_.adv_start(false, kBroadcastIntervalMin * mult, kBroadcastIntervalMax * mult);
+        } else if (broadcasting_fmdn_) {
+            hw_.adv_start(false, kBroadcastIntervalMin * mult, kBroadcastIntervalMax * mult, true);
             broadcasting_anything_ = true;
         }
     }
@@ -209,9 +209,10 @@ void StateMachine::handle_settings_mode_exit() {
     broadcasting_fmdn_ = false;
     broadcasting_airtag_ = false;
 
-    // Restore MAC address
+    // Restore MAC address — only use AirTag-derived MAC if AirTag is active.
+    // FMDN uses the controller's default MAC (or settings MAC if configured).
     hw_.bt_disable();
-    if (cfg.flag_airtag || cfg.flag_fmdn) {
+    if (cfg.flag_airtag) {
         hw_.set_mac(ble_addr_);
     }
     hw_.bt_enable();
@@ -349,7 +350,7 @@ void StateMachine::handle_key_rotation() {
     const auto& cfg = settings_.config();
     uint32_t now = hw_.uptime_seconds();
 
-    if (!cfg.flag_airtag) {
+    if (!cfg.flag_airtag || cfg.num_keys == 0) {
         return;
     }
     if (now < timers_.airtag_switch + static_cast<uint32_t>(cfg.change_interval)) {
@@ -537,6 +538,9 @@ void StateMachine::tick() {
         return;
     }
 
+    // Accelerometer — must run regardless of protocol alternation
+    handle_accelerometer();
+
     // Initial broadcast start
     if (!broadcasting_airtag_ && !broadcasting_fmdn_ && (cfg.flag_airtag || cfg.flag_fmdn)) {
         handle_initial_broadcast();
@@ -548,9 +552,6 @@ void StateMachine::tick() {
         handle_airtag_fmdn_alternation();
         return; // mirrors `continue` in original
     }
-
-    // Accelerometer
-    handle_accelerometer();
 }
 
 } // namespace beacon
