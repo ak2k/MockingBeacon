@@ -105,7 +105,8 @@ jobs:
             export PYTHONPATH=$(python3 -c "import site; print('"'"':'"'"'.join(site.getsitepackages()))")
             west build --board ${{ matrix.board }} -d build-dfu --pristine \
               -- -DEXTRA_CONF_FILE=dfu.conf
-            arm-none-eabi-size build-dfu/everytag/zephyr/zephyr.elf
+            APP_ELF=$(find build-dfu -name zephyr.elf -not -path "*/mcuboot/*" -print -quit)
+            arm-none-eabi-size "$APP_ELF"
           '
 
   codeql:
