@@ -23,6 +23,11 @@ The firmware emulates Apple AirTag (up to 40 public keys rotating at default 10 
 
 All settings (keys, TX power, broadcast interval, etc.) can be reconfigured over BLE without reflashing — a Python script and Android app are included. To minimize power consumption, the firmware accepts BLE connections only for 2 seconds every minute, with simple password protection.
 
+Additional features:
+- **Clock tracking** — if the board has a 32.768 kHz crystal, the firmware counts time and periodically saves it to flash so the clock survives reboots with minimal drift
+- **Accelerometer support** — on boards with a LIS2DW12 (e.g., KKM K4P), movement is tracked and encoded as a 7-bit summary byte in the advertisement status field
+- **Status byte telemetry** — the advertisement status byte can be configured to report battery voltage, accelerometer movement, temperature, or cycle between all three every minute
+
 ## Supported hardware
 
 Custom boards (defined in `boards/arm/`, need `-DBOARD_ROOT=$(pwd)`):
