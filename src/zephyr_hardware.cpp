@@ -19,6 +19,9 @@
 #include <zephyr/pm/pm.h>
 #include <zephyr/sys/byteorder.h>
 #include <zephyr/sys/poweroff.h>
+#if defined(CONFIG_MCUMGR_TRANSPORT_BT_DYNAMIC_SVC_REGISTRATION)
+#include <zephyr/mgmt/mcumgr/transport/smp_bt.h>
+#endif
 #if defined(CONFIG_SOC_NRF54L15_CPUAPP)
 #include <hal/nrf_memconf.h>
 #endif
@@ -99,6 +102,13 @@ int ZephyrHardware::bt_enable() {
                    addrs[0].a.val[4], addrs[0].a.val[3], addrs[0].a.val[2], addrs[0].a.val[1],
                    addrs[0].a.val[0]);
         }
+#if defined(CONFIG_MCUMGR_TRANSPORT_BT_DYNAMIC_SVC_REGISTRATION)
+        /* SMP auto-registers at boot — unregister immediately so it's only
+         * available during FirmwareUpload state (security: prevents
+         * unauthenticated firmware uploads during normal operation). */
+        ::smp_bt_unregister();
+        printk("SMP service unregistered (will re-register for DFU)\n");
+#endif
     }
     return err;
 }
@@ -421,6 +431,20 @@ void ZephyrHardware::update_turned_on(bool on) {
 void ZephyrHardware::set_status_bytes(uint8_t airtag_status, uint8_t fmdn_status) {
     airtag_data_store[6] = airtag_status;
     fmdn_data_store[23] = fmdn_status;
+}
+
+void ZephyrHardware::enable_dfu() {
+#if defined(CONFIG_MCUMGR_TRANSPORT_BT_DYNAMIC_SVC_REGISTRATION)
+    ::smp_bt_register();
+    printk("SMP service registered for DFU\n");
+#endif
+}
+
+void ZephyrHardware::disable_dfu() {
+#if defined(CONFIG_MCUMGR_TRANSPORT_BT_DYNAMIC_SVC_REGISTRATION)
+    ::smp_bt_unregister();
+    printk("SMP service unregistered\n");
+#endif
 }
 
 } // namespace beacon

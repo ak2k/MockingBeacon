@@ -194,16 +194,18 @@ void StateMachine::handle_settings_mode_exit() {
     // Check if firmware upload is requested
     if (pause_upload_) {
         state_ = State::FirmwareUpload;
-        // Restart connectable advertising so mcumgr CLI can connect
-        // after conn_beacon.py disconnects.  The SMP GATT service is
-        // auto-registered when CONFIG_MCUMGR_TRANSPORT_BT=y.
+        // Register SMP GATT service and restart connectable advertising
+        // so mcumgr CLI can connect after conn_beacon.py disconnects.
+        hw_.enable_dfu();
         hw_.stop_settings_adv();
         hw_.start_settings_adv();
+        // Wait up to 60s for firmware upload, then reboot.
         for (int i = 0; i < 15; i++) {
             hw_.sleep_ms(4000);
             hw_.store_time();
             hw_.wdt_feed();
         }
+        hw_.disable_dfu();
         hw_.reboot();
         return;
     }
@@ -474,7 +476,7 @@ void StateMachine::handle_accelerometer() {
 // ---- Main tick (one iteration of while(1) loop) ----
 
 void StateMachine::tick() {
-    if (state_ == State::ShuttingDown) {
+    if (state_ == State::ShuttingDown || state_ == State::FirmwareUpload) {
         return;
     }
 
