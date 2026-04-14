@@ -217,8 +217,6 @@ void entrypoint_smp_client(void)
     /* Subscribe to SMP notifications */
     sub_params.value_handle = smp_handle;
     sub_params.ccc_handle = 0; /* auto-discover CCC */
-    sub_params.end_handle = 0xFFFF;
-    sub_params.disc_params = NULL;
     sub_params.notify = notify_cb;
     sub_params.subscribe = subscribe_cb;
     sub_params.value = BT_GATT_CCC_NOTIFY;
