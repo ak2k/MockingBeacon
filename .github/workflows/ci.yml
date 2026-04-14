@@ -37,7 +37,7 @@ jobs:
         run: clang-format --dry-run --Werror src/*.cpp src/*.hpp
 
   cross-compile:
-    name: Cross-compile (${{ matrix.board }})
+    name: Cross-compile (${{ matrix.board }}${{ matrix.dfu && ' +DFU' || '' }})
     runs-on: ubuntu-latest
     timeout-minutes: 30
     strategy:
@@ -53,6 +53,16 @@ jobs:
             nix: false
           - board: thingy52/nrf52832
             nix: false
+          # DFU builds (sysbuild + MCUboot)
+          - board: nrf52dk/nrf52832
+            nix: false
+            dfu: true
+          - board: nrf52833dk/nrf52833
+            nix: false
+            dfu: true
+          - board: nrf54l15dk/nrf54l15/cpuapp
+            nix: false
+            dfu: true
     steps:
       - uses: actions/checkout@v4
 
@@ -67,11 +77,11 @@ jobs:
           cat result/size.txt
 
       - name: Build firmware (west)
-        if: "!matrix.nix"
+        if: "!matrix.nix && !matrix.dfu"
         uses: cachix/install-nix-action@v31
 
       - name: Build firmware (west build)
-        if: "!matrix.nix"
+        if: "!matrix.nix && !matrix.dfu"
         run: |
           nix develop --command bash -c '
             west init -l .
@@ -79,6 +89,27 @@ jobs:
             cd $OLDPWD
             west build --board ${{ matrix.board }} -d build-out --pristine --no-sysbuild
             arm-none-eabi-size build-out/zephyr/zephyr.elf
+          '
+
+      - name: Install Nix (DFU)
+        if: matrix.dfu
+        uses: cachix/install-nix-action@v31
+
+      - name: Build firmware (DFU + MCUboot)
+        if: matrix.dfu
+        run: |
+          nix develop --command bash -c '
+            west init -l .
+            cd .. && west update --narrow -o=--depth=1
+            cd $OLDPWD
+            # Ensure pykwalify is importable by any Python CMake finds
+            # (Nix has multiple Python interpreters; sysbuild sub-projects
+            # may resolve to the base one without site-packages)
+            export PYTHONPATH=$(python3 -c "import site; print('"'"':'"'"'.join(site.getsitepackages()))")
+            west build --board ${{ matrix.board }} -d build-dfu --pristine \
+              -- -DEXTRA_CONF_FILE=dfu.conf
+            APP_ELF=$(find build-dfu -name zephyr.elf -not -path "*/mcuboot/*" -print -quit)
+            arm-none-eabi-size "$APP_ELF"
           '
 
   codeql:
