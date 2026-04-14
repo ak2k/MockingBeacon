@@ -128,12 +128,16 @@
               export GNUARMEMB_TOOLCHAIN_PATH="${pkgs.gcc-arm-embedded}"
               export ZEPHYR_BASE="$PWD/../zephyr"
 
+              # Sysbuild spawns sub-projects (MCUboot) whose CMake may resolve
+              # a different Python.  Export site-packages so pykwalify etc. are
+              # importable regardless of which interpreter CMake finds.
+              export PYTHONPATH="${pythonEnv}/${pythonEnv.python.sitePackages}"
+
               west build --board ${board} -d build --pristine \
                 -- \
                 ${if boardRoot then "-DBOARD_ROOT=$PWD" else ""} \
                 -DCONF_FILE=${confFile} \
-                -DEXTRA_CONF_FILE=dfu.conf \
-                -DWEST_PYTHON=${pythonEnv}/bin/python3
+                -DEXTRA_CONF_FILE=dfu.conf
             '';
 
             installPhase = ''
