@@ -92,14 +92,14 @@ jobs:
         if: matrix.dfu
         uses: cachix/install-nix-action@v31
 
-      - name: Build firmware (DFU + MCUboot)
+      - name: Build firmware (DFU Kconfig)
         if: matrix.dfu
         run: |
           nix develop --command bash -c '
             west init -l .
             cd .. && west update --narrow -o=--depth=1
             cd $OLDPWD
-            west build --board ${{ matrix.board }} -d build-dfu --pristine \
+            west build --board ${{ matrix.board }} -d build-dfu --pristine --no-sysbuild \
               -- -DEXTRA_CONF_FILE=dfu.conf
             arm-none-eabi-size build-dfu/zephyr/zephyr.elf
           '

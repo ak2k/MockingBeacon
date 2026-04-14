@@ -132,7 +132,8 @@
                 -- \
                 ${if boardRoot then "-DBOARD_ROOT=$PWD" else ""} \
                 -DCONF_FILE=${confFile} \
-                -DEXTRA_CONF_FILE=dfu.conf
+                -DEXTRA_CONF_FILE=dfu.conf \
+                -DWEST_PYTHON=${pythonEnv}/bin/python3
             '';
 
             installPhase = ''
