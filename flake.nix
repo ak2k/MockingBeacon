@@ -46,6 +46,8 @@
         mkFirmware =
           {
             name,
+            board ? "kkm_p1_nrf52810",
+            boardRoot ? true,
             confFile ? "prj.conf",
           }:
           pkgs.stdenv.mkDerivation {
@@ -84,8 +86,8 @@
               export ZEPHYR_BASE="$PWD/../zephyr"
 
               cmake -GNinja -B build \
-                -DBOARD=kkm_p1_nrf52810 \
-                -DBOARD_ROOT=$PWD \
+                -DBOARD=${board} \
+                ${if boardRoot then "-DBOARD_ROOT=$PWD" else ""} \
                 -DCONF_FILE=${confFile} \
                 -DWEST_PYTHON=${pythonEnv}/bin/python3 \
                 -S .
@@ -108,6 +110,13 @@
         packages.firmware-release = mkFirmware {
           name = "everytag-firmware-release";
           confFile = "prj-lowpower.conf";
+        };
+
+        # nix build .#firmware-54l — nrf54l15dk build
+        packages.firmware-54l = mkFirmware {
+          name = "everytag-firmware-54l";
+          board = "nrf54l15dk/nrf54l15/cpuapp";
+          boardRoot = false;
         };
 
         packages.default = self.packages.${system}.firmware;
