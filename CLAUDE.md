@@ -12,6 +12,7 @@ nix run .#format      # auto-format C++ sources
 
 ## Cross-compile check (verify firmware compiles for real boards)
 west build --board kkm_p1_nrf52810 -d build-810 --pristine --no-sysbuild -- -DBOARD_ROOT=$(pwd)
+west build --board nrf54l15dk/nrf54l15/cpuapp -d build-54l --pristine --no-sysbuild
 
 ## Host-native tests (macOS/Linux, ASan/UBSan, no Zephyr dependency)
 cd tests/host && cmake -B build && cmake --build build && ./build/host_tests
@@ -30,7 +31,7 @@ clang-tidy src/*.cpp -p tests/host/build
 #   kkm_p1_nrf52810, kkm_p11_nrf52810, kkm_k4p, wb_20241125, hcbb22e, nrf52805_evm
 # Zephyr built-in boards (no BOARD_ROOT needed):
 #   nrf52dk/nrf52832, nrf52840dk/nrf52840, nrf52833dk/nrf52833, thingy52/nrf52832
-# Not yet working: nrf54l15dk/nrf54l15/cpuapp (watchdog DTS issue)
+# nrf54l15dk/nrf54l15/cpuapp (build-verified, BabbleSim-tested)
 
 ## Architecture (C++ migration)
 # src/beacon_logic.hpp/cpp   — pure functions (MAC, adv template, status byte via StatusFlags)
@@ -39,7 +40,7 @@ clang-tidy src/*.cpp -p tests/host/build
 # src/beacon_state.hpp/cpp   — StateMachine with IHardware interface, WhatInStatus enum
 # src/ihardware.hpp          — hardware abstraction (virtual interface, 29 methods)
 # src/zephyr_hardware.cpp    — IHardware impl wrapping Zephyr APIs
-# src/zephyr_nvs.cpp         — INvsStorage impl wrapping NVS
+# src/zephyr_nvs.cpp         — INvsStorage impl wrapping ZMS
 # src/gatt_glue.c            — BT_GATT_SERVICE_DEFINE (C99, can't be C++)
 # src/ble_glue.c             — BT_DATA_BYTES arrays (C99, can't be C++)
 # src/main.cpp               — static object graph, event loop
