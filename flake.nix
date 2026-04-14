@@ -43,6 +43,30 @@
           manifest = ./west2nix.toml;
         };
 
+        commonBuildInputs = [
+          pkgs.cmake
+          pkgs.ninja
+          pkgs.dtc
+          pkgs.gperf
+          pkgs.gcc-arm-embedded
+          pkgs.gitMinimal
+          pythonEnv
+          west2nixHook
+        ];
+
+        westConfigurePhase = ''
+          runHook preConfigure
+          cd ..
+          mv $sourceRoot everytag
+          mkdir -p $sourceRoot
+          mv everytag $sourceRoot/
+          cd $sourceRoot
+          runHook postConfigure
+          west init -l everytag
+          cd everytag
+        '';
+
+        # Plain cmake build (no sysbuild, no MCUboot) for small-flash boards.
         mkFirmware =
           {
             name,
@@ -53,32 +77,10 @@
           pkgs.stdenv.mkDerivation {
             inherit name;
             src = ./.;
-
-            nativeBuildInputs = [
-              pkgs.cmake
-              pkgs.ninja
-              pkgs.dtc
-              pkgs.gperf
-              pkgs.gcc-arm-embedded
-              pkgs.gitMinimal
-              pythonEnv
-              west2nixHook
-            ];
-
+            nativeBuildInputs = commonBuildInputs;
             dontUseCmakeConfigure = true;
             dontUseWestConfigure = true;
-
-            configurePhase = ''
-              runHook preConfigure
-              cd ..
-              mv $sourceRoot everytag
-              mkdir -p $sourceRoot
-              mv everytag $sourceRoot/
-              cd $sourceRoot
-              runHook postConfigure
-              west init -l everytag
-              cd everytag
-            '';
+            configurePhase = westConfigurePhase;
 
             buildPhase = ''
               export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
@@ -101,6 +103,45 @@
               ${pkgs.gcc-arm-embedded}/bin/arm-none-eabi-size build/zephyr/zephyr.elf | tee $out/size.txt
             '';
           };
+
+        # Sysbuild (MCUboot + app) for DFU-capable boards (>= 512KB flash).
+        mkFirmwareDfu =
+          {
+            name,
+            board,
+            boardRoot ? false,
+            confFile ? "prj-lowpower.conf",
+          }:
+          pkgs.stdenv.mkDerivation {
+            inherit name;
+            src = ./.;
+            nativeBuildInputs = commonBuildInputs;
+            dontUseCmakeConfigure = true;
+            dontUseWestConfigure = true;
+            configurePhase = westConfigurePhase;
+
+            buildPhase = ''
+              export ZEPHYR_TOOLCHAIN_VARIANT=gnuarmemb
+              export GNUARMEMB_TOOLCHAIN_PATH="${pkgs.gcc-arm-embedded}"
+              export ZEPHYR_BASE="$PWD/../zephyr"
+              export PYTHONPATH="${pythonEnv}/${pythonEnv.python.sitePackages}"
+
+              west build --board ${board} -d build --pristine \
+                -- \
+                ${if boardRoot then "-DBOARD_ROOT=$PWD" else ""} \
+                -DCONF_FILE=${confFile} \
+                -DEXTRA_CONF_FILE=dfu.conf
+            '';
+
+            installPhase = ''
+              mkdir -p $out
+              cp build/everytag/zephyr/zephyr.elf $out/
+              cp build/everytag/zephyr/zephyr.signed.hex $out/ 2>/dev/null || true
+              cp build/merged.hex $out/ 2>/dev/null || true
+              cp build/dfu_application.zip $out/ 2>/dev/null || true
+              ${pkgs.gcc-arm-embedded}/bin/arm-none-eabi-size build/everytag/zephyr/zephyr.elf | tee $out/size.txt
+            '';
+          };
       in
       {
         # Individual board targets
@@ -115,6 +156,22 @@
         packages.firmware-release = mkFirmware {
           name = "everytag-firmware-release";
           confFile = "prj-lowpower.conf";
+        };
+
+        # DFU-enabled targets (sysbuild + MCUboot)
+        packages.firmware-nrf52832-dfu = mkFirmwareDfu {
+          name = "everytag-firmware-nrf52832-dfu";
+          board = "nrf52dk/nrf52832";
+        };
+
+        packages.firmware-nrf52833-dfu = mkFirmwareDfu {
+          name = "everytag-firmware-nrf52833-dfu";
+          board = "nrf52833dk/nrf52833";
+        };
+
+        packages.firmware-nrf54l15-dfu = mkFirmwareDfu {
+          name = "everytag-firmware-nrf54l15-dfu";
+          board = "nrf54l15dk/nrf54l15/cpuapp";
         };
 
         # nix build .#firmware — builds all board targets
