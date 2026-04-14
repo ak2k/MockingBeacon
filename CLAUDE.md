@@ -6,7 +6,7 @@ Run `cd .. && west init -l Everytag && west update --narrow -o=--depth=1` to fet
 
 ## Flake apps (no nix develop needed)
 nix build .#firmware  # pure cross-compile for nrf52810 (no west setup)
-nix run .#test        # host-native tests (266 assertions, ASan/UBSan)
+nix run .#test        # host-native tests (290 assertions, ASan/UBSan)
 nix run .#lint        # clang-format check (dry-run, fails on diff)
 nix run .#format      # auto-format C++ sources
 
@@ -20,6 +20,25 @@ cd tests/host && cmake -B build && cmake --build build && ./build/host_tests
 ## C++ quality checks
 clang-format --dry-run --Werror src/*.cpp src/*.hpp
 clang-tidy src/*.cpp -p tests/host/build
+
+## DFU builds (boards with >= 512KB flash)
+nix build .#firmware-nrf52832-dfu   # sysbuild: MCUboot + app
+nix build .#firmware-nrf52833-dfu
+nix build .#firmware-nrf54l15-dfu
+# west: west build --board nrf52dk/nrf52832 -d build-dfu --pristine -- -DEXTRA_CONF_FILE=dfu.conf
+
+## BabbleSim tests
+# tests/bsim/   — BLE advertisement test: verifies AirTag key rotation
+#   and MAC derivation produce correct payloads over simulated radio.
+# tests/bsim_dfu/ — MCUmgr SMP echo test: verifies the DFU BLE transport
+#   works end-to-end. Covers:
+#   1. SMP GATT service registers and is discoverable by UUID
+#   2. BLE central can connect, discover, subscribe to notifications
+#   3. SMP echo request round-trips through the BLE transport
+#   4. Response has valid SMP header (op=3, group=OS, id=echo)
+#   5. Echoed payload contains the original test string
+#   Does NOT test: MCUboot image swap, actual firmware upload, flash
+#   partitions (nrf52_bsim lacks them). Those require real hardware.
 
 ## Binary size (nrf52810)
 # C baseline: text=151968, data=2872, bss=19930
