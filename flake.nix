@@ -142,11 +142,12 @@
 
             installPhase = ''
               mkdir -p $out
-              cp build/zephyr/zephyr.elf $out/
-              cp build/zephyr/zephyr.signed.hex $out/ 2>/dev/null || true
-              cp build/zephyr/app_update.bin $out/ 2>/dev/null || true
-              cp build/zephyr/zephyr.hex $out/ 2>/dev/null || true
-              ${pkgs.gcc-arm-embedded}/bin/arm-none-eabi-size build/zephyr/zephyr.elf | tee $out/size.txt
+              # Sysbuild nests app output under everytag/
+              cp build/everytag/zephyr/zephyr.elf $out/
+              cp build/everytag/zephyr/zephyr.signed.hex $out/ 2>/dev/null || true
+              cp build/merged.hex $out/ 2>/dev/null || true
+              cp build/dfu_application.zip $out/ 2>/dev/null || true
+              ${pkgs.gcc-arm-embedded}/bin/arm-none-eabi-size build/everytag/zephyr/zephyr.elf | tee $out/size.txt
             '';
           };
       in
