@@ -5,7 +5,9 @@
     nixpkgs.url = "github:NixOS/nixpkgs/nixpkgs-unstable";
     flake-utils.url = "github:numtide/flake-utils";
     west2nix = {
-      url = "github:adisbladis/west2nix";
+      # Use PR #2 branch: pre-builds fake git repos as a cached derivation
+      # (avoids 51x git-add-A on every build)
+      url = "github:wrvsrx/west2nix/reduce-repeating-clone";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
@@ -271,6 +273,7 @@
             export BSIM_OUT_PATH="${self.packages.${system}.bsim}"
 
             BSIM=${self.packages.${system}.bsim}
+            SRCDIR=$PWD
             RUNDIR=$PWD/run
             mkdir -p $RUNDIR
 
@@ -326,11 +329,21 @@
             ./bs_nrf52_bsim_smp -v=2 -s=smp -d=0 -rs=420 -testid=smp_server &
             ./bs_nrf52_bsim_smp -v=2 -s=smp -d=1 -rs=69  -testid=smp_client &
             PID=$!; ./bs_2G4_phy_v1 -v=2 -s=smp -D=2 -sim_length=10000000; wait $PID
+
+            # Build + run ZMS persistence test (native_sim, no BLE needed)
+            echo "=== ZMS persistence test (native_sim) ==="
+            cmake -GNinja -B $SRCDIR/build-zms \
+              -DBOARD=native_sim \
+              -DZEPHYR_TOOLCHAIN_VARIANT=host \
+              -DWEST_PYTHON=${pythonEnv}/bin/python3 \
+              -S $SRCDIR/tests/zms_persist
+            ninja -C $SRCDIR/build-zms
+            $SRCDIR/build-zms/zephyr/zephyr.exe
           '';
 
           installPhase = ''
             mkdir -p $out
-            echo "All BabbleSim tests passed" > $out/result.txt
+            echo "All tests passed" > $out/result.txt
             cp $RUNDIR/bin/bs_nrf52_bsim_adv $out/
             cp $RUNDIR/bin/bs_nrf54l15bsim_adv $out/
             cp $RUNDIR/bin/bs_nrf52_bsim_smp $out/
