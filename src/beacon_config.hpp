@@ -7,24 +7,9 @@
 #include <cstdint>
 #include <cstring>
 
-namespace beacon {
+#include "beacon_nvs_ids.hpp"
 
-// ---- NVS field IDs (match settings.c) ----
-enum NvsFieldId : uint16_t {
-    ID_fmdn_NVS = 0x01,
-    ID_airtag_NVS = 0x02,
-    ID_period_NVS = 0x03,
-    ID_changeInterval_NVS = 0x04,
-    ID_key_NVS = 0x05,
-    ID_auth_NVS = 0x06,
-    ID_power_NVS = 0x07,
-    ID_fmdnKey_NVS = 0x08,
-    ID_timeOffset_NVS = 0x09,
-    ID_settingsMAC_NVS = 0x0a,
-    ID_status_NVS = 0x0b,
-    ID_accel_NVS = 0x0c,
-    ID_turnedOn_NVS = 0x0d,
-};
+namespace beacon {
 
 // ---- Constants ----
 inline constexpr int kMaxKeysInMemory = 40;
