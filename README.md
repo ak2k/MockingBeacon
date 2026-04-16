@@ -6,11 +6,13 @@
 > **What changed:**
 > - C++ modules with explicit state machine and `IHardware` abstraction — pure computation is fully testable off-target
 > - 290 host-native test assertions (ASan/UBSan) verify byte-identical output vs the original C code
-> - BLE advertisement payloads verified end-to-end via [BabbleSim](https://babblesim.github.io/) simulation (3-key rotation over simulated radio)
+> - BLE advertisement payloads verified end-to-end via [BabbleSim](https://babblesim.github.io/) simulation (3-key rotation over simulated radio, MCUmgr SMP echo for DFU transport)
+> - BLE client integration tests against a virtual GATT server ([Bumble](https://google.github.io/bumble/)) — all 15 `conn_beacon.py` CLI options exercised with auth enforcement
+> - ZMS persistence test: write → remount → read roundtrip on native_sim flash
 > - Nix flake for reproducible cross-compilation (`nix build .#firmware`) — no west setup needed
 > - nrf54l15dk board support (build-verified, BabbleSim-tested)
 > - NVS to ZMS storage migration (future-proof for nRF54 series)
-> - Binary size impact: +952 bytes (+0.6%) vs original C
+> - Binary size: see [flash usage table](#flash-usage) — 69% release / 80% dev on the tightest target (nRF52810), ample headroom elsewhere
 >
 > **Quick start:**
 > ```
@@ -51,9 +53,12 @@ Button (first one on NRF52DK): long press until 1 short + 2 long flashes to star
 No west setup needed:
 
 ```
-nix build .#firmware              # all board targets (no DFU)
-nix build .#firmware-nrf52810     # single board
-nix build .#firmware-nrf52832-dfu # with MCUboot + OTA support
+nix build .#firmware              # all board targets (dev config)
+nix build .#firmware-nrf52810     # single board (dev: logging + RTT)
+nix build .#firmware-nrf52810-release  # production: no logging
+nix build .#firmware-nrf52832     # dev
+nix build .#firmware-nrf52832-release  # production
+nix build .#firmware-nrf52832-dfu # MCUboot + OTA (always release config)
 nix build .#firmware-nrf52833-dfu
 nix build .#firmware-nrf54l15-dfu
 nix run .#test                    # host-native tests (ASan/UBSan)
@@ -62,6 +67,26 @@ nix run .#format                  # auto-format C++ sources
 ```
 
 DFU targets build with sysbuild (MCUboot + application) and produce `app_update.bin` for OTA uploads. Boards that lack MCUboot partition layouts (nRF52805, nRF52810) simply don't have DFU targets.
+
+### Flash usage
+
+Dev builds use `prj.conf` (logging, RTT console, GPIO enabled). Release builds use `prj-lowpower.conf` (all disabled — production configuration). DFU builds always use the release config.
+
+| SoC | Build | Used | Available | Usage | Note |
+|-----|-------|-----:|----------:|------:|------|
+| nRF52810 | dev | 154 KB | 192 KB | **80%** | |
+| nRF52810 | release | 133 KB | 192 KB | 69% | |
+| nRF52832 | dev | 148 KB | 512 KB | 29% | |
+| nRF52832 | release | 127 KB | 512 KB | 25% | |
+| nRF52832 | DFU app slot | 145 KB | 220 KB | 66% | +33 KB MCUboot |
+| nRF52833 | dev | 148 KB | 512 KB | 29% | |
+| nRF52833 | release | 127 KB | 512 KB | 25% | |
+| nRF52833 | DFU app slot | 145 KB | 220 KB | 66% | +33 KB MCUboot |
+| nRF54L15 | dev | 177 KB | 1524 KB | 12% | |
+| nRF54L15 | release | 155 KB | 1524 KB | 10% | |
+| nRF54L15 | DFU app slot | 172 KB | 674 KB | 26% | +36 KB MCUboot |
+
+Logging and RTT add ~21 KB. The nRF52810 is the tightest target — 69% in release, 80% in dev — with 38–59 KB of headroom. All other platforms have ample room.
 
 ### With west
 
@@ -193,7 +218,7 @@ See `tagcheck/` for an Android app that can scan for beacons, change settings, a
 
 This firmware originated as a fork of the [macless-haystack](https://github.com/dchristl/macless-haystack) project, which itself builds on the [OpenHaystack](https://github.com/seemoo-lab/openhaystack) research project by the Secure Mobile Networking Lab at TU Darmstadt.
 
-The original C firmware was written by [vasimv](https://github.com/vasimv/Everytag), adding multi-key rotation, Google FMDN support, BLE settings reconfiguration, accelerometer tracking, OTA updates, and power optimization for nRF52 chips.
+The original C firmware and Android app were written by [vasimv](https://github.com/vasimv/Everytag), adding multi-key rotation, Google FMDN support, BLE settings reconfiguration, accelerometer tracking, OTA updates, and power optimization for nRF52 chips.
 
 This fork restructures the firmware as C++ with an `IHardware` abstraction and comprehensive off-target testing, while preserving byte-identical output.
 

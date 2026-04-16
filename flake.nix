@@ -167,12 +167,49 @@
           boardRoot = false;
         };
 
-        packages.firmware-release = mkFirmware {
-          name = "everytag-firmware-release";
+        # Non-DFU release builds (prj-lowpower.conf: no logging/RTT/GPIO)
+        packages.firmware-nrf52810-release = mkFirmware {
+          name = "everytag-firmware-nrf52810-release";
           confFile = "prj-lowpower.conf";
         };
 
-        # DFU-enabled targets (sysbuild + MCUboot)
+        packages.firmware-nrf52832 = mkFirmware {
+          name = "everytag-firmware-nrf52832";
+          board = "nrf52dk/nrf52832";
+          boardRoot = false;
+        };
+
+        packages.firmware-nrf52832-release = mkFirmware {
+          name = "everytag-firmware-nrf52832-release";
+          board = "nrf52dk/nrf52832";
+          boardRoot = false;
+          confFile = "prj-lowpower.conf";
+        };
+
+        packages.firmware-nrf52833 = mkFirmware {
+          name = "everytag-firmware-nrf52833";
+          board = "nrf52833dk/nrf52833";
+          boardRoot = false;
+        };
+
+        packages.firmware-nrf52833-release = mkFirmware {
+          name = "everytag-firmware-nrf52833-release";
+          board = "nrf52833dk/nrf52833";
+          boardRoot = false;
+          confFile = "prj-lowpower.conf";
+        };
+
+        packages.firmware-nrf54l15-release = mkFirmware {
+          name = "everytag-firmware-nrf54l15-release";
+          board = "nrf54l15dk/nrf54l15/cpuapp";
+          boardRoot = false;
+          confFile = "prj-lowpower.conf";
+        };
+
+        # Keep legacy alias
+        packages.firmware-release = self.packages.${system}.firmware-nrf52810-release;
+
+        # DFU-enabled targets (sysbuild + MCUboot, always prj-lowpower.conf)
         packages.firmware-nrf52832-dfu = mkFirmwareDfu {
           name = "everytag-firmware-nrf52832-dfu";
           board = "nrf52dk/nrf52832";
