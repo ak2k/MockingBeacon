@@ -77,6 +77,80 @@ def prefetch(project: dict, topdir: str) -> None:
     project["nix"] = {"hash": json.loads(result.stdout)["hash"]}
 
 
+def prefetch_bsim_component(component: dict) -> None:
+    """Compute the Nix hash for a BabbleSim component by URL."""
+    result = subprocess.run(
+        [
+            "nix-prefetch-git",
+            "--quiet",
+            "--url",
+            component["url"],
+            "--rev",
+            component["rev"],
+        ],
+        check=True,
+        capture_output=True,
+    )
+    component["hash"] = json.loads(result.stdout)["hash"]
+
+
+def generate_bsim_lockfile(topdir: str, output: Path, max_workers: int) -> None:
+    """Read bsim_west's manifest and emit a Nix-consumable TOML lockfile.
+
+    The BabbleSim component revisions Nordic validated Zephyr against live
+    in `tools/bsim/west.yml` (the bsim_west manifest, pinned by NCS's
+    top-level west.yml). We extract them and prefetch hashes so the flake
+    can pin BabbleSim against the exact versions Nordic tested.
+    """
+    bsim_manifest_path = Path(topdir) / "tools" / "bsim" / "west.yml"
+    if not bsim_manifest_path.exists():
+        print(
+            f"No bsim_west manifest at {bsim_manifest_path} — skipping", file=sys.stderr
+        )
+        return
+
+    with open(bsim_manifest_path) as f:
+        bsim_manifest = yaml.safe_load(f)
+
+    # Default remote is the BabbleSim GitHub org
+    remotes = {r["name"]: r["url-base"] for r in bsim_manifest["manifest"]["remotes"]}
+    default_remote = bsim_manifest["manifest"].get("defaults", {}).get("remote")
+
+    components = []
+    for p in bsim_manifest["manifest"]["projects"]:
+        remote = p.get("remote", default_remote)
+        repo_path = p.get("repo-path", p["name"])
+        # bsim_west lays out: bsim/components (base), bsim/components/ext_* (extensions).
+        # Our flake unpacks directly into components/..., stripping the leading bsim/.
+        dir_ = p["path"].removeprefix("bsim/")
+        components.append(
+            {
+                "name": p["name"],
+                "dir": dir_,
+                "url": f"{remotes[remote]}/{repo_path}",
+                "rev": p["revision"],
+            }
+        )
+
+    print(f"Prefetching {len(components)} BabbleSim components...", file=sys.stderr)
+    with ThreadPoolExecutor(max_workers=max_workers) as pool:
+        futures = {
+            pool.submit(prefetch_bsim_component, c): c["name"] for c in components
+        }
+        for future in as_completed(futures):
+            name = futures[future]
+            try:
+                future.result()
+                print(f"  {name}", file=sys.stderr)
+            except subprocess.CalledProcessError as e:
+                print(f"  {name}: FAILED ({e})", file=sys.stderr)
+                raise
+
+    with open(output, "w") as f:
+        tomlkit.dump({"components": components}, f)
+    print(f"Wrote {output} ({len(components)} components)", file=sys.stderr)
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument(
@@ -90,7 +164,13 @@ def main() -> None:
         "--output",
         type=Path,
         default=Path("west2nix.toml"),
-        help="output file (default: west2nix.toml)",
+        help="main output file (default: west2nix.toml)",
+    )
+    parser.add_argument(
+        "--bsim-output",
+        type=Path,
+        default=Path("bsim-west2nix.toml"),
+        help="BabbleSim lockfile (default: bsim-west2nix.toml)",
     )
     args = parser.parse_args()
 
@@ -112,8 +192,10 @@ def main() -> None:
 
     with open(args.output, "w") as f:
         tomlkit.dump(manifest, f)
-
     print(f"Wrote {args.output} ({len(projects)} projects)", file=sys.stderr)
+
+    # Also regenerate the BabbleSim lockfile from bsim_west's manifest
+    generate_bsim_lockfile(topdir, args.bsim_output, args.max_workers)
 
 
 if __name__ == "__main__":
