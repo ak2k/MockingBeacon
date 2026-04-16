@@ -4,9 +4,12 @@ type: refactor
 status: active
 date: 2026-04-16
 deepened: 2026-04-16
+companion: docs/plans/2026-04-16-ncs-3.2.4-research-appendix.md
 ---
 
 # NCS 2.9.2 → 3.2.4 firmware upgrade (staged)
+
+**Companion doc**: `docs/plans/2026-04-16-ncs-3.2.4-research-appendix.md` — research summaries, decision-reasoning table, symptom→cause map, expanded citations. Consult on-demand when hitting unexpected issues or understanding why a decision was made. THIS plan is the spec; the appendix is reference material.
 
 ## Enhancement Summary
 
