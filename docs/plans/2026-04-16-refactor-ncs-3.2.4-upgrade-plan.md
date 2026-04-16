@@ -106,9 +106,9 @@ No architectural change to `IHardware`/`StateMachine`/`BeaconConfig` layers. Cha
   - Resolved `.config` per board: for nrf52810, nrf52832dk, nrf54l15dk — `cp build-*/zephyr/.config docs/baselines/config-<board>-2.9.2`
   - Top-60 symbol sizes: `arm-none-eabi-nm --print-size --size-sort --radix=d build-810/zephyr/zephyr.elf | tail -60 > docs/baselines/symbols-nrf52810-2.9.2.txt`
   - Test suite: `nix build .#bsim-test && nix run .#test && uv run --with bumble --with pytest --with pytest-asyncio pytest tests/ble_client/ -v` — commit result logs.
-  - **Verify DFU builds green on main**: `nix build .#firmware-nrf52832-dfu .#firmware-nrf52833-dfu .#firmware-nrf52840dk-dfu .#firmware-nrf54l15-dfu .#firmware-thingy52-dfu`. All 5 must succeed (commit 42793bf on 2026-04-15 fixed the prior `zephyr_module.py TypeError`).
+  - **Verify DFU builds green on main**: `nix build .#firmware-nrf52832-dfu .#firmware-nrf52833-dfu .#firmware-nrf52840-dfu .#firmware-nrf54l15-dfu .#firmware-thingy52-dfu`. All 5 must succeed (commit 42793bf on 2026-04-15 fixed the prior `zephyr_module.py TypeError`).
 - **Signing key fingerprint**: capture `sha256sum sysbuild/mcuboot/boards/keys/*.pem 2>/dev/null || echo "NO KEY FILE"` — expected: no key file. See "Security sub-task" below.
-- **Verify `nrfutil device` in dev shell**: `nix develop -c nrfutil device --version` must report ≥ 2.8.8. If missing, add to `flake.nix` inputs before starting Phase 1.
+- **`nrfutil device` in dev shell** (DEFERRED — hardware-only): `nrfutil` is a hardware flashing/communication tool. Migration is simulation-only (per §Dependencies); nrfutil isn't required for builds, simulation tests, or PR merges. Tracked in TODO.md "Hardware DFU swap validation" entry — to be addressed when hardware arrives. Decision 2026-04-16: do not block Phase 1 on nrfutil packaging (segger-jlink unfree license + Linux-only; non-trivial flake.nix design decision).
 
 **Security note — pre-existing dev-key signing (decided: keep):**
 `sysbuild/mcuboot.conf` enables `BOOT_SIGNATURE_TYPE_ECDSA_P256` but does NOT set `CONFIG_BOOT_SIGNATURE_KEY_FILE`. MCUboot falls back to the upstream dev key (`bootloader/mcuboot/root-ec-p256.pem`), which is public. Anyone can sign a DFU image. This is a pre-existing dev-build limitation (README.md:138 documents). **Decision (2026-04-16): keep dev key for prebuilts; track in TODO.md as a separate post-migration issue.** The migration will not change signing config. Phase 3's signature-isolation test is therefore SKIPPED; DFU is not a production trust boundary in this build.
@@ -148,7 +148,7 @@ One or two commits.
 
 **1α gate (must pass to proceed to 1β):**
 - `nix build .#firmware` — all 11 CI attrs cross-compile
-- `nix build .#firmware-nrf52832-dfu .#firmware-nrf52833-dfu .#firmware-nrf52840dk-dfu .#firmware-nrf54l15-dfu .#firmware-thingy52-dfu` — all 5 DFU variants
+- `nix build .#firmware-nrf52832-dfu .#firmware-nrf52833-dfu .#firmware-nrf52840-dfu .#firmware-nrf54l15-dfu .#firmware-thingy52-dfu` — all 5 DFU variants
 - `nix run .#test` — host 290 assertions green
 - `nix run .#lint` — no drift
 - **Snapshot `.config` for nrf52810, nrf52832dk, nrf54l15dk** — `cp build-*/zephyr/.config docs/baselines/config-<board>-3.0.2`. Diff against Phase 0 baseline; any unexpected change in `CONFIG_BT_*`, `CONFIG_BOOT_*`, `CONFIG_MBEDTLS_*`, `CONFIG_PSA_*` must be explained in commit message.
