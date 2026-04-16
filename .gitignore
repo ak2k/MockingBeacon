@@ -8,3 +8,4 @@ twister-out*/
 tests/host/build/
 tests/*/build/
 result*
+.pre-commit-config.yaml
