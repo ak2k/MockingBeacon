@@ -1,0 +1,24 @@
+=== firmware-nrf52810 ===
+   text	   data	    bss	    dec	    hex	filename
+ 157884	   2812	  21112	 181808	  2c630	build/zephyr/zephyr.elf
+
+=== firmware-nrf52832 ===
+   text	   data	    bss	    dec	    hex	filename
+ 152072	   2856	  21004	 175932	  2af3c	build/zephyr/zephyr.elf
+
+=== firmware-nrf52833 ===
+   text	   data	    bss	    dec	    hex	filename
+ 152060	   3044	  21035	 176139	  2b00b	build/zephyr/zephyr.elf
+
+=== firmware-nrf52840 ===
+   text	   data	    bss	    dec	    hex	filename
+ 169704	   3440	  25180	 198324	  306b4	build/zephyr/zephyr.elf
+
+=== firmware-thingy52 ===
+   text	   data	    bss	    dec	    hex	filename
+ 158664	   2968	  21276	 182908	  2ca7c	build/zephyr/zephyr.elf
+
+=== firmware-nrf54l15 ===
+   text	   data	    bss	    dec	    hex	filename
+ 166048	   5720	  22207	 193975	  2f5b7	build/zephyr/zephyr.elf
+
