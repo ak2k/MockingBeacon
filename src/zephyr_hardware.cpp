@@ -318,7 +318,7 @@ void ZephyrHardware::set_tx_power(int level) {
     struct net_buf* buf;
     struct net_buf* rsp = nullptr;
 
-    buf = ::bt_hci_cmd_create(BT_HCI_OP_VS_WRITE_TX_POWER_LEVEL, sizeof(*cp));
+    buf = ::bt_hci_cmd_alloc(K_FOREVER);
     if (!buf) {
         printk("Unable to allocate command buffer\n");
         return;
