@@ -96,9 +96,25 @@ static void disconnected(struct bt_conn *conn, uint8_t reason) {
     }
 }
 
+// Zephyr 4.0+ .recycled callback: fires after the conn object is released
+// (post-disconnect). This is where we trigger adv restart — bt_host forbids
+// calling bt_le_adv_start from .recycled context, so we submit work to the
+// dedicated adv_wq (see zephyr_hardware.cpp).
+//
+// Also clears authorizedGatt here (belt-and-suspenders). Without this, a
+// workqueue race where .recycled fires before .disconnected cleanup
+// completes could let a new client inherit prior auth.
+extern void beacon_adv_recycled_cb(void);
+static void recycled(void) {
+    authorizedGatt = 0;
+    allowedChange = 0;
+    beacon_adv_recycled_cb();
+}
+
 BT_CONN_CB_DEFINE(conn_callbacks) = {
     .connected = connected,
     .disconnected = disconnected,
+    .recycled = recycled,
 };
 
 // ---- GATT write callbacks (thin wrappers calling C++ bridge) ----
