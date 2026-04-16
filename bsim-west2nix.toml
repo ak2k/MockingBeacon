@@ -2,22 +2,8 @@
 name = "babblesim_base"
 dir = "components"
 url = "https://github.com/BabbleSim/base"
-rev = "0cc70e78a88c1de9d8ec045a703b38134861e7e7"
-hash = "sha256-EFaF2Yv+oIk9KbiN0K+WV/3YqTab5Mvta2yQTgpu6jQ="
-
-[[components]]
-name = "babblesim_ext_2G4_libPhyComv1"
-dir = "components/ext_2G4_libPhyComv1"
-url = "https://github.com/BabbleSim/ext_2G4_libPhyComv1"
-rev = "15ae0f87fa049e04cbec48a866f3bc37d903f950"
-hash = "sha256-AJLqerKa9N3RE5/m5Fw3KOL3C4kROmKSiCE4RsVcCdI="
-
-[[components]]
-name = "babblesim_ext_2G4_phy_v1"
-dir = "components/ext_2G4_phy_v1"
-url = "https://github.com/BabbleSim/ext_2G4_phy_v1"
-rev = "62e797b2c518e5bb6123a198382ed2b64b8c068e"
-hash = "sha256-BMXnUbTJ1qQsrNXaDE1netxxrFZWYxhCKygI3PZ0mB8="
+rev = "153101c61ce7106f6ba8b108b5c6488efdc1151a"
+hash = "sha256-NdP8pC2mELQe4yEFQGJCx3Hl098AfKY8F8BY6CgNk+U="
 
 [[components]]
 name = "babblesim_ext_2G4_channel_NtNcable"
@@ -34,18 +20,11 @@ rev = "bde72a57384dde7a4310bcf3843469401be93074"
 hash = "sha256-JLt2QPyPab3uGmEfCZEdI6jRye+Kdvu5Mi3fRINryFs="
 
 [[components]]
-name = "babblesim_ext_2G4_modem_magic"
-dir = "components/ext_2G4_modem_magic"
-url = "https://github.com/BabbleSim/ext_2G4_modem_magic"
-rev = "edfcda2d3937a74be0a59d6cd47e0f50183453da"
-hash = "sha256-q/GbN+5JNx3a1h1xttnRU8P3xxcB0wB4F6otnQD1F8I="
-
-[[components]]
-name = "babblesim_ext_2G4_modem_BLE_simple"
-dir = "components/ext_2G4_modem_BLE_simple"
-url = "https://github.com/BabbleSim/ext_2G4_modem_BLE_simple"
-rev = "4d2379de510684cd4b1c3bbbb09bce7b5a20bc1f"
-hash = "sha256-nWokWTpIJnc5wpl4lTizKlGtolk5tJBAeRlIm9m3nd8="
+name = "babblesim_ext_2G4_device_WLAN_actmod"
+dir = "components/ext_2G4_device_WLAN_actmod"
+url = "https://github.com/BabbleSim/ext_2G4_device_WLAN_actmod"
+rev = "9cb6d8e72695f6b785e57443f0629a18069d6ce4"
+hash = "sha256-5TRYGe0TXcbrxvHFS0p0u6nlrfLcV+FAwiFY0doGqzQ="
 
 [[components]]
 name = "babblesim_ext_2G4_device_burst_interferer"
@@ -53,13 +32,6 @@ dir = "components/ext_2G4_device_burst_interferer"
 url = "https://github.com/BabbleSim/ext_2G4_device_burst_interferer"
 rev = "5b5339351d6e6a2368c686c734dc8b2fc65698fc"
 hash = "sha256-JikW/YdhTxhLAFQYq2i9Sx4kJjHrTW3Altr6ajtftZw="
-
-[[components]]
-name = "babblesim_ext_2G4_device_WLAN_actmod"
-dir = "components/ext_2G4_device_WLAN_actmod"
-url = "https://github.com/BabbleSim/ext_2G4_device_WLAN_actmod"
-rev = "9cb6d8e72695f6b785e57443f0629a18069d6ce4"
-hash = "sha256-5TRYGe0TXcbrxvHFS0p0u6nlrfLcV+FAwiFY0doGqzQ="
 
 [[components]]
 name = "babblesim_ext_2G4_device_playback"
@@ -76,8 +48,36 @@ rev = "0a3c28ecd59b5ee08ed4668446c243d3ffd98b46"
 hash = "sha256-2AgPy7wUxvRwVT4vfaiF7VEMVSFLh78Twqzp8h9rYis="
 
 [[components]]
+name = "babblesim_ext_2G4_libPhyComv1"
+dir = "components/ext_2G4_libPhyComv1"
+url = "https://github.com/BabbleSim/ext_2G4_libPhyComv1"
+rev = "15ae0f87fa049e04cbec48a866f3bc37d903f950"
+hash = "sha256-AJLqerKa9N3RE5/m5Fw3KOL3C4kROmKSiCE4RsVcCdI="
+
+[[components]]
+name = "babblesim_ext_2G4_modem_BLE_simple"
+dir = "components/ext_2G4_modem_BLE_simple"
+url = "https://github.com/BabbleSim/ext_2G4_modem_BLE_simple"
+rev = "4d2379de510684cd4b1c3bbbb09bce7b5a20bc1f"
+hash = "sha256-nWokWTpIJnc5wpl4lTizKlGtolk5tJBAeRlIm9m3nd8="
+
+[[components]]
+name = "babblesim_ext_2G4_modem_magic"
+dir = "components/ext_2G4_modem_magic"
+url = "https://github.com/BabbleSim/ext_2G4_modem_magic"
+rev = "edfcda2d3937a74be0a59d6cd47e0f50183453da"
+hash = "sha256-q/GbN+5JNx3a1h1xttnRU8P3xxcB0wB4F6otnQD1F8I="
+
+[[components]]
+name = "babblesim_ext_2G4_phy_v1"
+dir = "components/ext_2G4_phy_v1"
+url = "https://github.com/BabbleSim/ext_2G4_phy_v1"
+rev = "62e797b2c518e5bb6123a198382ed2b64b8c068e"
+hash = "sha256-BMXnUbTJ1qQsrNXaDE1netxxrFZWYxhCKygI3PZ0mB8="
+
+[[components]]
 name = "babblesim_ext_libCryptov1"
 dir = "components/ext_libCryptov1"
 url = "https://github.com/BabbleSim/ext_libCryptov1"
-rev = "236309584c90be32ef12848077bd6de54e9f4deb"
-hash = "sha256-fzO5SVo5t0YeDiP7SsMdxNvuhR8UotjdV/USj2oeckw="
+rev = "da246018ebe031e4fe4a8228187fb459e9f3b2fa"
+hash = "sha256-OUFYWTegII9CSTNRPqBmMe44565HIdlSuGzu1Iv0sGs="

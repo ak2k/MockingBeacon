@@ -1,24 +1,33 @@
 [manifest]
-group-filter = ["-babblesim", "-bsec", "-doc-internal", "-dragoon", "-find-my", "-nrf-802154", "-sidewalk"]
+group-filter = ["-babblesim", "-bsec", "-doc-internal", "-dragoon", "-find-my", "-libmodem", "-nrf-802154"]
 
 [[manifest.projects]]
 name = "sdk-nrf"
 url = "https://github.com/nrfconnect/sdk-nrf"
-revision = "4ab7b98fc76f658249bd8553cf8f9253ff840a53"
+revision = "89ba1294ac9b624e28271a5c71e99193ed4d92a4"
 path = "nrf"
 west-commands = "scripts/west-commands.yml"
 
 [manifest.projects.nix]
-hash = "sha256-sN34FNrUFJ4Hp2gfxrsgASDKsvvuqvrOjnBT6qnzA2Q="
+hash = "sha256-s/UehGakk0TFliofWHi5fZU8VU7tLucO2YJpDpmpMCs="
 
 [[manifest.projects]]
 name = "zephyr"
 url = "https://github.com/nrfconnect/sdk-zephyr"
-revision = "aa34a5632971262ce4002e73ed0fb09e9bd14808"
+revision = "f791c49f492c40da0d18efd51087b6fe1ec56aa0"
 west-commands = "scripts/west-commands.yml"
 
 [manifest.projects.nix]
-hash = "sha256-rmdwwHLntiAyBGkCkw56ucC6GvxsKrbtBjIlTaqkKhE="
+hash = "sha256-J5mohjxbTNvru6Fl94zQJkhZL1/30NKeLaw2qZST8M4="
+
+[[manifest.projects]]
+name = "hostap"
+url = "https://github.com/nrfconnect/sdk-hostap"
+revision = "8cd83053a3723d12c1d4ace712dfced687cb0b9b"
+path = "modules/lib/hostap"
+
+[manifest.projects.nix]
+hash = "sha256-cQyuNWN65JSVFvHi3RS28gXQzpvVg/WzSnU20bmUBbw="
 
 [[manifest.projects]]
 name = "wfa-qt-control-app"
@@ -37,11 +46,11 @@ hash = "sha256-0hJ9k71Iz6Zney3GYu9GeJq/kzPzZZbw8dIqyAT2tfA="
 [[manifest.projects]]
 name = "mcuboot"
 url = "https://github.com/nrfconnect/sdk-mcuboot"
-revision = "12e5ee106034972b0f1074d6f2261b2b39d1501b"
+revision = "ae1ee57f390621a20696387d0ad89e9e1f7ed1b7"
 path = "bootloader/mcuboot"
 
 [manifest.projects.nix]
-hash = "sha256-wLMR5wEoE39BZ0kBQSNwqM8W3obasWEO8tNPaipFd/g="
+hash = "sha256-/RxIYb3uE/FZn1A5Vj6zcxxwVPBHWMuK+p4iJqXjW6A="
 
 [[manifest.projects]]
 name = "qcbor"
@@ -55,37 +64,37 @@ hash = "sha256-heOCeSDrHCJA2T/iRnSXoRIl6WeS8KRDtEh9zK1Hkm8="
 [[manifest.projects]]
 name = "mbedtls"
 url = "https://github.com/nrfconnect/sdk-mbedtls"
-revision = "98603a8c91660beac00e0ee1d76198fb7c4ed29b"
+revision = "44ce293d1d9bf4251e337160250d7dd477f52edd"
 path = "modules/crypto/mbedtls"
 
 [manifest.projects.nix]
-hash = "sha256-dVSaCCwQSbdADKhDe5eI8njawANa7/YMP/LEMAF7WqI="
+hash = "sha256-XjAiabfrBNwurCvl2qf2HcNy58rXzwyZrnqrJC/iNoU="
 
 [[manifest.projects]]
 name = "oberon-psa-crypto"
 url = "https://github.com/nrfconnect/sdk-oberon-psa-crypto"
-revision = "21728cf8402ac567326d0d69eec891a2bfdb8ea3"
+revision = "de2e3e0c9f086b179a0bd7c45d4c74753f7eca07"
 path = "modules/crypto/oberon-psa-crypto"
 
 [manifest.projects.nix]
-hash = "sha256-1q+A8WgY+XwnNf9cZKmqijbie+vIZxgJt0iFntIURD0="
+hash = "sha256-JN1Yx48X7whLplw+GymvXjgfjCUoWD5/7eshqEytjBE="
 
 [[manifest.projects]]
 name = "nrfxlib"
 url = "https://github.com/nrfconnect/sdk-nrfxlib"
-revision = "1143aee1e0521b5309e891b44a0a8048f83074d2"
+revision = "3a14dbc326c385a0161fc122f72b6d9be308f7d6"
 
 [manifest.projects.nix]
-hash = "sha256-6oVFxIunDczg9jq7OopBw2aDE7H89acRk6TiCkSV0NA="
+hash = "sha256-JffM4FinDBzw7/QpqGNMjMh3mg5fZvWUnHF1EV3BfEM="
 
 [[manifest.projects]]
 name = "trusted-firmware-m"
 url = "https://github.com/nrfconnect/sdk-trusted-firmware-m"
-revision = "e200da60e1c82bbf442fcaa9d03f2e5a7c246040"
+revision = "17765832a390987ea7cfcd5667d65320be00ec0b"
 path = "modules/tee/tf-m/trusted-firmware-m"
 
 [manifest.projects.nix]
-hash = "sha256-944Qjix2SK9OsdP/YARYxPZeACxWIJyXyeisikKKxBE="
+hash = "sha256-Q4bre2UCu+VTJYIKhb9/t10V9FbX8oQ/9qJcwZbgTSc="
 
 [[manifest.projects]]
 name = "psa-arch-tests"
@@ -99,7 +108,7 @@ hash = "sha256-y5XR1Dk8/8lM6CMSvaEqBwxQtxrM7qX3XniezwEdkB8="
 [[manifest.projects]]
 name = "matter"
 url = "https://github.com/nrfconnect/sdk-connectedhomeip"
-revision = "88e08ccd278ab8991632812d509b59ac726dccde"
+revision = "b16d42678846cacd5ef9cadd01ceab00e2119bf6"
 path = "modules/lib/matter"
 west-commands = "scripts/west/west-commands.yml"
 
@@ -125,17 +134,7 @@ upstream-sha = "181b0cb14ff007ec912f2ba6627e05dfb066c008"
 compare-by-default = false
 
 [manifest.projects.nix]
-hash = "sha256-M9inQMyIhzcLyMYQclKwOIsOvVQNczhNB1x7VV/8pXE="
-
-[[manifest.projects]]
-name = "soc-hwmv1"
-url = "https://github.com/nrfconnect/sdk-soc-hwmv1"
-revision = "be0500992bd8c222118b651b88d1f3714855a3aa"
-path = "modules/soc-hwmv1"
-groups = ["soc-hwmv1"]
-
-[manifest.projects.nix]
-hash = "sha256-jGmMmRjIlfMKQYDpZ+eTSJKyJf0qLx/mxA0hfRlQF74="
+hash = "sha256-NHBDuDYxMlg3fgw693LTip+W2deq1GgbJno6xWE/yog="
 
 [[manifest.projects]]
 name = "cjson"
@@ -182,7 +181,7 @@ hash = "sha256-zNRoNsjkTHjiAebLxlzFQiFpJloo86Ee23KiaCp3DT4="
 [[manifest.projects]]
 name = "openthread"
 url = "https://github.com/nrfconnect/sdk-openthread"
-revision = "ee86dc26d71c9ef021fad8a28898829df772011a"
+revision = "0e26667136c2c49d42c96b8104ec2e90e8d55e4d"
 path = "modules/lib/openthread"
 
 [manifest.projects.userdata.ncs]
@@ -191,25 +190,25 @@ upstream-sha = "c6eaeda5a1c1c5dbb24dce7e027340cb8893a77b"
 compare-by-default = false
 
 [manifest.projects.nix]
-hash = "sha256-SDuLoFLm1gPnbz8ydJMsT9ojRb9Q80YANws+fOyi8zE="
+hash = "sha256-MzsrLeklp1simIwJh2Y0b7dKNlMkal6SlNHXFvpqyfE="
 
 [[manifest.projects]]
 name = "suit-generator"
 url = "https://github.com/nrfconnect/suit-generator"
-revision = "8f9ce9039e6fb8584dc915944b2bc275856757c0"
+revision = "d6afcd80b376b069eeb59061c50721983932ab6f"
 path = "modules/lib/suit-generator"
 
 [manifest.projects.nix]
-hash = "sha256-o84WrX9GH+EvGWKVgmY0YgHhIW80GnpQptY0X9DlRHw="
+hash = "sha256-o4sP4utGqt4vOfUCMc31h7cid/wFtJMjazVlz2M0z7Y="
 
 [[manifest.projects]]
 name = "suit-processor"
 url = "https://github.com/nrfconnect/suit-processor"
-revision = "6802f3008cba16a74a8c65814af00808327a7ee7"
+revision = "94effb7561b3a970195df76165e4b15e4ac0c34e"
 path = "modules/lib/suit-processor"
 
 [manifest.projects.nix]
-hash = "sha256-J49IM3CV00/ypczBPW7Oz/NW9zGiCqG9LBJ1WhMm9bI="
+hash = "sha256-Vw1zAbI349Qwvp0P7VX77vgqbcH6FB2YL/Y67P6oYNU="
 
 [[manifest.projects]]
 name = "cmock"
@@ -224,20 +223,20 @@ hash = "sha256-0JbIT3db/NlBtkf6xCIVtYsWiC0j9RCYAKbBhrroyoA="
 [[manifest.projects]]
 name = "memfault-firmware-sdk"
 url = "https://github.com/memfault/memfault-firmware-sdk"
-revision = "47d69c572c44c19d23936193629e19372e22c7e2"
+revision = "0bd360fec3b5bf3af0286a1bba3e1faa8c7b8b1b"
 path = "modules/lib/memfault-firmware-sdk"
 
 [manifest.projects.nix]
-hash = "sha256-C8pE0ZgWdFZswI37KroTfTtfi5GYJf0de5qKB0KDY3I="
+hash = "sha256-Zq2nmrds4iAOtFlfPf/p1nAaflxquVt/hpbNxr/s6b0="
 
 [[manifest.projects]]
 name = "bsim"
 url = "https://github.com/BabbleSim/bsim_west"
-revision = "1f242f4ed7fc141fdfcfeca8d21c6d9e801179d7"
+revision = "a88d3353451387ca490a6a7f7c478a90c4ee05b7"
 path = "tools/bsim"
 
 [manifest.projects.nix]
-hash = "sha256-jHJddEK1W++ldhVt7nGkupIE7fR/0X8mMRTmg/yDJMk="
+hash = "sha256-fukVH/2GJtWw3YWrTWSzMEW80jqdhWq8xhlt/0xhxrI="
 
 [[manifest.projects]]
 name = "coremark"
@@ -282,22 +281,22 @@ hash = "sha256-6P6JUb7B/BfzhQLWaH7v4TNm5Yyz6OvGZmbZ8WM/65Q="
 [[manifest.projects]]
 name = "nanopb"
 url = "https://github.com/zephyrproject-rtos/nanopb"
-revision = "4474bd35bd39de067f0532a1b19ce3aed9ed9807"
+revision = "7307ce399b81ddcb3c3a5dc862c52d4754328d38"
 path = "modules/lib/nanopb"
 groups = ["optional"]
 
 [manifest.projects.nix]
-hash = "sha256-ZcNMXy3HvMJbuXLpAPvK+sW9gDGpjJxA38X4hcyli7o="
+hash = "sha256-v06q2v1ifISPvO+0Elqa4N1q4/oxnG7C6lTj72Y2uZY="
 
 [[manifest.projects]]
 name = "tf-m-tests"
 url = "https://github.com/zephyrproject-rtos/tf-m-tests"
-revision = "d552e4f18b92032bd335d5e3aa312f6acd82a83b"
+revision = "502ea90105ee18f20c78f710e2ba2ded0fc0756e"
 path = "modules/tee/tf-m/tf-m-tests"
 groups = ["optional"]
 
 [manifest.projects.nix]
-hash = "sha256-UUy4OJeOp0fbXVV+w/ypDZPFDVk13MSyeaTqMOHZh7g="
+hash = "sha256-rec6QftsVRNYv4xdGjYEQ1HJerr3S6IMHMiJ9lD8UE8="
 
 [[manifest.projects]]
 name = "zscilib"
@@ -322,11 +321,11 @@ hash = "sha256-vzCbE69wCMLIjrSz1m8yspgVCto4JSm4Qg5zY/Ozg+k="
 [[manifest.projects]]
 name = "cmsis-dsp"
 url = "https://github.com/zephyrproject-rtos/cmsis-dsp"
-revision = "6489e771e9c405f1763b52d64a3f17a1ec488ace"
+revision = "d80a49b2bb186317dc1db4ac88da49c0ab77e6e7"
 path = "modules/lib/cmsis-dsp"
 
 [manifest.projects.nix]
-hash = "sha256-ly4/gMKVwFSVQNlV8j6QeP7qO1vU50Xxq7cTyEj0cbg="
+hash = "sha256-79wBXyHHqJXEGNNneBRfnr7DpmrC3jZjzEhC/kUbHgg="
 
 [[manifest.projects]]
 name = "cmsis-nn"
@@ -359,61 +358,62 @@ hash = "sha256-5l3hJazG8BoLZ0QxfSFc98uKArIGAFD1P8D6tsKMRt4="
 
 [[manifest.projects]]
 name = "hal_nordic"
-url = "https://github.com/nrfconnect/sdk-hal_nordic"
-revision = "bc671cbc669b492144d021faab7df84e79fb0712"
+url = "https://github.com/zephyrproject-rtos/hal_nordic"
+revision = "8cdcc33c6e5c7618ca4e77ff19a0eab557cc4bd5"
 path = "modules/hal/nordic"
 groups = ["hal"]
 
 [manifest.projects.nix]
-hash = "sha256-h7bUOa2oegC2BWHn+qgxKW2S6o8ttwf7rSdy7mgnW9I="
+hash = "sha256-LvernyUMV2v26sWk6MW4YCgFx8FMdzsoiBnRd5nwLak="
 
 [[manifest.projects]]
 name = "hal_st"
 url = "https://github.com/zephyrproject-rtos/hal_st"
-revision = "b2f548fe672f24122c7f92027b2c9eeea8a0483a"
+revision = "05fd4533730a9aea845261c5d24ed9832a6f0b6e"
 path = "modules/hal/st"
 groups = ["hal"]
 
 [manifest.projects.nix]
-hash = "sha256-ZVDYTzukYN/k5I6otwwHh3k9zBNI90vq1DXnCY75wcQ="
+hash = "sha256-0YFr1wSw76cD/c9WSyWxkOoRZlt1fL1LyJnIcZXhK6I="
+
+[[manifest.projects]]
+name = "hal_tdk"
+url = "https://github.com/zephyrproject-rtos/hal_tdk"
+revision = "e0ade95b29841d915c38bc157bb5509270e8aa21"
+path = "modules/hal/tdk"
+groups = ["hal"]
+
+[manifest.projects.nix]
+hash = "sha256-c04m3rLsqSUV4T1i4Q0UcG1w0jjLUy5D0uwrlH+Xlp4="
 
 [[manifest.projects]]
 name = "hal_wurthelektronik"
 url = "https://github.com/zephyrproject-rtos/hal_wurthelektronik"
-revision = "e5bcb2eac1bb9639ce13b4dafc78eb254e014342"
+revision = "e3e2797b224fc48fdef1bc3e5a12a7c73108bba2"
 path = "modules/hal/wurthelektronik"
 groups = ["hal"]
 
 [manifest.projects.nix]
-hash = "sha256-IHul1HDX9AaW1xIBIYZEmVJ2uisNUtQPvel5nitBPPU="
-
-[[manifest.projects]]
-name = "hostap"
-url = "https://github.com/zephyrproject-rtos/hostap"
-revision = "44285310338f423021cc7df2c1056256882a00cc"
-path = "modules/lib/hostap"
-
-[manifest.projects.nix]
-hash = "sha256-RxTPoQ5Z0nHR+gzReRsPeCIMCJX6uMjVEgu+mhlfT6s="
-
-[[manifest.projects]]
-name = "libmetal"
-url = "https://github.com/zephyrproject-rtos/libmetal"
-revision = "a6851ba6dba8c9e87d00c42f171a822f7a29639b"
-path = "modules/hal/libmetal"
-groups = ["hal"]
-
-[manifest.projects.nix]
-hash = "sha256-TvJ8XiIa05lAUDfaGObkEuOjOUn3EzHPDxEVCoeiRBA="
+hash = "sha256-Xf/xazKK3ttGV7hdvUQanust2AUGjDyt62h1yl1Sc7A="
 
 [[manifest.projects]]
 name = "liblc3"
 url = "https://github.com/zephyrproject-rtos/liblc3"
-revision = "1a5938ebaca4f13fe79ce074f5dee079783aa29f"
+revision = "bb85f7dde4195bfc0fca9e9c7c2eed0f8694203c"
 path = "modules/lib/liblc3"
 
 [manifest.projects.nix]
-hash = "sha256-nQJgF/cWoCx5TkX4xOaLB9SzvhVXPY29bLh7UwPMWEE="
+hash = "sha256-ngy/fFtqB8ta52I+kMm+e75Zcg0TsVZ50oqVRVYlGa0="
+
+[[manifest.projects]]
+name = "libmetal"
+url = "https://github.com/zephyrproject-rtos/libmetal"
+revision = "14f519529a1e4a46aaea6826f5a41d99a3347276"
+path = "modules/hal/libmetal"
+groups = ["hal"]
+
+[manifest.projects.nix]
+hash = "sha256-sI7YxMjstLhm44K3GH0yk3eZX+ase2uCXJ5omo7Qn4Y="
 
 [[manifest.projects]]
 name = "littlefs"
@@ -437,11 +437,11 @@ hash = "sha256-t6CRkm5TheFvUuc+Qj3JaveWYOaHRH6Pquvlb5YlsOg="
 [[manifest.projects]]
 name = "lvgl"
 url = "https://github.com/zephyrproject-rtos/lvgl"
-revision = "2b498e6f36d6b82ae1da12c8b7742e318624ecf5"
+revision = "6decbb7f7783f6e48d4591fcb9f7810c2fb08e61"
 path = "modules/lib/gui/lvgl"
 
 [manifest.projects.nix]
-hash = "sha256-esrGS2Mz7RnT91O/wvMwxhtRemf7aq2iNAApCNonkCU="
+hash = "sha256-VNHKZCrwaw89IxIhaNP2ZZAhJzSg4LOqgiC9n8+vZoY="
 
 [[manifest.projects]]
 name = "mipi-sys-t"
@@ -466,48 +466,58 @@ hash = "sha256-Bst/K21L+NhYzq0icjBdd8Rj4vIOtjJTx7vSvzZlFzk="
 [[manifest.projects]]
 name = "nrf_hw_models"
 url = "https://github.com/zephyrproject-rtos/nrf_hw_models"
-revision = "3cfca0192ff84da919e9bc7978bcc2239cd6a395"
+revision = "b84bd7314a239f818e78f6927f5673247816df53"
 path = "modules/bsim_hw_models/nrf_hw_models"
 
 [manifest.projects.nix]
-hash = "sha256-AB2iB0LyPSNRbN9pFFLFeb3on5kLc869E7YF2G5DUOI="
+hash = "sha256-1yAjGJTomxciC+M4TnbxNPkAPG+PzzZUL+P4ZeTotzk="
 
 [[manifest.projects]]
 name = "nrf_wifi"
 url = "https://github.com/zephyrproject-rtos/nrf_wifi"
-revision = "f6b950a3b5c0187fe499b0e518426d5bf88b7e68"
+revision = "5e185a2b33b4f5b9524999a5bfd96121d25ffdbc"
 path = "modules/lib/nrf_wifi"
 
 [manifest.projects.nix]
-hash = "sha256-g1a0Soj750VtTtyv3jCjp12MmJqmDUY4Ow6vfMohJ64="
+hash = "sha256-zBQ6KHqX1k18CEup3OMjytkb3y6RJ/M2ON1dQd/7CZA="
 
 [[manifest.projects]]
 name = "open-amp"
 url = "https://github.com/zephyrproject-rtos/open-amp"
-revision = "b735edbc739ad59156eb55bb8ce2583d74537719"
+revision = "f7f4d083c7909a39d86e217376c69b416ec4faf3"
 path = "modules/lib/open-amp"
 
 [manifest.projects.nix]
-hash = "sha256-aockxz6wtvH0mOpkeiebOOIma1JDwdqkxT/N18/Jgqc="
+hash = "sha256-6BwbtMZM49C+SgB98A3FZS0Aw7SlFWu04GGaSdZqP0Q="
+
+[[manifest.projects]]
+name = "percepio"
+url = "https://github.com/zephyrproject-rtos/percepio"
+revision = "0d44033c744978ca2505a06640b4f6964c5411e6"
+path = "modules/debug/percepio"
+groups = ["debug"]
+
+[manifest.projects.nix]
+hash = "sha256-qyxCHwq8zsqHVvCDRktlGaacKZxu857f8JZ+iT+kytw="
 
 [[manifest.projects]]
 name = "picolibc"
 url = "https://github.com/zephyrproject-rtos/picolibc"
-revision = "27746bbc246841852912fc3bb5b45094cd8a505a"
+revision = "82d62ed1ac55b4e34a12d0390aced2dc9af13fc9"
 path = "modules/lib/picolibc"
 
 [manifest.projects.nix]
-hash = "sha256-eYlwQzy+ANGjjW0D81BSxRpapKGfNk7PuuSwZWp59kM="
+hash = "sha256-22TJoxyU/PyyHcLYooOBQtDI0TljkpL8SUQgL3s5R5M="
 
 [[manifest.projects]]
 name = "segger"
 url = "https://github.com/zephyrproject-rtos/segger"
-revision = "b011c45b585e097d95d9cf93edf4f2e01588d3cd"
+revision = "cf56b1d9c80f81a26e2ac5727c9cf177116a4692"
 path = "modules/debug/segger"
 groups = ["debug"]
 
 [manifest.projects.nix]
-hash = "sha256-otxrP9Z4fUlJvdQ52jIXz9Bb6Fy3mr/jEFx9lhz0QlE="
+hash = "sha256-RiQm92YGm+pZPLDcZxI9brNfIerumduLFNi6JKGj99E="
 
 [[manifest.projects]]
 name = "tinycrypt"
@@ -531,11 +541,11 @@ hash = "sha256-hTKe7jVw2EhqnCcnZy5Eh8aHECtoS0YAfsPkSXGnIa4="
 [[manifest.projects]]
 name = "zcbor"
 url = "https://github.com/zephyrproject-rtos/zcbor"
-revision = "47f34dd7f5284e8750b5a715dee7f77c6c5bdc3f"
+revision = "9b07780aca6fb21f82a241ba386ad9b379809337"
 path = "modules/lib/zcbor"
 
 [manifest.projects.nix]
-hash = "sha256-3tDJXcIYeWKhbSGtLdb4hvj81yuF7vZEXimckFkPM3g="
+hash = "sha256-PIxfJfj0WztvsBZPTybkyQ+XImU8b83UtYQwt02CVuc="
 
 [manifest.self]
-path = "Everytag"
+path = "wt-phase1a"
