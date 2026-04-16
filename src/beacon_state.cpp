@@ -3,6 +3,17 @@
 
 #include "beacon_logic.hpp"
 
+// Adv workqueue cancel/allowed hooks (zephyr_hardware.cpp). Called before
+// adv-mode-changing transitions to purge any pending .recycled-triggered
+// restart so it doesn't race the new mode. No-ops on HOST_TEST.
+#ifndef HOST_TEST
+extern "C" void beacon_adv_cancel_sync(void);
+extern "C" void beacon_adv_set_allowed(int allowed);
+#else
+static inline void beacon_adv_cancel_sync(void) {}
+static inline void beacon_adv_set_allowed(int) {}
+#endif
+
 namespace beacon {
 
 StateMachine::StateMachine(IHardware& hw, SettingsManager& settings, MovementTracker& accel)
@@ -197,6 +208,7 @@ void StateMachine::handle_settings_mode_exit() {
         // Register SMP GATT service and restart connectable advertising
         // so mcumgr CLI can connect after conn_beacon.py disconnects.
         hw_.enable_dfu();
+        beacon_adv_cancel_sync();
         hw_.stop_settings_adv();
         hw_.start_settings_adv();
         // Wait up to 60s for firmware upload, then reboot.
@@ -210,6 +222,7 @@ void StateMachine::handle_settings_mode_exit() {
         return;
     }
 
+    beacon_adv_cancel_sync();
     hw_.stop_settings_adv();
     broadcasting_settings_ = false;
     broadcasting_anything_ = false;
@@ -271,6 +284,8 @@ bool StateMachine::handle_uvlo_shutdown() {
     if (charge_lock_counter_ <= 0) {
         bad_power_++;
         if (bad_power_ > kUvloBadPowerThreshold) {
+            beacon_adv_set_allowed(0);
+            beacon_adv_cancel_sync();
             hw_.adv_stop();
             hw_.bq_shipmode();
             hw_.power_off();
@@ -310,6 +325,7 @@ void StateMachine::handle_settings_mode_entry() {
     timers_.settings_mode = now;
     timers_.end_settings = now + static_cast<uint32_t>(kSettingsWait);
 
+    beacon_adv_cancel_sync();
     hw_.adv_stop();
     hw_.bt_disable();
 
@@ -375,6 +391,7 @@ void StateMachine::handle_key_rotation() {
     }
     keys_changes_++;
 
+    beacon_adv_cancel_sync();
     hw_.adv_stop();
     hw_.bt_disable();
     broadcasting_anything_ = false;
@@ -409,6 +426,8 @@ bool StateMachine::handle_button_longpress() {
     settings_.set_turned_on(false);
     hw_.update_turned_on(false);
     hw_.sleep_ms(500);
+    beacon_adv_set_allowed(0);
+    beacon_adv_cancel_sync();
     hw_.adv_stop();
     hw_.bt_disable();
     hw_.power_off();
