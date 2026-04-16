@@ -6,10 +6,35 @@ on:
       - "v*"
 
 jobs:
-  build-firmware:
-    name: Build firmware
+  # One job per firmware variant, in parallel.
+  # Each gets its own live log panel in the Actions UI sidebar; failures
+  # attribute to the specific variant and can be retried independently.
+  build:
+    name: Build ${{ matrix.label }}
     runs-on: ubuntu-latest
-    timeout-minutes: 30
+    timeout-minutes: 20
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          # Non-DFU release (production: no logging, full chip flash)
+          - { pkg: firmware-nrf52810-release, label: nrf52810 }
+          - { pkg: firmware-nrf52832-release, label: nrf52832 }
+          - { pkg: firmware-nrf52833-release, label: nrf52833 }
+          - { pkg: firmware-nrf54l15-release, label: nrf54l15 }
+          # Non-DFU dev (logging + RTT console, full chip flash)
+          - { pkg: firmware-nrf52810, label: nrf52810-dev }
+          - { pkg: firmware-nrf52832, label: nrf52832-dev }
+          - { pkg: firmware-nrf52833, label: nrf52833-dev }
+          - { pkg: firmware-nrf54l15, label: nrf54l15-dev }
+          # DFU release (MCUboot + app, signed, for OTA)
+          - { pkg: firmware-nrf52832-dfu, label: nrf52832-dfu }
+          - { pkg: firmware-nrf52833-dfu, label: nrf52833-dfu }
+          - { pkg: firmware-nrf54l15-dfu, label: nrf54l15-dfu }
+          # DFU dev (MCUboot + app with logging — for DFU bring-up)
+          - { pkg: firmware-nrf52832-dfu-dev, label: nrf52832-dfu-dev }
+          - { pkg: firmware-nrf52833-dfu-dev, label: nrf52833-dfu-dev }
+          - { pkg: firmware-nrf54l15-dfu-dev, label: nrf54l15-dfu-dev }
     steps:
       - uses: actions/checkout@v6
 
@@ -20,100 +45,128 @@ jobs:
           name: ak2k
           authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
 
-      - name: Build all release + dev + DFU firmware
-        run: |
-          for pkg in \
-            firmware-nrf52810 \
-            firmware-nrf52832 \
-            firmware-nrf52833 \
-            firmware-nrf54l15 \
-            firmware-nrf52810-release \
-            firmware-nrf52832-release \
-            firmware-nrf52833-release \
-            firmware-nrf54l15-release \
-            firmware-nrf52832-dfu \
-            firmware-nrf52833-dfu \
-            firmware-nrf54l15-dfu; do
-            echo "=== Building $pkg ==="
-            nix build .#$pkg -o "result-$pkg" -L
-          done
+      - name: Build ${{ matrix.pkg }}
+        run: nix build .#${{ matrix.pkg }} -L -o result
 
-      - name: Collect release artifacts
+      - name: Collect artifacts
         run: |
-          mkdir -p release
           TAG=${GITHUB_REF_NAME}
+          LABEL=${{ matrix.label }}
+          mkdir -p artifacts
 
-          # Release (no DFU) firmware — production, no logging
-          for board in nrf52810 nrf52832 nrf52833 nrf54l15; do
-            dir="result-firmware-${board}-release"
-            cp "$dir/zephyr.hex" "release/everytag-${board}-${TAG}.hex"
-            cp "$dir/size.txt" "release/everytag-${board}-${TAG}-size.txt"
-          done
+          # size.txt and zephyr-version.txt are produced by every firmware target
+          cp result/size.txt "artifacts/everytag-${LABEL}-${TAG}-size.txt"
+          cp result/zephyr-version.txt artifacts/zephyr-version.txt
 
-          # Dev firmware — logging + RTT console for debugging
-          for board in nrf52810 nrf52832 nrf52833 nrf54l15; do
-            dir="result-firmware-${board}"
-            cp "$dir/zephyr.hex" "release/everytag-${board}-dev-${TAG}.hex"
-            cp "$dir/size.txt" "release/everytag-${board}-dev-${TAG}-size.txt"
-          done
+          # .hex exists for non-DFU; DFU builds produce signed.hex + merged.hex
+          [ -f result/zephyr.hex ] && cp result/zephyr.hex "artifacts/everytag-${LABEL}-${TAG}.hex"
+          [ -f result/zephyr.elf ] && cp result/zephyr.elf "artifacts/everytag-${LABEL}-${TAG}.elf"
+          [ -f result/zephyr.signed.hex ] && cp result/zephyr.signed.hex "artifacts/everytag-${LABEL}-${TAG}.signed.hex"
+          [ -f result/merged.hex ] && cp result/merged.hex "artifacts/everytag-${LABEL}-${TAG}.merged.hex"
 
-          # DFU firmware (MCUboot + app)
-          for board in nrf52832 nrf52833 nrf54l15; do
-            dir="result-firmware-${board}-dfu"
-            cp "$dir/zephyr.elf" "release/everytag-${board}-dfu-${TAG}.elf"
-            if [ -f "$dir/zephyr.signed.hex" ]; then
-              cp "$dir/zephyr.signed.hex" "release/everytag-${board}-dfu-${TAG}.signed.hex"
-            fi
-            if [ -f "$dir/merged.hex" ]; then
-              cp "$dir/merged.hex" "release/everytag-${board}-dfu-${TAG}.merged.hex"
-            fi
-            cp "$dir/size.txt" "release/everytag-${board}-dfu-${TAG}-size.txt"
-          done
+          ls -la artifacts/
 
-          ls -la release/
+      - uses: actions/upload-artifact@v7
+        with:
+          name: firmware-${{ matrix.label }}
+          path: artifacts/
+          retention-days: 7
+          if-no-files-found: error
+
+  release:
+    name: Create GitHub Release
+    needs: build
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+
+      - uses: actions/download-artifact@v8
+        with:
+          path: release
+          pattern: firmware-*
+          merge-multiple: true
 
       - name: Generate release notes
         run: |
           TAG=${GITHUB_REF_NAME}
-          # Flash sizes per SoC (total chip flash in KB)
+          REPO=${GITHUB_REPOSITORY}
+
+          # Extract NCS version from west.yml
+          NCS_VER=$(awk '/name: sdk-nrf/{found=1} found && /revision:/{print $2; exit}' west.yml)
+
+          # Zephyr version (same across all builds — last-wins merge is fine)
+          Z_MAJOR=$(awk '/VERSION_MAJOR/ {print $3}' release/zephyr-version.txt)
+          Z_MINOR=$(awk '/VERSION_MINOR/ {print $3}' release/zephyr-version.txt)
+          Z_PATCH=$(awk '/PATCHLEVEL/ {print $3}' release/zephyr-version.txt)
+          ZEPHYR_VER="${Z_MAJOR}.${Z_MINOR}.${Z_PATCH}"
+
+          # Previous tag for "changes since" section
+          PREV_TAG=$(git tag --list 'v*' --sort=-v:refname | grep -v "^${TAG}\$" | head -1 || true)
+
           declare -A FLASH_KB=( [nrf52810]=192 [nrf52832]=512 [nrf52833]=512 [nrf54l15]=1524 )
+          declare -A DFU_SLOT_KB=( [nrf52832]=224 [nrf52833]=224 [nrf54l15]=674 )
 
-          cat > release/RELEASE_NOTES.md <<'HEADER'
-          ### Flash usage
+          {
+            echo "Built against **nRF Connect SDK ${NCS_VER}** (Zephyr ${ZEPHYR_VER})."
+            echo
+            echo "### Flash usage"
+            echo
+            echo "Non-DFU builds (no MCUboot, uses full chip flash):"
+            echo
+            echo "| SoC | Release | Dev | Available | Release Usage |"
+            echo "|-----|--------:|----:|----------:|--------------:|"
+            for board in nrf52810 nrf52832 nrf52833 nrf54l15; do
+              avail_kb=${FLASH_KB[$board]}
+              read -r text data _ < <(tail -1 "release/everytag-${board}-${TAG}-size.txt")
+              rel_kb=$(( (text + data + 512) / 1024 ))
+              read -r text data _ < <(tail -1 "release/everytag-${board}-dev-${TAG}-size.txt")
+              dev_kb=$(( (text + data + 512) / 1024 ))
+              pct=$(( rel_kb * 100 / avail_kb ))
+              echo "| ${board} | ${rel_kb} KB | ${dev_kb} KB | ${avail_kb} KB | ${pct}% |"
+            done
+            echo
+            echo "DFU builds (MCUboot + app, constrained by app slot):"
+            echo
+            echo "| SoC | Release | Dev | App slot | Release Usage |"
+            echo "|-----|--------:|----:|---------:|--------------:|"
+            for board in nrf52832 nrf52833 nrf54l15; do
+              slot_kb=${DFU_SLOT_KB[$board]}
+              read -r text data _ < <(tail -1 "release/everytag-${board}-dfu-${TAG}-size.txt")
+              rel_kb=$(( (text + data + 512) / 1024 ))
+              read -r text data _ < <(tail -1 "release/everytag-${board}-dfu-dev-${TAG}-size.txt")
+              dev_kb=$(( (text + data + 512) / 1024 ))
+              pct=$(( rel_kb * 100 / slot_kb ))
+              echo "| ${board} | ${rel_kb} KB | ${dev_kb} KB | ${slot_kb} KB | ${pct}% |"
+            done
+            echo
+            echo "### Files"
+            echo
+            echo "- \`*-<board>-<tag>.hex\` — **Release** firmware (production, no logging). Flash via SWD."
+            echo "- \`*-<board>-dev-<tag>.hex\` — **Dev** firmware (logging + RTT console). Use for debugging/bring-up via J-Link."
+            echo "- \`*-<board>-dfu-<tag>.merged.hex\` — MCUboot + app (initial SWD flash for DFU-capable boards)"
+            echo "- \`*-<board>-dfu-<tag>.signed.hex\` — Signed app image (for OTA updates)"
 
-          | SoC | Release | Dev | Available | Release usage |
-          |-----|--------:|----:|----------:|--------------:|
-          HEADER
-          sed -i 's/^          //' release/RELEASE_NOTES.md
-
-          for board in nrf52810 nrf52832 nrf52833 nrf54l15; do
-            read -r text data _ < <(tail -1 "release/everytag-${board}-${TAG}-size.txt")
-            rel_kb=$(( (text + data + 512) / 1024 ))
-            read -r text data _ < <(tail -1 "release/everytag-${board}-dev-${TAG}-size.txt")
-            dev_kb=$(( (text + data + 512) / 1024 ))
-            avail_kb=${FLASH_KB[$board]}
-            pct=$(( rel_kb * 100 / avail_kb ))
-            echo "| ${board} | ${rel_kb} KB | ${dev_kb} KB | ${avail_kb} KB | ${pct}% |" >> release/RELEASE_NOTES.md
-          done
-
-          cat >> release/RELEASE_NOTES.md <<'NOTES'
-
-          ### Files
-
-          - `*-<board>-<tag>.hex` — **Release** firmware (production, no logging). Flash via SWD.
-          - `*-<board>-dev-<tag>.hex` — **Dev** firmware (logging + RTT console). Use for debugging/bring-up via J-Link.
-          - `*-<board>-dfu-<tag>.merged.hex` — MCUboot + app (initial SWD flash for DFU-capable boards)
-          - `*-<board>-dfu-<tag>.signed.hex` — Signed app image (for OTA updates)
-
-          Built with Nix from `flake.lock`-pinned toolchain and NCS modules.
-          NOTES
-          sed -i 's/^          //' release/RELEASE_NOTES.md
+            if [ -n "$PREV_TAG" ]; then
+              echo
+              echo "### Changes since ${PREV_TAG}"
+              echo
+              git log --pretty=format:'- %s' "${PREV_TAG}..${TAG}"
+              echo
+              echo
+              echo "**Full diff:** https://github.com/${REPO}/compare/${PREV_TAG}...${TAG}"
+            fi
+          } > release/RELEASE_NOTES.md
 
       - name: Create GitHub Release
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           TAG=${GITHUB_REF_NAME}
+          # zephyr-version.txt is internal bookkeeping; don't attach to release
+          rm -f release/zephyr-version.txt
           gh release create "$TAG" \
             --title "Everytag $TAG" \
             --notes-file release/RELEASE_NOTES.md \

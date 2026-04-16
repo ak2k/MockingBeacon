@@ -149,6 +149,7 @@
               cp build/zephyr/zephyr.elf $out/
               cp build/zephyr/zephyr.hex $out/
               ${pkgs.gcc-arm-embedded}/bin/arm-none-eabi-size build/zephyr/zephyr.elf | tee $out/size.txt
+              cp "$ZEPHYR_BASE/VERSION" $out/zephyr-version.txt
             '';
           };
 
@@ -188,6 +189,7 @@
               cp build/everytag/zephyr/zephyr.signed.hex $out/ 2>/dev/null || true
               cp build/merged.hex $out/ 2>/dev/null || true
               cp build/dfu_application.zip $out/ 2>/dev/null || true
+              cp "$ZEPHYR_BASE/VERSION" $out/zephyr-version.txt
               ${pkgs.gcc-arm-embedded}/bin/arm-none-eabi-size build/everytag/zephyr/zephyr.elf | tee $out/size.txt
             '';
           };
@@ -248,6 +250,14 @@
                 value = mkFirmwareDfu {
                   name = "everytag-firmware-${b.short}-dfu";
                   inherit (b) board boardRoot;
+                };
+              }
+              {
+                name = "firmware-${b.short}-dfu-dev";
+                value = mkFirmwareDfu {
+                  name = "everytag-firmware-${b.short}-dfu-dev";
+                  inherit (b) board boardRoot;
+                  confFile = "prj.conf";
                 };
               }
             ]
