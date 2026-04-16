@@ -1,0 +1,5 @@
+lrwxr-xr-x 1 akirby 74 Apr 16 13:28 result -> /nix/store/wijns2pyr1nvjfv9s28mj4kd9jn3kmm5-everytag-firmware-nrf52832-dfu
+lrwxr-xr-x 1 akirby 74 Apr 16 13:28 result-1 -> /nix/store/52xj227jy19pnj26qkrcy99wq4khaxaa-everytag-firmware-nrf52833-dfu
+lrwxr-xr-x 1 akirby 74 Apr 16 13:28 result-2 -> /nix/store/sbjkaxv7a7g1d442jxgjr060zvqkkg61-everytag-firmware-nrf52840-dfu
+lrwxr-xr-x 1 akirby 74 Apr 16 13:28 result-3 -> /nix/store/461lxbd5mhjlnkih41iwzyrddxxygcz9-everytag-firmware-nrf54l15-dfu
+lrwxr-xr-x 1 akirby 74 Apr 16 13:28 result-4 -> /nix/store/5qlvhb8zfqlzig77nkqxihqvqp1xfl32-everytag-firmware-thingy52-dfu

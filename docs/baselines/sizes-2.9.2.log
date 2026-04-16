@@ -1,0 +1,595 @@
+error (ignored): SQLite database '/Users/akirby/.cache/nix/eval-cache-v6/adfeaa1a7f85d9723833a26a199c56e961ba95dc82f6337e617e7fda572b91d6.sqlite' is busy
+these 7 derivations will be built:
+  /nix/store/25g9vnws1yjnih8as6hajrlvgpiph0sq-everytag-firmware-nrf52810.drv
+  /nix/store/4bzv26v2646549f9z9hi6s571gxy7j6w-everytag-firmware-nrf52840.drv
+  /nix/store/7lm1qcbhvdjn04368285rhjks685p460-everytag-firmware-nrf52833.drv
+  /nix/store/bmh492hlv99y8g39w13xksbslly29wki-everytag-firmware-thingy52.drv
+  /nix/store/v7r7gmpylyb2n2yiygvr2bb5zk17pb57-everytag-firmware-nrf52832.drv
+  /nix/store/xjk7p7qkrp4p0my1aw1h3l76blj4m79y-everytag-firmware-nrf54l15.drv
+  /nix/store/vilsy0b5fji8k648qv8k768zcq8dj4gv-everytag-firmware-all.drv
+this path will be fetched (5.5 KiB download, 37.3 KiB unpacked):
+  /nix/store/vj428r2wnpl54zrwy9glnn7ni3v9px27-lndir-1.0.5
+copying path '/nix/store/vj428r2wnpl54zrwy9glnn7ni3v9px27-lndir-1.0.5' from 'https://cache.nixos.org'...
+building '/nix/store/25g9vnws1yjnih8as6hajrlvgpiph0sq-everytag-firmware-nrf52810.drv'...
+building '/nix/store/v7r7gmpylyb2n2yiygvr2bb5zk17pb57-everytag-firmware-nrf52832.drv'...
+building '/nix/store/7lm1qcbhvdjn04368285rhjks685p460-everytag-firmware-nrf52833.drv'...
+building '/nix/store/4bzv26v2646549f9z9hi6s571gxy7j6w-everytag-firmware-nrf52840.drv'...
+building '/nix/store/xjk7p7qkrp4p0my1aw1h3l76blj4m79y-everytag-firmware-nrf54l15.drv'...
+building '/nix/store/bmh492hlv99y8g39w13xksbslly29wki-everytag-firmware-thingy52.drv'...
+everytag-firmware-nrf52810> Running phase: unpackPhase
+everytag-firmware-nrf52832> Running phase: unpackPhase
+everytag-firmware-nrf52810> unpacking source archive /nix/store/r6i93gq7jdzwrw5qxl5xjrkq801pgn2r-jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source
+everytag-firmware-nrf52832> unpacking source archive /nix/store/r6i93gq7jdzwrw5qxl5xjrkq801pgn2r-jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source
+everytag-firmware-nrf52833> Running phase: unpackPhase
+everytag-firmware-nrf52833> unpacking source archive /nix/store/r6i93gq7jdzwrw5qxl5xjrkq801pgn2r-jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source
+everytag-firmware-nrf52840> Running phase: unpackPhase
+everytag-firmware-nrf52840> unpacking source archive /nix/store/r6i93gq7jdzwrw5qxl5xjrkq801pgn2r-jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source
+everytag-firmware-nrf54l15> Running phase: unpackPhase
+everytag-firmware-nrf54l15> unpacking source archive /nix/store/r6i93gq7jdzwrw5qxl5xjrkq801pgn2r-jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source
+everytag-firmware-thingy52> Running phase: unpackPhase
+everytag-firmware-nrf52810> source root is jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source
+everytag-firmware-thingy52> unpacking source archive /nix/store/r6i93gq7jdzwrw5qxl5xjrkq801pgn2r-jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source
+everytag-firmware-nrf52832> source root is jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source
+everytag-firmware-nrf52833> source root is jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source
+everytag-firmware-nrf52810> Running phase: patchPhase
+everytag-firmware-nrf52832> Running phase: patchPhase
+everytag-firmware-nrf52840> source root is jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source
+everytag-firmware-nrf52810> Running phase: updateAutotoolsGnuConfigScriptsPhase
+everytag-firmware-nrf52832> Running phase: updateAutotoolsGnuConfigScriptsPhase
+everytag-firmware-nrf54l15> source root is jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source
+everytag-firmware-nrf52833> Running phase: patchPhase
+everytag-firmware-thingy52> source root is jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source
+everytag-firmware-nrf52810> Running phase: configurePhase
+everytag-firmware-nrf52833> Running phase: updateAutotoolsGnuConfigScriptsPhase
+everytag-firmware-nrf52832> Running phase: configurePhase
+everytag-firmware-nrf52840> Running phase: patchPhase
+everytag-firmware-nrf52810> Executing __west2nix_copyProjectsHook
+everytag-firmware-nrf54l15> Running phase: patchPhase
+everytag-firmware-nrf52832> Executing __west2nix_copyProjectsHook
+everytag-firmware-nrf52840> Running phase: updateAutotoolsGnuConfigScriptsPhase
+everytag-firmware-nrf52833> Running phase: configurePhase
+everytag-firmware-thingy52> Running phase: patchPhase
+everytag-firmware-nrf54l15> Running phase: updateAutotoolsGnuConfigScriptsPhase
+everytag-firmware-thingy52> Running phase: updateAutotoolsGnuConfigScriptsPhase
+everytag-firmware-nrf52833> Executing __west2nix_copyProjectsHook
+everytag-firmware-nrf52840> Running phase: configurePhase
+everytag-firmware-nrf54l15> Running phase: configurePhase
+everytag-firmware-thingy52> Running phase: configurePhase
+everytag-firmware-nrf52840> Executing __west2nix_copyProjectsHook
+everytag-firmware-nrf54l15> Executing __west2nix_copyProjectsHook
+everytag-firmware-thingy52> Executing __west2nix_copyProjectsHook
+everytag-firmware-thingy52> === Initializing from existing manifest repository everytag
+everytag-firmware-thingy52> --- Creating /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/.west and local configuration file
+everytag-firmware-nrf52810> === Initializing from existing manifest repository everytag
+everytag-firmware-nrf52810> --- Creating /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/.west and local configuration file
+everytag-firmware-nrf52832> === Initializing from existing manifest repository everytag
+everytag-firmware-nrf52832> --- Creating /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/.west and local configuration file
+everytag-firmware-nrf52833> === Initializing from existing manifest repository everytag
+everytag-firmware-nrf52833> --- Creating /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/.west and local configuration file
+everytag-firmware-nrf52840> === Initializing from existing manifest repository everytag
+everytag-firmware-nrf52840> --- Creating /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/.west and local configuration file
+everytag-firmware-nrf54l15> === Initializing from existing manifest repository everytag
+everytag-firmware-nrf54l15> --- Creating /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/.west and local configuration file
+everytag-firmware-nrf52832> === Initialized. Now run "west update" inside /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source.
+everytag-firmware-nrf52840> === Initialized. Now run "west update" inside /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source.
+everytag-firmware-nrf54l15> === Initialized. Now run "west update" inside /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source.
+everytag-firmware-nrf52810> === Initialized. Now run "west update" inside /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source.
+everytag-firmware-nrf52833> === Initialized. Now run "west update" inside /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source.
+everytag-firmware-thingy52> === Initialized. Now run "west update" inside /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source.
+everytag-firmware-nrf54l15> configurePhase completed in 2 minutes 55 seconds
+everytag-firmware-nrf54l15> Running phase: buildPhase
+everytag-firmware-nrf52832> configurePhase completed in 2 minutes 55 seconds
+everytag-firmware-nrf52832> Running phase: buildPhase
+everytag-firmware-nrf52833> configurePhase completed in 2 minutes 55 seconds
+everytag-firmware-thingy52> configurePhase completed in 2 minutes 55 seconds
+everytag-firmware-nrf52833> Running phase: buildPhase
+everytag-firmware-thingy52> Running phase: buildPhase
+everytag-firmware-nrf52810> configurePhase completed in 2 minutes 55 seconds
+everytag-firmware-nrf52810> Running phase: buildPhase
+everytag-firmware-nrf52840> configurePhase completed in 2 minutes 55 seconds
+everytag-firmware-nrf52840> Running phase: buildPhase
+everytag-firmware-nrf52833> Loading Zephyr default modules (Zephyr base).
+everytag-firmware-nrf52832> Loading Zephyr default modules (Zephyr base).
+everytag-firmware-nrf52810> Loading Zephyr default modules (Zephyr base).
+everytag-firmware-nrf52840> Loading Zephyr default modules (Zephyr base).
+everytag-firmware-nrf54l15> Loading Zephyr default modules (Zephyr base).
+everytag-firmware-thingy52> Loading Zephyr default modules (Zephyr base).
+everytag-firmware-nrf52840> -- Application: /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag
+everytag-firmware-nrf52840> -- CMake version: 4.1.2
+everytag-firmware-nrf52810> -- Application: /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag
+everytag-firmware-nrf52810> -- CMake version: 4.1.2
+everytag-firmware-nrf52832> -- Application: /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag
+everytag-firmware-nrf52832> -- CMake version: 4.1.2
+everytag-firmware-nrf52833> -- Application: /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag
+everytag-firmware-nrf52833> -- CMake version: 4.1.2
+everytag-firmware-nrf54l15> -- Application: /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag
+everytag-firmware-nrf54l15> -- CMake version: 4.1.2
+everytag-firmware-thingy52> -- Application: /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag
+everytag-firmware-thingy52> -- CMake version: 4.1.2
+everytag-firmware-nrf52810> -- Found Python3: /nix/store/fp96w8r1l7afydx1449v3dagxg65485d-python3-3.13.12-env/bin/python3 (found suitable version "3.13.12", minimum required is "3.8") found components: Interpreter
+everytag-firmware-nrf52833> -- Found Python3: /nix/store/fp96w8r1l7afydx1449v3dagxg65485d-python3-3.13.12-env/bin/python3 (found suitable version "3.13.12", minimum required is "3.8") found components: Interpreter
+everytag-firmware-thingy52> -- Found Python3: /nix/store/fp96w8r1l7afydx1449v3dagxg65485d-python3-3.13.12-env/bin/python3 (found suitable version "3.13.12", minimum required is "3.8") found components: Interpreter
+everytag-firmware-nrf52840> -- Found Python3: /nix/store/fp96w8r1l7afydx1449v3dagxg65485d-python3-3.13.12-env/bin/python3 (found suitable version "3.13.12", minimum required is "3.8") found components: Interpreter
+everytag-firmware-nrf52832> -- Found Python3: /nix/store/fp96w8r1l7afydx1449v3dagxg65485d-python3-3.13.12-env/bin/python3 (found suitable version "3.13.12", minimum required is "3.8") found components: Interpreter
+everytag-firmware-nrf54l15> -- Found Python3: /nix/store/fp96w8r1l7afydx1449v3dagxg65485d-python3-3.13.12-env/bin/python3 (found suitable version "3.13.12", minimum required is "3.8") found components: Interpreter
+everytag-firmware-nrf52810> -- Cache files will be written to: /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/.cache
+everytag-firmware-nrf52833> -- Cache files will be written to: /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/.cache
+everytag-firmware-nrf52840> -- Cache files will be written to: /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/.cache
+everytag-firmware-thingy52> -- Cache files will be written to: /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/.cache
+everytag-firmware-nrf54l15> -- Cache files will be written to: /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/.cache
+everytag-firmware-nrf52832> -- Cache files will be written to: /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/.cache
+everytag-firmware-nrf52810> -- Zephyr version: 3.7.99 (/nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr)
+everytag-firmware-nrf54l15> -- Zephyr version: 3.7.99 (/nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr)
+everytag-firmware-nrf52840> -- Zephyr version: 3.7.99 (/nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr)
+everytag-firmware-nrf52833> -- Zephyr version: 3.7.99 (/nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr)
+everytag-firmware-thingy52> -- Zephyr version: 3.7.99 (/nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr)
+everytag-firmware-nrf52832> -- Zephyr version: 3.7.99 (/nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr)
+everytag-firmware-nrf52810> -- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+everytag-firmware-nrf52833> -- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+everytag-firmware-nrf54l15> -- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+everytag-firmware-nrf52840> -- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+everytag-firmware-thingy52> -- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+everytag-firmware-nrf52832> -- Found west (found suitable version "1.5.0", minimum required is "0.14.0")
+everytag-firmware-nrf52833> -- Board: nrf52833dk, qualifiers: nrf52833
+everytag-firmware-nrf52840> -- Board: nrf52840dk, qualifiers: nrf52840
+everytag-firmware-nrf54l15> -- Board: nrf54l15dk, qualifiers: nrf54l15/cpuapp
+everytag-firmware-nrf52810> -- Board: kkm_p1_nrf52810, qualifiers: nrf52810
+everytag-firmware-thingy52> -- Board: thingy52, qualifiers: nrf52832
+everytag-firmware-nrf52832> -- Board: nrf52dk, qualifiers: nrf52832
+everytag-firmware-nrf52810> -- Found toolchain: gnuarmemb (/nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1)
+everytag-firmware-nrf52840> -- Found toolchain: gnuarmemb (/nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1)
+everytag-firmware-nrf52832> -- Found toolchain: gnuarmemb (/nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1)
+everytag-firmware-nrf54l15> -- Found toolchain: gnuarmemb (/nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1)
+everytag-firmware-nrf52810> -- Found Dtc: /nix/store/y5zas14gj58ph0h4yk30515pzb6pgjbi-dtc-1.7.2/bin/dtc (found suitable version "1.7.2", minimum required is "1.4.6")
+everytag-firmware-nrf52810> -- Found BOARD.dts: /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/boards/arm/kkm_p1_nrf52810/kkm_p1_nrf52810.dts
+everytag-firmware-nrf52832> -- Found Dtc: /nix/store/y5zas14gj58ph0h4yk30515pzb6pgjbi-dtc-1.7.2/bin/dtc (found suitable version "1.7.2", minimum required is "1.4.6")
+everytag-firmware-nrf52840> -- Found Dtc: /nix/store/y5zas14gj58ph0h4yk30515pzb6pgjbi-dtc-1.7.2/bin/dtc (found suitable version "1.7.2", minimum required is "1.4.6")
+everytag-firmware-nrf52840> -- Found BOARD.dts: /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/boards/nordic/nrf52840dk/nrf52840dk_nrf52840.dts
+everytag-firmware-nrf52832> -- Found BOARD.dts: /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/boards/nordic/nrf52dk/nrf52dk_nrf52832.dts
+everytag-firmware-nrf54l15> -- Found Dtc: /nix/store/y5zas14gj58ph0h4yk30515pzb6pgjbi-dtc-1.7.2/bin/dtc (found suitable version "1.7.2", minimum required is "1.4.6")
+everytag-firmware-nrf54l15> -- Found BOARD.dts: /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/boards/nordic/nrf54l15dk/nrf54l15dk_nrf54l15_cpuapp.dts
+everytag-firmware-nrf54l15> -- Found devicetree overlay: /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/boards/nrf54l15dk_nrf54l15_cpuapp.overlay
+everytag-firmware-nrf52833> -- Found toolchain: gnuarmemb (/nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1)
+everytag-firmware-thingy52> -- Found toolchain: gnuarmemb (/nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1)
+everytag-firmware-nrf52833> -- Found Dtc: /nix/store/y5zas14gj58ph0h4yk30515pzb6pgjbi-dtc-1.7.2/bin/dtc (found suitable version "1.7.2", minimum required is "1.4.6")
+everytag-firmware-nrf52833> -- Found BOARD.dts: /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/boards/nordic/nrf52833dk/nrf52833dk_nrf52833.dts
+everytag-firmware-thingy52> -- Found Dtc: /nix/store/y5zas14gj58ph0h4yk30515pzb6pgjbi-dtc-1.7.2/bin/dtc (found suitable version "1.7.2", minimum required is "1.4.6")
+everytag-firmware-thingy52> -- Found BOARD.dts: /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/boards/nordic/thingy52/thingy52_nrf52832.dts
+everytag-firmware-nrf54l15> unit address and first address in 'reg' (0x5004c000) don't match for /soc/peripheral@50000000/vpr@4c000/mailbox@1
+everytag-firmware-nrf52810> -- Generated zephyr.dts: /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/zephyr.dts
+everytag-firmware-nrf52810> -- Generated devicetree_generated.h: /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/include/generated/zephyr/devicetree_generated.h
+everytag-firmware-nrf52832> -- Generated zephyr.dts: /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/zephyr.dts
+everytag-firmware-nrf52832> -- Generated devicetree_generated.h: /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/include/generated/zephyr/devicetree_generated.h
+everytag-firmware-thingy52> -- Generated zephyr.dts: /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/zephyr.dts
+everytag-firmware-thingy52> -- Generated devicetree_generated.h: /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/include/generated/zephyr/devicetree_generated.h
+everytag-firmware-nrf52833> -- Generated zephyr.dts: /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/zephyr.dts
+everytag-firmware-nrf52833> -- Generated devicetree_generated.h: /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/include/generated/zephyr/devicetree_generated.h
+everytag-firmware-nrf52840> -- Generated zephyr.dts: /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/zephyr.dts
+everytag-firmware-nrf52840> -- Generated devicetree_generated.h: /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/include/generated/zephyr/devicetree_generated.h
+everytag-firmware-nrf54l15> -- Generated zephyr.dts: /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/zephyr.dts
+everytag-firmware-nrf54l15> -- Generated devicetree_generated.h: /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/include/generated/zephyr/devicetree_generated.h
+everytag-firmware-nrf52810> -- Including generated dts.cmake file: /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/dts.cmake
+everytag-firmware-nrf52832> -- Including generated dts.cmake file: /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/dts.cmake
+everytag-firmware-nrf52840> -- Including generated dts.cmake file: /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/dts.cmake
+everytag-firmware-nrf54l15> -- Including generated dts.cmake file: /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/dts.cmake
+everytag-firmware-thingy52> -- Including generated dts.cmake file: /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/dts.cmake
+everytag-firmware-nrf52833> -- Including generated dts.cmake file: /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/dts.cmake
+everytag-firmware-nrf52810> 
+everytag-firmware-nrf52810> warning: PM (defined at soc/silabs/silabs_s2/efr32bg22/Kconfig.defconfig:12,
+everytag-firmware-nrf52810> soc/silabs/silabs_s2/efr32bg27/Kconfig.defconfig:12,
+everytag-firmware-nrf52810> soc/silabs/silabs_s2/efr32mg24/Kconfig.defconfig:12,
+everytag-firmware-nrf52810> soc/renesas/smartbond/da1469x/Kconfig.defconfig:39, subsys/pm/Kconfig:13) was assigned the value 'y'
+everytag-firmware-nrf52810> but got the value 'n'. Check these unsatisfied dependencies: (SOC_SERIES_EFR32BG22 ||
+everytag-firmware-nrf52810> SOC_SERIES_EFR32BG27 || SOC_SERIES_EFR32MG24 || (SOC_SERIES_DA1469X && SOC_FAMILY_RENESAS_SMARTBOND)
+everytag-firmware-nrf52810> || (SYS_CLOCK_EXISTS && HAS_PM)) (=n). See
+everytag-firmware-nrf52810> http://docs.zephyrproject.org/latest/kconfig.html#CONFIG_PM and/or look up PM in the
+everytag-firmware-nrf52810> menuconfig/guiconfig interface. The Application Development Primer, Setting Configuration Values,
+everytag-firmware-nrf52810> and Kconfig - Tips and Best Practices sections of the manual might be helpful too.
+everytag-firmware-nrf52810> 
+everytag-firmware-thingy52> 
+everytag-firmware-thingy52> warning: PM (defined at soc/silabs/silabs_s2/efr32bg22/Kconfig.defconfig:12,
+everytag-firmware-thingy52> soc/silabs/silabs_s2/efr32bg27/Kconfig.defconfig:12,
+everytag-firmware-thingy52> soc/silabs/silabs_s2/efr32mg24/Kconfig.defconfig:12,
+everytag-firmware-thingy52> soc/renesas/smartbond/da1469x/Kconfig.defconfig:39, subsys/pm/Kconfig:13) was assigned the value 'y'
+everytag-firmware-thingy52> but got the value 'n'. Check these unsatisfied dependencies: (SOC_SERIES_EFR32BG22 ||
+everytag-firmware-thingy52> SOC_SERIES_EFR32BG27 || SOC_SERIES_EFR32MG24 || (SOC_SERIES_DA1469X && SOC_FAMILY_RENESAS_SMARTBOND)
+everytag-firmware-thingy52> || (SYS_CLOCK_EXISTS && HAS_PM)) (=n). See
+everytag-firmware-thingy52> http://docs.zephyrproject.org/latest/kconfig.html#CONFIG_PM and/or look up PM in the
+everytag-firmware-thingy52> menuconfig/guiconfig interface. The Application Development Primer, Setting Configuration Values,
+everytag-firmware-thingy52> and Kconfig - Tips and Best Practices sections of the manual might be helpful too.
+everytag-firmware-thingy52> 
+everytag-firmware-nrf52833> 
+everytag-firmware-nrf52833> warning: PM (defined at soc/silabs/silabs_s2/efr32bg22/Kconfig.defconfig:12,
+everytag-firmware-nrf52833> soc/silabs/silabs_s2/efr32bg27/Kconfig.defconfig:12,
+everytag-firmware-nrf52833> soc/silabs/silabs_s2/efr32mg24/Kconfig.defconfig:12,
+everytag-firmware-nrf52833> soc/renesas/smartbond/da1469x/Kconfig.defconfig:39, subsys/pm/Kconfig:13) was assigned the value 'y'
+everytag-firmware-nrf52833> but got the value 'n'. Check these unsatisfied dependencies: (SOC_SERIES_EFR32BG22 ||
+everytag-firmware-nrf52833> SOC_SERIES_EFR32BG27 || SOC_SERIES_EFR32MG24 || (SOC_SERIES_DA1469X && SOC_FAMILY_RENESAS_SMARTBOND)
+everytag-firmware-nrf52833> || (SYS_CLOCK_EXISTS && HAS_PM)) (=n). See
+everytag-firmware-nrf52833> http://docs.zephyrproject.org/latest/kconfig.html#CONFIG_PM and/or look up PM in the
+everytag-firmware-nrf52833> menuconfig/guiconfig interface. The Application Development Primer, Setting Configuration Values,
+everytag-firmware-nrf52833> and Kconfig - Tips and Best Practices sections of the manual might be helpful too.
+everytag-firmware-nrf52833> 
+everytag-firmware-nrf52840> 
+everytag-firmware-nrf52840> warning: PM (defined at soc/silabs/silabs_s2/efr32bg22/Kconfig.defconfig:12,
+everytag-firmware-nrf52840> soc/silabs/silabs_s2/efr32bg27/Kconfig.defconfig:12,
+everytag-firmware-nrf52840> soc/silabs/silabs_s2/efr32mg24/Kconfig.defconfig:12,
+everytag-firmware-nrf52840> soc/renesas/smartbond/da1469x/Kconfig.defconfig:39, subsys/pm/Kconfig:13) was assigned the value 'y'
+everytag-firmware-nrf52840> but got the value 'n'. Check these unsatisfied dependencies: (SOC_SERIES_EFR32BG22 ||
+everytag-firmware-nrf52840> SOC_SERIES_EFR32BG27 || SOC_SERIES_EFR32MG24 || (SOC_SERIES_DA1469X && SOC_FAMILY_RENESAS_SMARTBOND)
+everytag-firmware-nrf52840> || (SYS_CLOCK_EXISTS && HAS_PM)) (=n). See
+everytag-firmware-nrf52840> http://docs.zephyrproject.org/latest/kconfig.html#CONFIG_PM and/or look up PM in the
+everytag-firmware-nrf52840> menuconfig/guiconfig interface. The Application Development Primer, Setting Configuration Values,
+everytag-firmware-nrf52840> and Kconfig - Tips and Best Practices sections of the manual might be helpful too.
+everytag-firmware-nrf52840> 
+everytag-firmware-nrf54l15> 
+everytag-firmware-nrf54l15> warning: SPI (defined at boards/shields/sparkfun_carrier_asset_tracker/Kconfig.defconfig:18,
+everytag-firmware-nrf54l15> boards/shields/x_nucleo_bnrg2a1/Kconfig.defconfig:8,
+everytag-firmware-nrf54l15> boards/shields/x_nucleo_idb05a1/Kconfig.defconfig:8,
+everytag-firmware-nrf54l15> boards/shields/x_nucleo_wb05kn1/Kconfig.defconfig:8, soc/nxp/kinetis/k6x/Kconfig.defconfig:19,
+everytag-firmware-nrf54l15> soc/nxp/kinetis/kwx/Kconfig.defconfig:12, soc/gaisler/gr716a/Kconfig.defconfig:15,
+everytag-firmware-nrf54l15> drivers/spi/Kconfig:9) was assigned the value 'n' but got the value 'y'. See
+everytag-firmware-nrf54l15> http://docs.zephyrproject.org/latest/kconfig.html#CONFIG_SPI and/or look up SPI in the
+everytag-firmware-nrf54l15> menuconfig/guiconfig interface. The Application Development Primer, Setting Configuration Values,
+everytag-firmware-nrf54l15> and Kconfig - Tips and Best Practices sections of the manual might be helpful too.
+everytag-firmware-nrf54l15> 
+everytag-firmware-nrf54l15> 
+everytag-firmware-nrf54l15> warning: PM (defined at soc/silabs/silabs_s2/efr32bg22/Kconfig.defconfig:12,
+everytag-firmware-nrf54l15> soc/silabs/silabs_s2/efr32bg27/Kconfig.defconfig:12,
+everytag-firmware-nrf54l15> soc/silabs/silabs_s2/efr32mg24/Kconfig.defconfig:12,
+everytag-firmware-nrf54l15> soc/renesas/smartbond/da1469x/Kconfig.defconfig:39, subsys/pm/Kconfig:13) was assigned the value 'y'
+everytag-firmware-nrf54l15> but got the value 'n'. Check these unsatisfied dependencies: (SOC_SERIES_EFR32BG22 ||
+everytag-firmware-nrf54l15> SOC_SERIES_EFR32BG27 || SOC_SERIES_EFR32MG24 || (SOC_SERIES_DA1469X && SOC_FAMILY_RENESAS_SMARTBOND)
+everytag-firmware-nrf54l15> || (SYS_CLOCK_EXISTS && HAS_PM)) (=n). See
+everytag-firmware-nrf54l15> http://docs.zephyrproject.org/latest/kconfig.html#CONFIG_PM and/or look up PM in the
+everytag-firmware-nrf54l15> menuconfig/guiconfig interface. The Application Development Primer, Setting Configuration Values,
+everytag-firmware-nrf54l15> and Kconfig - Tips and Best Practices sections of the manual might be helpful too.
+everytag-firmware-nrf54l15> 
+everytag-firmware-nrf52832> 
+everytag-firmware-nrf52832> warning: PM (defined at soc/silabs/silabs_s2/efr32bg22/Kconfig.defconfig:12,
+everytag-firmware-nrf52832> soc/silabs/silabs_s2/efr32bg27/Kconfig.defconfig:12,
+everytag-firmware-nrf52832> soc/silabs/silabs_s2/efr32mg24/Kconfig.defconfig:12,
+everytag-firmware-nrf52832> soc/renesas/smartbond/da1469x/Kconfig.defconfig:39, subsys/pm/Kconfig:13) was assigned the value 'y'
+everytag-firmware-nrf52832> but got the value 'n'. Check these unsatisfied dependencies: (SOC_SERIES_EFR32BG22 ||
+everytag-firmware-nrf52832> SOC_SERIES_EFR32BG27 || SOC_SERIES_EFR32MG24 || (SOC_SERIES_DA1469X && SOC_FAMILY_RENESAS_SMARTBOND)
+everytag-firmware-nrf52832> || (SYS_CLOCK_EXISTS && HAS_PM)) (=n). See
+everytag-firmware-nrf52832> http://docs.zephyrproject.org/latest/kconfig.html#CONFIG_PM and/or look up PM in the
+everytag-firmware-nrf52832> menuconfig/guiconfig interface. The Application Development Primer, Setting Configuration Values,
+everytag-firmware-nrf52832> and Kconfig - Tips and Best Practices sections of the manual might be helpful too.
+everytag-firmware-nrf52832> 
+everytag-firmware-nrf52810> Parsing /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/Kconfig
+everytag-firmware-nrf52810> Loaded configuration '/nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/boards/arm/kkm_p1_nrf52810/kkm_p1_nrf52810_defconfig'
+everytag-firmware-nrf52810> Merged configuration '/nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/prj.conf'
+everytag-firmware-nrf52810> Configuration saved to '/nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/.config'
+everytag-firmware-nrf52810> Kconfig header saved to '/nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/include/generated/zephyr/autoconf.h'
+everytag-firmware-nrf52840> Parsing /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/Kconfig
+everytag-firmware-nrf52840> Loaded configuration '/nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/boards/nordic/nrf52840dk/nrf52840dk_nrf52840_defconfig'
+everytag-firmware-nrf52840> Merged configuration '/nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/prj.conf'
+everytag-firmware-nrf52840> Configuration saved to '/nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/.config'
+everytag-firmware-nrf52840> Kconfig header saved to '/nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/include/generated/zephyr/autoconf.h'
+everytag-firmware-nrf54l15> Parsing /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/Kconfig
+everytag-firmware-nrf54l15> Loaded configuration '/nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/boards/nordic/nrf54l15dk/nrf54l15dk_nrf54l15_cpuapp_defconfig'
+everytag-firmware-nrf54l15> Merged configuration '/nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/prj.conf'
+everytag-firmware-nrf54l15> Configuration saved to '/nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/.config'
+everytag-firmware-nrf54l15> Kconfig header saved to '/nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/include/generated/zephyr/autoconf.h'
+everytag-firmware-nrf52833> Parsing /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/Kconfig
+everytag-firmware-nrf52833> Loaded configuration '/nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/boards/nordic/nrf52833dk/nrf52833dk_nrf52833_defconfig'
+everytag-firmware-nrf52833> Merged configuration '/nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/prj.conf'
+everytag-firmware-nrf52833> Configuration saved to '/nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/.config'
+everytag-firmware-nrf52833> Kconfig header saved to '/nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/include/generated/zephyr/autoconf.h'
+everytag-firmware-nrf52832> Parsing /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/Kconfig
+everytag-firmware-nrf52832> Loaded configuration '/nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/boards/nordic/nrf52dk/nrf52dk_nrf52832_defconfig'
+everytag-firmware-nrf52832> Merged configuration '/nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/prj.conf'
+everytag-firmware-nrf52832> Configuration saved to '/nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/.config'
+everytag-firmware-nrf52832> Kconfig header saved to '/nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/include/generated/zephyr/autoconf.h'
+everytag-firmware-thingy52> Parsing /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/Kconfig
+everytag-firmware-thingy52> Loaded configuration '/nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/boards/nordic/thingy52/thingy52_nrf52832_defconfig'
+everytag-firmware-thingy52> Merged configuration '/nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/prj.conf'
+everytag-firmware-thingy52> Configuration saved to '/nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/.config'
+everytag-firmware-thingy52> Kconfig header saved to '/nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/include/generated/zephyr/autoconf.h'
+everytag-firmware-nrf52832> -- Found GnuLd: /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/arm-none-eabi/bin/ld.bfd (found version "2.45.1")
+everytag-firmware-nrf52810> -- Found GnuLd: /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/arm-none-eabi/bin/ld.bfd (found version "2.45.1")
+everytag-firmware-nrf52833> -- Found GnuLd: /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/arm-none-eabi/bin/ld.bfd (found version "2.45.1")
+everytag-firmware-nrf54l15> -- Found GnuLd: /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/arm-none-eabi/bin/ld.bfd (found version "2.45.1")
+everytag-firmware-thingy52> -- Found GnuLd: /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/arm-none-eabi/bin/ld.bfd (found version "2.45.1")
+everytag-firmware-nrf52840> -- Found GnuLd: /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/arm-none-eabi/bin/ld.bfd (found version "2.45.1")
+everytag-firmware-nrf52832> -- The C compiler identification is GNU 15.2.1
+everytag-firmware-nrf52833> -- The C compiler identification is GNU 15.2.1
+everytag-firmware-thingy52> -- The C compiler identification is GNU 15.2.1
+everytag-firmware-nrf52810> -- The C compiler identification is GNU 15.2.1
+everytag-firmware-nrf54l15> -- The C compiler identification is GNU 15.2.1
+everytag-firmware-nrf52840> -- The C compiler identification is GNU 15.2.1
+everytag-firmware-nrf52810> -- The CXX compiler identification is GNU 15.2.1
+everytag-firmware-nrf52840> -- The CXX compiler identification is GNU 15.2.1
+everytag-firmware-thingy52> -- The CXX compiler identification is GNU 15.2.1
+everytag-firmware-nrf52832> -- The CXX compiler identification is GNU 15.2.1
+everytag-firmware-nrf52833> -- The CXX compiler identification is GNU 15.2.1
+everytag-firmware-nrf54l15> -- The CXX compiler identification is GNU 15.2.1
+everytag-firmware-nrf52832> -- The ASM compiler identification is GNU
+everytag-firmware-nrf52833> -- The ASM compiler identification is GNU
+everytag-firmware-nrf52840> -- The ASM compiler identification is GNU
+everytag-firmware-thingy52> -- The ASM compiler identification is GNU
+everytag-firmware-nrf52810> -- The ASM compiler identification is GNU
+everytag-firmware-nrf52833> -- Found assembler: /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/arm-none-eabi-gcc
+everytag-firmware-nrf54l15> -- The ASM compiler identification is GNU
+everytag-firmware-nrf52810> -- Found assembler: /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/arm-none-eabi-gcc
+everytag-firmware-nrf52832> -- Found assembler: /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/arm-none-eabi-gcc
+everytag-firmware-nrf52840> -- Found assembler: /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/arm-none-eabi-gcc
+everytag-firmware-nrf54l15> -- Found assembler: /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/arm-none-eabi-gcc
+everytag-firmware-thingy52> -- Found assembler: /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/arm-none-eabi-gcc
+everytag-firmware-nrf54l15> =========== Generating psa_crypto_config ===============
+everytag-firmware-nrf54l15> Backup: CONFIG_MBEDTLS_PSA_CRYPTO_SPM: False
+everytag-firmware-nrf54l15> Backup: CONFIG_MBEDTLS_PSA_CRYPTO_C: True
+everytag-firmware-nrf54l15> Backup: CONFIG_MBEDTLS_PSA_CRYPTO_KEY_ID_ENCODES_OWNER: False
+everytag-firmware-nrf54l15> Backup: CONFIG_MBEDTLS_PLATFORM_SETUP_TEARDOWN_ALT: False
+everytag-firmware-nrf54l15> Backup: CONFIG_MBEDTLS_THREADING: False
+everytag-firmware-nrf54l15> Backup: CONFIG_MBEDTLS_THREADING_ALT: True
+everytag-firmware-nrf54l15> =========== Checkpoint: backup ===============
+everytag-firmware-nrf54l15> Restore: CONFIG_MBEDTLS_PSA_CRYPTO_SPM: False
+everytag-firmware-nrf54l15> Restore: CONFIG_MBEDTLS_PSA_CRYPTO_C: True
+everytag-firmware-nrf54l15> Restore: CONFIG_MBEDTLS_PSA_CRYPTO_KEY_ID_ENCODES_OWNER: False
+everytag-firmware-nrf54l15> Restore: CONFIG_MBEDTLS_PLATFORM_SETUP_TEARDOWN_ALT: False
+everytag-firmware-nrf54l15> Restore: CONFIG_MBEDTLS_THREADING: False
+everytag-firmware-nrf54l15> Restore: CONFIG_MBEDTLS_THREADING_ALT: True
+everytag-firmware-nrf54l15> =========== End psa_crypto_config ===============
+everytag-firmware-nrf54l15> =========== Generating psa_crypto_library_config ===============
+everytag-firmware-nrf54l15> Backup: CONFIG_MBEDTLS_PSA_CRYPTO_C: True
+everytag-firmware-nrf54l15> Backup: CONFIG_MBEDTLS_PSA_CRYPTO_KEY_ID_ENCODES_OWNER: False
+everytag-firmware-nrf54l15> Backup: CONFIG_MBEDTLS_PSA_CRYPTO_SPM: False
+everytag-firmware-nrf54l15> Backup: CONFIG_MBEDTLS_USE_PSA_CRYPTO: True
+everytag-firmware-nrf54l15> Backup: CONFIG_MBEDTLS_PLATFORM_PRINTF_ALT: False
+everytag-firmware-nrf54l15> Backup: CONFIG_MBEDTLS_THREADING: False
+everytag-firmware-nrf54l15> Backup: CONFIG_MBEDTLS_THREADING_ALT: True
+everytag-firmware-nrf54l15> =========== Checkpoint: backup ===============
+everytag-firmware-nrf54l15> Restore: CONFIG_MBEDTLS_PSA_CRYPTO_C: True
+everytag-firmware-nrf54l15> Restore: CONFIG_MBEDTLS_PSA_CRYPTO_KEY_ID_ENCODES_OWNER: False
+everytag-firmware-nrf54l15> Restore: CONFIG_MBEDTLS_PSA_CRYPTO_SPM: False
+everytag-firmware-nrf54l15> Restore: CONFIG_MBEDTLS_USE_PSA_CRYPTO: True
+everytag-firmware-nrf54l15> Restore: CONFIG_MBEDTLS_PLATFORM_PRINTF_ALT: False
+everytag-firmware-nrf54l15> Restore: CONFIG_MBEDTLS_THREADING: False
+everytag-firmware-nrf54l15> Restore: CONFIG_MBEDTLS_THREADING_ALT: True
+everytag-firmware-nrf54l15> =========== End psa_crypto_library_config ===============
+everytag-firmware-nrf52832> -- Configuring done (23.7s)
+everytag-firmware-thingy52> -- Configuring done (23.7s)
+everytag-firmware-nrf52810> -- Configuring done (23.7s)
+everytag-firmware-nrf52840> -- Configuring done (23.8s)
+everytag-firmware-nrf52833> -- Configuring done (23.8s)
+everytag-firmware-nrf54l15> -- Configuring done (23.9s)
+everytag-firmware-nrf52810> -- Generating done (2.4s)
+everytag-firmware-nrf52810> -- Build files have been written to: /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build
+everytag-firmware-nrf52810> ninja: Entering directory `build'
+everytag-firmware-nrf52832> -- Generating done (2.5s)
+everytag-firmware-nrf52832> -- Build files have been written to: /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build
+everytag-firmware-nrf52833> -- Generating done (2.4s)
+everytag-firmware-nrf52833> -- Build files have been written to: /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build
+everytag-firmware-thingy52> -- Generating done (2.5s)
+everytag-firmware-thingy52> -- Build files have been written to: /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build
+everytag-firmware-nrf52832> ninja: Entering directory `build'
+everytag-firmware-nrf52840> -- Generating done (2.5s)
+everytag-firmware-nrf52840> -- Build files have been written to: /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build
+everytag-firmware-nrf54l15> -- Generating done (2.3s)
+everytag-firmware-nrf52833> ninja: Entering directory `build'
+everytag-firmware-nrf54l15> -- Build files have been written to: /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build
+everytag-firmware-nrf52810> [1/229] Preparing syscall dependency handling
+everytag-firmware-nrf52810> 
+everytag-firmware-thingy52> ninja: Entering directory `build'
+everytag-firmware-nrf52840> ninja: Entering directory `build'
+everytag-firmware-nrf54l15> ninja: Entering directory `build'
+everytag-firmware-nrf52832> [1/220] Preparing syscall dependency handling
+everytag-firmware-nrf52832> 
+everytag-firmware-nrf52833> [1/220] Preparing syscall dependency handling
+everytag-firmware-nrf52833> 
+everytag-firmware-thingy52> [1/233] Preparing syscall dependency handling
+everytag-firmware-thingy52> 
+everytag-firmware-nrf52840> [1/231] Preparing syscall dependency handling
+everytag-firmware-nrf52840> 
+everytag-firmware-nrf54l15> [1/339] Preparing syscall dependency handling
+everytag-firmware-nrf54l15> 
+everytag-firmware-nrf52810> [6/229] Generating include/generated/zephyr/version.h
+everytag-firmware-nrf52810> -- Zephyr version: 3.7.99 (/nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr), build: f3e03efa33dc
+everytag-firmware-nrf52833> [6/220] Generating include/generated/zephyr/version.h
+everytag-firmware-nrf52833> -- Zephyr version: 3.7.99 (/nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr), build: f3e03efa33dc
+everytag-firmware-nrf52832> [6/220] Generating include/generated/zephyr/version.h
+everytag-firmware-nrf52832> -- Zephyr version: 3.7.99 (/nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr), build: f3e03efa33dc
+everytag-firmware-nrf54l15> [6/339] Generating include/generated/zephyr/version.h
+everytag-firmware-nrf54l15> -- Zephyr version: 3.7.99 (/nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr), build: f3e03efa33dc
+everytag-firmware-thingy52> [6/233] Generating include/generated/zephyr/version.h
+everytag-firmware-thingy52> -- Zephyr version: 3.7.99 (/nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr), build: f3e03efa33dc
+everytag-firmware-nrf52840> [6/231] Generating include/generated/zephyr/version.h
+everytag-firmware-nrf52840> -- Zephyr version: 3.7.99 (/nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr), build: f3e03efa33dc
+everytag-firmware-thingy52> [91/233] Building C object zephyr/soc/soc/nrf52832/CMakeFiles/soc__nordic.dir/validate_binding_headers.c.obj
+everytag-firmware-thingy52> In file included from <command-line>:
+everytag-firmware-thingy52> /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:6: warning: header guard 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_' followed by '#define' of a different macro [-Wheader-guard]
+everytag-firmware-thingy52>     6 | #ifndef ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_
+everytag-firmware-thingy52> /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:7: note: 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_' is defined here; did you mean 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_'?
+everytag-firmware-thingy52>     7 | #define ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_
+everytag-firmware-nrf52833> [91/220] Building C object zephyr/soc/soc/nrf52833/CMakeFiles/soc__nordic.dir/validate_binding_headers.c.obj
+everytag-firmware-nrf52833> In file included from <command-line>:
+everytag-firmware-nrf52833> /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:6: warning: header guard 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_' followed by '#define' of a different macro [-Wheader-guard]
+everytag-firmware-nrf52833>     6 | #ifndef ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_
+everytag-firmware-nrf52833> /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:7: note: 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_' is defined here; did you mean 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_'?
+everytag-firmware-nrf52833>     7 | #define ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_
+everytag-firmware-nrf52832> [84/220] Building C object zephyr/soc/soc/nrf52832/CMakeFiles/soc__nordic.dir/validate_binding_headers.c.obj
+everytag-firmware-nrf52832> In file included from <command-line>:
+everytag-firmware-nrf52832> /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:6: warning: header guard 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_' followed by '#define' of a different macro [-Wheader-guard]
+everytag-firmware-nrf52832>     6 | #ifndef ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_
+everytag-firmware-nrf52832> /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:7: note: 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_' is defined here; did you mean 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_'?
+everytag-firmware-nrf52832>     7 | #define ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_
+everytag-firmware-nrf52810> [91/229] Building C object zephyr/soc/soc/nrf52810/CMakeFiles/soc__nordic.dir/validate_binding_headers.c.obj
+everytag-firmware-nrf52810> In file included from <command-line>:
+everytag-firmware-nrf52810> /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:6: warning: header guard 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_' followed by '#define' of a different macro [-Wheader-guard]
+everytag-firmware-nrf52810>     6 | #ifndef ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_
+everytag-firmware-nrf52810> /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:7: note: 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_' is defined here; did you mean 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_'?
+everytag-firmware-nrf52810>     7 | #define ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_
+everytag-firmware-nrf52840> [93/231] Building C object zephyr/soc/soc/nrf52840/CMakeFiles/soc__nordic.dir/validate_binding_headers.c.obj
+everytag-firmware-nrf52840> In file included from <command-line>:
+everytag-firmware-nrf52840> /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:6: warning: header guard 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_' followed by '#define' of a different macro [-Wheader-guard]
+everytag-firmware-nrf52840>     6 | #ifndef ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_
+everytag-firmware-nrf52840> /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:7: note: 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_' is defined here; did you mean 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_'?
+everytag-firmware-nrf52840>     7 | #define ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_
+everytag-firmware-nrf52833> [98/220] Building C object zephyr/soc/soc/nrf52833/CMakeFiles/soc__nordic.dir/nrf52/soc.c.obj
+everytag-firmware-nrf52833> In file included from /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/soc/nordic/nrf52/soc.c:16:
+everytag-firmware-nrf52833> /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:6: warning: header guard 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_' followed by '#define' of a different macro [-Wheader-guard]
+everytag-firmware-nrf52833>     6 | #ifndef ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_
+everytag-firmware-nrf52833> /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:7: note: 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_' is defined here; did you mean 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_'?
+everytag-firmware-nrf52833>     7 | #define ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_
+everytag-firmware-thingy52> [102/233] Building C object zephyr/soc/soc/nrf52832/CMakeFiles/soc__nordic.dir/nrf52/soc.c.obj
+everytag-firmware-thingy52> In file included from /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/soc/nordic/nrf52/soc.c:16:
+everytag-firmware-thingy52> /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:6: warning: header guard 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_' followed by '#define' of a different macro [-Wheader-guard]
+everytag-firmware-thingy52>     6 | #ifndef ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_
+everytag-firmware-thingy52> /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:7: note: 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_' is defined here; did you mean 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_'?
+everytag-firmware-thingy52>     7 | #define ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_
+everytag-firmware-nrf52810> [99/229] Building C object zephyr/soc/soc/nrf52810/CMakeFiles/soc__nordic.dir/nrf52/soc.c.obj
+everytag-firmware-nrf52810> In file included from /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/soc/nordic/nrf52/soc.c:16:
+everytag-firmware-nrf52810> /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:6: warning: header guard 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_' followed by '#define' of a different macro [-Wheader-guard]
+everytag-firmware-nrf52810>     6 | #ifndef ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_
+everytag-firmware-nrf52810> /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:7: note: 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_' is defined here; did you mean 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_'?
+everytag-firmware-nrf52810>     7 | #define ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_
+everytag-firmware-nrf52840> [100/231] Building C object zephyr/soc/soc/nrf52840/CMakeFiles/soc__nordic.dir/nrf52/soc.c.obj
+everytag-firmware-nrf52840> In file included from /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/soc/nordic/nrf52/soc.c:16:
+everytag-firmware-nrf52840> /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:6: warning: header guard 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_' followed by '#define' of a different macro [-Wheader-guard]
+everytag-firmware-nrf52840>     6 | #ifndef ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_
+everytag-firmware-nrf52840> /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:7: note: 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_' is defined here; did you mean 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_'?
+everytag-firmware-nrf52840>     7 | #define ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_
+everytag-firmware-nrf52832> [103/220] Building C object zephyr/soc/soc/nrf52832/CMakeFiles/soc__nordic.dir/nrf52/soc.c.obj
+everytag-firmware-nrf52832> In file included from /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/soc/nordic/nrf52/soc.c:16:
+everytag-firmware-nrf52832> /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:6: warning: header guard 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_' followed by '#define' of a different macro [-Wheader-guard]
+everytag-firmware-nrf52832>     6 | #ifndef ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_
+everytag-firmware-nrf52832> /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:7: note: 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_' is defined here; did you mean 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_'?
+everytag-firmware-nrf52832>     7 | #define ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_
+everytag-firmware-nrf54l15> [190/339] Building C object zephyr/soc/soc/nrf54l15/CMakeFiles/soc__nordic.dir/validate_binding_headers.c.obj
+everytag-firmware-nrf54l15> In file included from <command-line>:
+everytag-firmware-nrf54l15> /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:6: warning: header guard 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_' followed by '#define' of a different macro [-Wheader-guard]
+everytag-firmware-nrf54l15>     6 | #ifndef ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_
+everytag-firmware-nrf54l15> /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:7: note: 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_' is defined here; did you mean 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_'?
+everytag-firmware-nrf54l15>     7 | #define ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_
+everytag-firmware-nrf54l15> [207/339] Building C object zephyr/soc/soc/nrf54l15/CMakeFiles/soc__nordic.dir/nrf54l/soc.c.obj
+everytag-firmware-nrf54l15> In file included from /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/soc/nordic/nrf54l/soc.c:20:
+everytag-firmware-nrf54l15> /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:6: warning: header guard 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_' followed by '#define' of a different macro [-Wheader-guard]
+everytag-firmware-nrf54l15>     6 | #ifndef ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_
+everytag-firmware-nrf54l15> /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/zephyr/include/zephyr/dt-bindings/regulator/nrf5x.h:7: note: 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_' is defined here; did you mean 'ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF5X_H_'?
+everytag-firmware-nrf54l15>     7 | #define ZEPHYR_INCLUDE_DT_BINDINGS_REGULATOR_NRF_H_
+everytag-firmware-thingy52> [228/233] Linking CXX executable zephyr/zephyr_pre0.elf; Logical command for additional byproducts on target: zephyr_pre0
+everytag-firmware-thingy52> /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/bin/ld.bfd: warning: zephyr/zephyr_pre0.elf has a LOAD segment with RWX permissions
+everytag-firmware-nrf52833> [215/220] Linking CXX executable zephyr/zephyr_pre0.elf; Logical command for additional byproducts on target: zephyr_pre0
+everytag-firmware-nrf52833> /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/bin/ld.bfd: warning: zephyr/zephyr_pre0.elf has a LOAD segment with RWX permissions
+everytag-firmware-nrf52810> [224/229] Linking CXX executable zephyr/zephyr_pre0.elf; Logical command for additional byproducts on target: zephyr_pre0
+everytag-firmware-nrf52810> /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/bin/ld.bfd: warning: zephyr/zephyr_pre0.elf has a LOAD segment with RWX permissions
+everytag-firmware-nrf52840> [226/231] Linking CXX executable zephyr/zephyr_pre0.elf; Logical command for additional byproducts on target: zephyr_pre0
+everytag-firmware-nrf52840> /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/bin/ld.bfd: warning: zephyr/zephyr_pre0.elf has a LOAD segment with RWX permissions
+everytag-firmware-nrf52832> [215/220] Linking CXX executable zephyr/zephyr_pre0.elf; Logical command for additional byproducts on target: zephyr_pre0
+everytag-firmware-nrf52832> /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/bin/ld.bfd: warning: zephyr/zephyr_pre0.elf has a LOAD segment with RWX permissions
+everytag-firmware-thingy52> [233/233] Linking CXX executable zephyr/zephyr.elf
+everytag-firmware-thingy52> /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/bin/ld.bfd: warning: zephyr/zephyr.elf has a LOAD segment with RWX permissions
+everytag-firmware-thingy52> Memory region         Used Size  Region Size  %age Used
+everytag-firmware-thingy52>            FLASH:      158524 B       512 KB     30.24%
+everytag-firmware-thingy52>              RAM:       23312 B        64 KB     35.57%
+everytag-firmware-thingy52>         IDT_LIST:           0 B        32 KB      0.00%
+everytag-firmware-thingy52> Generating files from /nix/var/nix/builds/nix-62802-333934861/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/zephyr.elf for board: thingy52
+everytag-firmware-nrf52810> [229/229] Linking CXX executable zephyr/zephyr.elf
+everytag-firmware-nrf52810> /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/bin/ld.bfd: warning: zephyr/zephyr.elf has a LOAD segment with RWX permissions
+everytag-firmware-nrf52810> Memory region         Used Size  Region Size  %age Used
+everytag-firmware-nrf52810>            FLASH:      157548 B       192 KB     80.13%
+everytag-firmware-nrf52810>              RAM:       22992 B        24 KB     93.55%
+everytag-firmware-nrf52810>         IDT_LIST:           0 B        32 KB      0.00%
+everytag-firmware-nrf52810> Generating files from /nix/var/nix/builds/nix-62802-333934856/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/zephyr.elf for board: kkm_p1_nrf52810
+everytag-firmware-thingy52> buildPhase completed in 1 minutes 7 seconds
+everytag-firmware-thingy52> Running phase: installPhase
+everytag-firmware-nrf52833> [220/220] Linking CXX executable zephyr/zephyr.elf
+everytag-firmware-nrf52833> /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/bin/ld.bfd: warning: zephyr/zephyr.elf has a LOAD segment with RWX permissions
+everytag-firmware-nrf52833> Memory region         Used Size  Region Size  %age Used
+everytag-firmware-nrf52833>            FLASH:      151352 B       512 KB     28.87%
+everytag-firmware-nrf52833>              RAM:       22800 B       128 KB     17.40%
+everytag-firmware-nrf52833>         IDT_LIST:           0 B        32 KB      0.00%
+everytag-firmware-nrf52833> Generating files from /nix/var/nix/builds/nix-62802-333934858/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/zephyr.elf for board: nrf52833dk
+everytag-firmware-nrf52810> buildPhase completed in 1 minutes 7 seconds
+everytag-firmware-nrf52810> Running phase: installPhase
+everytag-firmware-nrf52833> buildPhase completed in 1 minutes 7 seconds
+everytag-firmware-nrf52833> Running phase: installPhase
+everytag-firmware-nrf52832> [220/220] Linking CXX executable zephyr/zephyr.elf
+everytag-firmware-nrf52832> /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/bin/ld.bfd: warning: zephyr/zephyr.elf has a LOAD segment with RWX permissions
+everytag-firmware-nrf52832> Memory region         Used Size  Region Size  %age Used
+everytag-firmware-nrf52832>            FLASH:      151288 B       512 KB     28.86%
+everytag-firmware-nrf52832>              RAM:       22800 B        64 KB     34.79%
+everytag-firmware-nrf52832>         IDT_LIST:           0 B        32 KB      0.00%
+everytag-firmware-nrf52832> Generating files from /nix/var/nix/builds/nix-62802-333934857/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/zephyr.elf for board: nrf52dk
+everytag-firmware-nrf52832> buildPhase completed in 1 minutes 7 seconds
+everytag-firmware-nrf52832> Running phase: installPhase
+everytag-firmware-nrf52810>    text        data     bss     dec     hex filename
+everytag-firmware-nrf52810>  154716        2822   20394  177932   2b70c build/zephyr/zephyr.elf
+everytag-firmware-thingy52>    text        data     bss     dec     hex filename
+everytag-firmware-thingy52>  155440        3066   20558  179064   2bb78 build/zephyr/zephyr.elf
+everytag-firmware-nrf52810> Running phase: fixupPhase
+everytag-firmware-thingy52> Running phase: fixupPhase
+everytag-firmware-nrf52833>    text        data     bss     dec     hex filename
+everytag-firmware-nrf52833>  148468        2874   20297  171639   29e77 build/zephyr/zephyr.elf
+everytag-firmware-nrf52840> [231/231] Linking CXX executable zephyr/zephyr.elf
+everytag-firmware-nrf52840> /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/bin/ld.bfd: warning: zephyr/zephyr.elf has a LOAD segment with RWX permissions
+everytag-firmware-nrf52840> Memory region         Used Size  Region Size  %age Used
+everytag-firmware-nrf52840>            FLASH:      169904 B         1 MB     16.20%
+everytag-firmware-nrf52840>              RAM:       27344 B       256 KB     10.43%
+everytag-firmware-nrf52840>         IDT_LIST:           0 B        32 KB      0.00%
+everytag-firmware-nrf52840> Generating files from /nix/var/nix/builds/nix-62802-333934859/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/zephyr.elf for board: nrf52840dk
+everytag-firmware-nrf52840> buildPhase completed in 1 minutes 7 seconds
+everytag-firmware-nrf52840> Running phase: installPhase
+everytag-firmware-nrf52832>    text        data     bss     dec     hex filename
+everytag-firmware-nrf52832>  148488        2780   20286  171554   29e22 build/zephyr/zephyr.elf
+everytag-firmware-nrf52833> Running phase: fixupPhase
+everytag-firmware-nrf52810> checking for references to /nix/var/nix/builds/nix-62802-333934856/ in /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810...
+everytag-firmware-nrf52832> Running phase: fixupPhase
+everytag-firmware-thingy52> checking for references to /nix/var/nix/builds/nix-62802-333934861/ in /nix/store/7s45nmfpz02ykj6kaahgxvg2nj5pnjkx-everytag-firmware-thingy52...
+everytag-firmware-nrf52833> checking for references to /nix/var/nix/builds/nix-62802-333934858/ in /nix/store/nv3rbkx9x8kin4b34s7smqaaqvhbgg2r-everytag-firmware-nrf52833...
+everytag-firmware-nrf52840>    text        data     bss     dec     hex filename
+everytag-firmware-nrf52840>  166612        3282   24430  194324   2f714 build/zephyr/zephyr.elf
+everytag-firmware-nrf52832> checking for references to /nix/var/nix/builds/nix-62802-333934857/ in /nix/store/166w6g8k9pj3n3lgi4671clmxjz455zb-everytag-firmware-nrf52832...
+everytag-firmware-nrf52840> Running phase: fixupPhase
+everytag-firmware-nrf52810> _: line 2: patchelf: command not found
+everytag-firmware-nrf52833> _: line 2: patchelf: command not found
+everytag-firmware-thingy52> _: line 2: patchelf: command not found
+everytag-firmware-nrf52832> _: line 2: patchelf: command not found
+everytag-firmware-nrf52840> checking for references to /nix/var/nix/builds/nix-62802-333934859/ in /nix/store/6pq74vxvs0nl8lkb08j1zjkgpqwabyw3-everytag-firmware-nrf52840...
+everytag-firmware-thingy52> patching script interpreter paths in /nix/store/7s45nmfpz02ykj6kaahgxvg2nj5pnjkx-everytag-firmware-thingy52
+everytag-firmware-nrf52833> patching script interpreter paths in /nix/store/nv3rbkx9x8kin4b34s7smqaaqvhbgg2r-everytag-firmware-nrf52833
+everytag-firmware-nrf52810> patching script interpreter paths in /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810
+everytag-firmware-nrf52832> patching script interpreter paths in /nix/store/166w6g8k9pj3n3lgi4671clmxjz455zb-everytag-firmware-nrf52832
+everytag-firmware-nrf52840> _: line 2: patchelf: command not found
+everytag-firmware-nrf52840> patching script interpreter paths in /nix/store/6pq74vxvs0nl8lkb08j1zjkgpqwabyw3-everytag-firmware-nrf52840
+everytag-firmware-nrf54l15> [334/339] Linking CXX executable zephyr/zephyr_pre0.elf; Logical command for additional byproducts on target: zephyr_pre0
+everytag-firmware-nrf54l15> /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/bin/ld.bfd: warning: zephyr/zephyr_pre0.elf has a LOAD segment with RWX permissions
+everytag-firmware-nrf54l15> [339/339] Linking CXX executable zephyr/zephyr.elf
+everytag-firmware-nrf54l15> /nix/store/diav2yfklla6xxdwlfmpnz3fjn8q90j4-gcc-arm-embedded-15.2.rel1/bin/../lib/gcc/arm-none-eabi/15.2.1/../../../../arm-none-eabi/bin/ld.bfd: warning: zephyr/zephyr.elf has a LOAD segment with RWX permissions
+everytag-firmware-nrf54l15> Memory region         Used Size  Region Size  %age Used
+everytag-firmware-nrf54l15>            FLASH:      180796 B      1428 KB     12.36%
+everytag-firmware-nrf54l15>              RAM:       26032 B       188 KB     13.52%
+everytag-firmware-nrf54l15>         IDT_LIST:           0 B        32 KB      0.00%
+everytag-firmware-nrf54l15> Generating files from /nix/var/nix/builds/nix-62802-333934860/jahgnrqwdpwvy9f8zlkbm9nx5nxpks5b-source/everytag/build/zephyr/zephyr.elf for board: nrf54l15dk
+everytag-firmware-nrf54l15> buildPhase completed in 1 minutes 38 seconds
+everytag-firmware-nrf54l15> Running phase: installPhase
+everytag-firmware-nrf54l15>    text        data     bss     dec     hex filename
+everytag-firmware-nrf54l15>  175060        5724   22485  203269   31a05 build/zephyr/zephyr.elf
+everytag-firmware-nrf54l15> Running phase: fixupPhase
+everytag-firmware-nrf54l15> checking for references to /nix/var/nix/builds/nix-62802-333934860/ in /nix/store/c99a9mff94rs3mi4ha5l1srq6jgg9a25-everytag-firmware-nrf54l15...
+everytag-firmware-nrf54l15> _: line 2: patchelf: command not found
+everytag-firmware-nrf54l15> patching script interpreter paths in /nix/store/c99a9mff94rs3mi4ha5l1srq6jgg9a25-everytag-firmware-nrf54l15
+everytag-firmware-nrf54l15> fixupPhase completed in 1 minutes 58 seconds
+building '/nix/store/vilsy0b5fji8k648qv8k768zcq8dj4gv-everytag-firmware-all.drv'...
+everytag-firmware-all> zephyr.hex: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr.hex
+everytag-firmware-all> zephyr-version.txt: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr-version.txt
+everytag-firmware-all> size.txt: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/size.txt
+everytag-firmware-all> zephyr.elf: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr.elf
+everytag-firmware-all> zephyr.hex: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr.hex
+everytag-firmware-all> zephyr-version.txt: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr-version.txt
+everytag-firmware-all> size.txt: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/size.txt
+everytag-firmware-all> zephyr.elf: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr.elf
+everytag-firmware-all> zephyr.hex: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr.hex
+everytag-firmware-all> zephyr-version.txt: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr-version.txt
+everytag-firmware-all> size.txt: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/size.txt
+everytag-firmware-all> zephyr.elf: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr.elf
+everytag-firmware-all> zephyr.hex: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr.hex
+everytag-firmware-all> zephyr-version.txt: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr-version.txt
+everytag-firmware-all> size.txt: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/size.txt
+everytag-firmware-all> zephyr.elf: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr.elf
+everytag-firmware-all> zephyr.hex: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr.hex
+everytag-firmware-all> zephyr-version.txt: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr-version.txt
+everytag-firmware-all> size.txt: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/size.txt
+everytag-firmware-all> zephyr.elf: Keeping existing link to /nix/store/zjmcfm1xn1a3d8s32bmhwnb91az2z4z7-everytag-firmware-nrf52810/zephyr.elf

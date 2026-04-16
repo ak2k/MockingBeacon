@@ -1,0 +1,75 @@
+-- The CXX compiler identification is Clang 21.1.8
+-- The C compiler identification is Clang 21.1.8
+-- Detecting CXX compiler ABI info
+-- Detecting CXX compiler ABI info - done
+-- Check for working CXX compiler: /nix/store/s7qlr26bmc6n4r607scz8iiwcg6yg4ic-clang-wrapper-21.1.8/bin/clang++ - skipped
+-- Detecting CXX compile features
+-- Detecting CXX compile features - done
+-- Detecting C compiler ABI info
+-- Detecting C compiler ABI info - done
+-- Check for working C compiler: /nix/store/s7qlr26bmc6n4r607scz8iiwcg6yg4ic-clang-wrapper-21.1.8/bin/clang - skipped
+-- Detecting C compile features
+-- Detecting C compile features - done
+-- Configuring done (1.0s)
+-- Generating done (0.0s)
+-- Build files have been written to: /private/tmp/claude/ncs-upgrade/wt-phase0/build
+[ 16%] Building CXX object CMakeFiles/host_tests.dir/src/test_main.cpp.o
+[ 33%] Building CXX object CMakeFiles/host_tests.dir/private/tmp/claude/ncs-upgrade/wt-phase0/src/beacon_logic.cpp.o
+[ 50%] Building CXX object CMakeFiles/host_tests.dir/private/tmp/claude/ncs-upgrade/wt-phase0/src/accel_data.cpp.o
+[ 66%] Building CXX object CMakeFiles/host_tests.dir/private/tmp/claude/ncs-upgrade/wt-phase0/src/beacon_config.cpp.o
+[ 83%] Building CXX object CMakeFiles/host_tests.dir/private/tmp/claude/ncs-upgrade/wt-phase0/src/beacon_state.cpp.o
+[100%] Linking CXX executable host_tests
+[100%] Built target host_tests
+  test: derive_mac_known_key
+  test: derive_mac_or_c0
+  test: fill_adv_template_basic
+  test: is_key_empty_tests
+  test: compute_status_fixed
+  test: compute_status_incrementing
+  test: compute_status_voltage
+  test: compute_status_battery_level
+  test: compute_status_accel
+  test: compute_status_temp
+  test: derive_mac_equivalence
+  test: fill_template_equivalence
+  test: is_key_empty_equivalence
+  test: compute_status_equivalence
+  test: sentinel_first_reading
+  test: movement_detected
+  test: no_movement
+  test: fifo_shift
+  test: compute_accel_byte_bits
+  test: compute_accel_byte_all_bits
+  test: temperature
+  test: accel_c_cpp_equivalence
+  test: load_defaults
+  test: load_from_nvs
+  test: change_interval_alignment
+  test: key_count_with_zeros
+  test: save_field_roundtrip
+  test: time_arithmetic
+  test: gatt_validate_field_basic
+  test: gatt_period_whitelist
+  test: gatt_auth_code
+  test: gatt_key_chunk_overflow
+  test: load_corrupted_nvs
+  test: init_to_broadcasting_airtag
+  test: init_to_ibeacon_mode
+  test: settings_mode_entry_exit
+  test: key_rotation_increments_and_wraps
+  test: airtag_fmdn_alternation
+  test: battery_uvlo_shutdown
+  test: battery_uvlo_charging_resets
+  test: button_longpress_shutdown
+  test: nokeys_shutdown
+  test: airtag_adv_payload_matches_original
+  test: fmdn_adv_payload_matches_original
+  test: airtag_status_byte_preserved_across_key_switch
+  test: fmdn_status_byte_preserved_across_key_switch
+  test: status_flags_roundtrip
+  test: setter_validation
+  test: nvs_load_rejects_invalid
+  test: status_bytes_wired
+Running host tests...
+
+290/290 assertions passed
