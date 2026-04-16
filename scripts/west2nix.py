@@ -35,23 +35,45 @@ def freeze_manifest() -> dict:
     return yaml.safe_load(result.stdout)
 
 
-def prefetch(project: dict) -> None:
-    """Compute the Nix hash for a west project."""
-    path = project.get("path", project["name"])
-    abs_path = os.path.abspath(path)
-
+def west_topdir() -> str:
+    """Return the west workspace top directory."""
     result = subprocess.run(
-        [
-            "nix-prefetch-git",
-            "--quiet",
-            "--url",
-            abs_path,
-            "--rev",
-            project["revision"],
-        ],
+        ["west", "topdir"],
         check=True,
         capture_output=True,
+        text=True,
     )
+    return result.stdout.strip()
+
+
+def prefetch(project: dict, topdir: str) -> None:
+    """Compute the Nix hash for a west project.
+
+    The hash must be computed using the same fetch options that
+    west2nix's hook will use at build time. `--fetch-submodules`
+    is required for any project with `submodules: true` in west.yml —
+    without it, the computed hash excludes submodule content while
+    the CI build includes it, causing hash mismatches.
+    """
+    path = project.get("path", project["name"])
+    abs_path = os.path.join(topdir, path)
+
+    cmd = [
+        "nix-prefetch-git",
+        "--quiet",
+        "--url",
+        abs_path,
+        "--rev",
+        project["revision"],
+    ]
+    # Only submodules=True (bool) triggers submodule fetching in nixpkgs
+    # fetchgit. A list of submodule specs is currently silently ignored by
+    # fetchgit, so we must not pass --fetch-submodules for those projects
+    # (the hash would diverge from CI's fetchgit result).
+    if project.get("submodules") is True:
+        cmd.append("--fetch-submodules")
+
+    result = subprocess.run(cmd, check=True, capture_output=True)
     project["nix"] = {"hash": json.loads(result.stdout)["hash"]}
 
 
@@ -73,11 +95,12 @@ def main() -> None:
     args = parser.parse_args()
 
     manifest = freeze_manifest()
+    topdir = west_topdir()
     projects = manifest["manifest"]["projects"]
-    print(f"Prefetching {len(projects)} projects...", file=sys.stderr)
+    print(f"Prefetching {len(projects)} projects from {topdir}...", file=sys.stderr)
 
     with ThreadPoolExecutor(max_workers=args.max_workers) as pool:
-        futures = {pool.submit(prefetch, p): p["name"] for p in projects}
+        futures = {pool.submit(prefetch, p, topdir): p["name"] for p in projects}
         for future in as_completed(futures):
             name = futures[future]
             try:

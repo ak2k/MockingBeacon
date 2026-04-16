@@ -42,6 +42,7 @@
             click
             cryptography
             pillow
+            tomlkit
           ]
         );
 
@@ -511,85 +512,102 @@
             echo "All checks passed" > $out/result.txt
           '';
 
-        apps = {
-          test = {
-            type = "app";
-            program = toString (
-              pkgs.writeShellScript "everytag-test" ''
-                set -euo pipefail
+        apps =
+          let
+            mkApp =
+              {
+                name,
+                runtimeInputs ? [ ],
+                text,
+              }:
+              let
+                drv = pkgs.writeShellApplication { inherit name runtimeInputs text; };
+              in
+              {
+                type = "app";
+                program = "${drv}/bin/${name}";
+              };
+          in
+          {
+            test = mkApp {
+              name = "everytag-test";
+              runtimeInputs = [
+                pkgs.cmake
+                pkgs.clang
+              ];
+              text = ''
                 cd "''${1:-.}/tests/host"
-                ${pkgs.cmake}/bin/cmake -B build \
-                  -DCMAKE_CXX_COMPILER=${pkgs.clang}/bin/clang++ \
-                  -DCMAKE_C_COMPILER=${pkgs.clang}/bin/clang \
+                cmake -B build \
+                  -DCMAKE_CXX_COMPILER=clang++ \
+                  -DCMAKE_C_COMPILER=clang \
                   2>/dev/null
-                ${pkgs.cmake}/bin/cmake --build build 2>&1
+                cmake --build build 2>&1
                 ./build/host_tests
-              ''
-            );
-          };
+              '';
+            };
 
-          test-ble = {
-            type = "app";
-            program = toString (
-              pkgs.writeShellScript "everytag-test-ble" ''
-                set -euo pipefail
+            test-ble = mkApp {
+              name = "everytag-test-ble";
+              runtimeInputs = [ testPythonEnv ];
+              text = ''
                 cd "''${1:-.}"
-                ${testPythonEnv}/bin/pytest tests/ble_client/ -v "$@"
-              ''
-            );
-          };
+                pytest tests/ble_client/ -v "$@"
+              '';
+            };
 
-          format = {
-            type = "app";
-            program = toString (
-              pkgs.writeShellScript "everytag-format" ''
-                set -euo pipefail
+            format = mkApp {
+              name = "everytag-format";
+              runtimeInputs = [ pkgs.clang-tools ];
+              text = ''
                 cd "''${1:-.}"
-                ${pkgs.clang-tools}/bin/clang-format -i src/*.cpp src/*.hpp
+                clang-format -i src/*.cpp src/*.hpp
                 echo "Formatted src/*.cpp src/*.hpp"
-              ''
-            );
-          };
+              '';
+            };
 
-          lint = {
-            type = "app";
-            program = toString (
-              pkgs.writeShellScript "everytag-lint" ''
-                set -euo pipefail
+            lint = mkApp {
+              name = "everytag-lint";
+              runtimeInputs = [ pkgs.clang-tools ];
+              text = ''
                 cd "''${1:-.}"
-                ${pkgs.clang-tools}/bin/clang-format --dry-run --Werror src/*.cpp src/*.hpp
+                clang-format --dry-run --Werror src/*.cpp src/*.hpp
                 echo "Lint passed"
-              ''
-            );
-          };
+              '';
+            };
 
-          cppcheck = {
-            type = "app";
-            program = toString (
-              pkgs.writeShellScript "everytag-cppcheck" ''
-                set -euo pipefail
+            cppcheck = mkApp {
+              name = "everytag-cppcheck";
+              runtimeInputs = [ pkgs.cppcheck ];
+              text = ''
                 cd "''${1:-.}"
-                ${pkgs.cppcheck}/bin/cppcheck --enable=warning,performance,portability \
+                cppcheck --enable=warning,performance,portability \
                   --std=c++20 --error-exitcode=1 --force \
                   --suppress=missingIncludeSystem \
                   --suppress=normalCheckLevelMaxBranches \
                   src/*.cpp src/*.hpp
-              ''
-            );
-          };
+              '';
+            };
 
-          update-lockfile = {
-            type = "app";
-            program = toString (
-              pkgs.writeShellScript "update-west2nix" ''
-                set -euo pipefail
-                echo "This requires a west workspace (run from parent of Everytag/)."
-                echo "Run: cd .. && west update && cd Everytag && nix run .#update-lockfile"
-                ${pythonEnv}/bin/python3 scripts/west2nix.py -o west2nix.toml
-              ''
-            );
+            update-lockfile = mkApp {
+              name = "update-west2nix";
+              runtimeInputs = [
+                pythonEnv
+                pkgs.nix-prefetch-git
+              ];
+              text = ''
+                cd "''${1:-.}"
+                if [ ! -d ../nrf ] || [ ! -d ../zephyr ]; then
+                  echo "Initializing west workspace..."
+                  (cd .. && west init -l Everytag)
+                fi
+                echo "Updating west projects (this may take a few minutes)..."
+                (cd .. && west update --narrow -o=--depth=1)
+                echo "Regenerating west2nix.toml..."
+                python3 scripts/west2nix.py -o west2nix.toml
+                echo "Done. Review west2nix.toml and commit if acceptable."
+              '';
+            };
           };
-        };
       }
     );
 }
