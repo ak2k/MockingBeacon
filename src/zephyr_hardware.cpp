@@ -164,23 +164,22 @@ void adv_restart_handler(struct k_work*) {
 
 int start_airtag_direct(uint16_t intvl_min, uint16_t intvl_max) {
     return ::bt_le_adv_start(
-        BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY, intvl_min, intvl_max, NULL),
-        adv_airtag, ADV_AIRTAG_COUNT, NULL, 0);
+        BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY, intvl_min, intvl_max, NULL), adv_airtag,
+        ADV_AIRTAG_COUNT, NULL, 0);
 }
 
 int start_fmdn_direct(uint16_t intvl_min, uint16_t intvl_max) {
     return ::bt_le_adv_start(
-        BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY, intvl_min, intvl_max, NULL),
-        adv_fmdn, ADV_FMDN_COUNT, NULL, 0);
+        BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY, intvl_min, intvl_max, NULL), adv_fmdn,
+        ADV_FMDN_COUNT, NULL, 0);
 }
 
 int start_ibeacon_direct(int batt_voltage) {
     std::memcpy(iBeacon_data, adv_ibeacon[1].data, adv_ibeacon[1].data_len);
     adv_ibeacon[1].data = iBeacon_data;
     iBeacon_data[24] = static_cast<uint8_t>((batt_voltage + 50) / 100);
-    return ::bt_le_adv_start(
-        BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY, 11200, 12800, NULL),
-        adv_ibeacon, ADV_IBEACON_COUNT, NULL, 0);
+    return ::bt_le_adv_start(BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY, 11200, 12800, NULL),
+                             adv_ibeacon, ADV_IBEACON_COUNT, NULL, 0);
 }
 
 void adv_wq_init_once() {
