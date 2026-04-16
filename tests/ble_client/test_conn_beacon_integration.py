@@ -13,6 +13,7 @@ This tests the actual conn_beacon.py logic without a real BLE adapter.
 Run: uv run --with bumble --with pytest --with pytest-asyncio \
      pytest tests/ble_client/test_conn_beacon_integration.py -v
 """
+
 import asyncio
 import sys
 import types
@@ -20,18 +21,14 @@ from pathlib import Path
 from unittest.mock import MagicMock
 
 import pytest
-from bumble.att import ATT_WRITE_NOT_PERMITTED_ERROR
 from bumble.controller import Controller
 from bumble.device import Device, Peer
-from bumble.gatt import Attribute, Characteristic, CharacteristicValue, Service
 from bumble.host import Host
 from bumble.link import LocalLink
 from bumble.hci import Address
 
 # Reuse UUIDs and server from the unit tests
 from test_conn_beacon import (
-    AUTH_CODE,
-    SERVICE_UUID,
     UUID_AIRTAG_FLAG,
     UUID_AUTH,
     UUID_DELAY,
@@ -44,7 +41,6 @@ from test_conn_beacon import (
     UUID_SETTINGS_MAC,
     UUID_STATUS,
     UUID_ACCEL,
-    ALL_SETTING_UUIDS,
     BeaconGattServer,
 )
 
@@ -178,7 +174,9 @@ def test_enable_airtag(beacon_and_mock):
     """conn_beacon.py -i <MAC> -a <auth> -t 1 should enable AirTag."""
     server, mock_module, _ = beacon_and_mock
 
-    run_conn_beacon(mock_module, ["-i", "F0:F1:F2:F3:F4:F5", "-a", "abcdefgh", "-t", "1"])
+    run_conn_beacon(
+        mock_module, ["-i", "F0:F1:F2:F3:F4:F5", "-a", "abcdefgh", "-t", "1"]
+    )
 
     assert server.authorized
     assert server.get_writes(UUID_AIRTAG_FLAG) == [b"\x01\x00\x00\x00"]
@@ -188,7 +186,9 @@ def test_set_tx_power(beacon_and_mock):
     """conn_beacon.py -p 2 should set high TX power."""
     server, mock_module, _ = beacon_and_mock
 
-    run_conn_beacon(mock_module, ["-i", "F0:F1:F2:F3:F4:F5", "-a", "abcdefgh", "-p", "2"])
+    run_conn_beacon(
+        mock_module, ["-i", "F0:F1:F2:F3:F4:F5", "-a", "abcdefgh", "-p", "2"]
+    )
 
     assert server.authorized
     assert server.get_writes(UUID_TXPOWER) == [b"\x02\x00\x00\x00"]
@@ -212,12 +212,18 @@ def test_multiple_settings(beacon_and_mock):
     run_conn_beacon(
         mock_module,
         [
-            "-i", "F0:F1:F2:F3:F4:F5",
-            "-a", "abcdefgh",
-            "-t", "1",
-            "-g", "1",
-            "-d", "2",
-            "-p", "0",
+            "-i",
+            "F0:F1:F2:F3:F4:F5",
+            "-a",
+            "abcdefgh",
+            "-t",
+            "1",
+            "-g",
+            "1",
+            "-d",
+            "2",
+            "-p",
+            "0",
         ],
     )
 

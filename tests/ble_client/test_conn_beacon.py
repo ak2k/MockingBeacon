@@ -10,6 +10,7 @@ Tests the same GATT operations as conn_beacon.py without real hardware.
 Run: uv run tests/ble_client/test_conn_beacon.py
 Or:  uv run --with bumble --with pytest --with pytest-asyncio pytest tests/ble_client/ -v
 """
+
 import asyncio
 
 import pytest
@@ -115,11 +116,15 @@ class BeaconGattServer:
 
     def make_service(self) -> Service:
         chars = [
-            Characteristic(UUID_AUTH, WRITABLE, PERMISSIONS, value=self._make_auth_value()),
+            Characteristic(
+                UUID_AUTH, WRITABLE, PERMISSIONS, value=self._make_auth_value()
+            ),
         ]
         for uuid in ALL_SETTING_UUIDS:
             chars.append(
-                Characteristic(uuid, WRITABLE, PERMISSIONS, value=self._make_setting_value(uuid))
+                Characteristic(
+                    uuid, WRITABLE, PERMISSIONS, value=self._make_setting_value(uuid)
+                )
             )
         return Service(SERVICE_UUID, chars)
 

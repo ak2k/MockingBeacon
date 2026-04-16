@@ -63,9 +63,11 @@ pkgs.testers.nixosTest {
         pythonEnv
       ];
 
-      virtualisation.memorySize = 4096;
-      virtualisation.diskSize = 16384;
-      virtualisation.cores = 4;
+      virtualisation = {
+        memorySize = 4096;
+        diskSize = 16384;
+        cores = 4;
+      };
     };
 
   testScript = ''
