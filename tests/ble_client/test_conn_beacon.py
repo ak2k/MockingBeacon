@@ -84,6 +84,14 @@ class BeaconGattServer:
         self.writes: dict[str, list[bytes]] = {}
         self.rejected_writes: dict[str, int] = {}
 
+    # Mirror gatt_glue.c .disconnected + .recycled behavior: clear auth
+    # state when the previous client goes away. Without this, a fresh
+    # client could inherit prior auth — same defect class as the firmware
+    # bug fixed in Phase 1β.
+    def on_disconnected(self):
+        self.authorized = False
+        self.allowed_change = False
+
     def _make_auth_value(self):
         def write(connection, value):
             if bytes(value) == AUTH_CODE:
