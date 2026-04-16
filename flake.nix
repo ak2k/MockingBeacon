@@ -113,14 +113,29 @@
           cd everytag
         '';
 
+        # prj.conf is always the base. Release builds overlay prj-lowpower.conf
+        # which strips logging + RTT + GPIO (~21 KB flash savings).
+        # DFU builds add dfu.conf for MCUmgr/MCUboot.
+        extraConfList =
+          { release, dfu }:
+          pkgs.lib.concatStringsSep ";" (
+            pkgs.lib.optional release "prj-lowpower.conf" ++ pkgs.lib.optional dfu "dfu.conf"
+          );
+
         # Plain cmake build (no sysbuild, no MCUboot) for small-flash boards.
         mkFirmware =
           {
             name,
             board ? "kkm_p1_nrf52810",
             boardRoot ? true,
-            confFile ? "prj.conf",
+            release ? false,
           }:
+          let
+            extra = extraConfList {
+              inherit release;
+              dfu = false;
+            };
+          in
           pkgs.stdenv.mkDerivation {
             inherit name;
             src = ./.;
@@ -138,7 +153,8 @@
                 -DCMAKE_BUILD_TYPE=MinSizeRel \
                 -DBOARD=${board} \
                 ${if boardRoot then "-DBOARD_ROOT=$PWD" else ""} \
-                -DCONF_FILE=${confFile} \
+                -DCONF_FILE=prj.conf \
+                ${pkgs.lib.optionalString (extra != "") "-DEXTRA_CONF_FILE=${extra}"} \
                 -DWEST_PYTHON=${pythonEnv}/bin/python3 \
                 -S .
               ninja -C build
@@ -159,8 +175,14 @@
             name,
             board,
             boardRoot ? false,
-            confFile ? "prj-lowpower.conf",
+            release ? true,
           }:
+          let
+            extra = extraConfList {
+              inherit release;
+              dfu = true;
+            };
+          in
           pkgs.stdenv.mkDerivation {
             inherit name;
             src = ./.;
@@ -179,8 +201,8 @@
                 -- \
                 -DCMAKE_BUILD_TYPE=MinSizeRel \
                 ${if boardRoot then "-DBOARD_ROOT=$PWD" else ""} \
-                -DCONF_FILE=${confFile} \
-                -DEXTRA_CONF_FILE=dfu.conf
+                -DCONF_FILE=prj.conf \
+                -DEXTRA_CONF_FILE="${extra}"
             '';
 
             installPhase = ''
@@ -240,7 +262,7 @@
                 value = mkFirmware {
                   name = "everytag-firmware-${b.short}-release";
                   inherit (b) board boardRoot;
-                  confFile = "prj-lowpower.conf";
+                  release = true;
                 };
               }
             ]
@@ -257,7 +279,7 @@
                 value = mkFirmwareDfu {
                   name = "everytag-firmware-${b.short}-dfu-dev";
                   inherit (b) board boardRoot;
-                  confFile = "prj.conf";
+                  release = false;
                 };
               }
             ]
