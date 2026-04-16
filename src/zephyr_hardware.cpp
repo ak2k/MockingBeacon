@@ -120,7 +120,7 @@ void ZephyrHardware::bt_disable() {
 int ZephyrHardware::adv_start(bool connectable, int interval_min, int interval_max, bool use_fmdn) {
     uint32_t options = BT_LE_ADV_OPT_USE_IDENTITY;
     if (connectable) {
-        options |= BT_LE_ADV_OPT_CONNECTABLE;
+        options |= BT_LE_ADV_OPT_CONN;
     }
     if (use_fmdn) {
         return ::bt_le_adv_start(BT_LE_ADV_PARAM(options, static_cast<uint32_t>(interval_min),

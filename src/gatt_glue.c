@@ -359,7 +359,7 @@ void start_settings_adv(void) {
         printk("Error at setting auth callbacks (err %d)\n", err);
     }
     err = bt_le_adv_start(BT_LE_ADV_PARAM(
-            BT_LE_ADV_OPT_USE_IDENTITY | BT_LE_ADV_OPT_CONNECTABLE,
+            BT_LE_ADV_OPT_USE_IDENTITY | BT_LE_ADV_OPT_CONN,
             SETTINGS_ADV_INTERVAL * 1.6 - 20,
             SETTINGS_ADV_INTERVAL * 1.6 + 20, NULL),
         ad, ARRAY_SIZE(ad), NULL, 0);
