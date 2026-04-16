@@ -596,6 +596,9 @@
               runtimeInputs = [ testPythonEnv ];
               text = ''
                 cd "''${1:-.}"
+                # Pytest tries to write .pytest_cache next to tests/; fails silently
+                # on read-only /nix/store paths (inside checks.default).
+                export PYTEST_CACHE_DIR="''${TMPDIR:-/tmp}/pytest-cache"
                 pytest tests/ble_client/ -v "$@"
               '';
             };
