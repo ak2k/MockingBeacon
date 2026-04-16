@@ -1,0 +1,122 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*"
+
+jobs:
+  build-firmware:
+    name: Build firmware
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v6
+
+      - uses: cachix/install-nix-action@v31
+
+      - uses: cachix/cachix-action@v17
+        with:
+          name: ak2k
+          authToken: "${{ secrets.CACHIX_AUTH_TOKEN }}"
+
+      - name: Build all release + dev + DFU firmware
+        run: |
+          for pkg in \
+            firmware-nrf52810 \
+            firmware-nrf52832 \
+            firmware-nrf52833 \
+            firmware-nrf54l15 \
+            firmware-nrf52810-release \
+            firmware-nrf52832-release \
+            firmware-nrf52833-release \
+            firmware-nrf54l15-release \
+            firmware-nrf52832-dfu \
+            firmware-nrf52833-dfu \
+            firmware-nrf54l15-dfu; do
+            echo "=== Building $pkg ==="
+            nix build .#$pkg -o "result-$pkg" -L
+          done
+
+      - name: Collect release artifacts
+        run: |
+          mkdir -p release
+          TAG=${GITHUB_REF_NAME}
+
+          # Release (no DFU) firmware — production, no logging
+          for board in nrf52810 nrf52832 nrf52833 nrf54l15; do
+            dir="result-firmware-${board}-release"
+            cp "$dir/zephyr.hex" "release/everytag-${board}-${TAG}.hex"
+            cp "$dir/size.txt" "release/everytag-${board}-${TAG}-size.txt"
+          done
+
+          # Dev firmware — logging + RTT console for debugging
+          for board in nrf52810 nrf52832 nrf52833 nrf54l15; do
+            dir="result-firmware-${board}"
+            cp "$dir/zephyr.hex" "release/everytag-${board}-dev-${TAG}.hex"
+            cp "$dir/size.txt" "release/everytag-${board}-dev-${TAG}-size.txt"
+          done
+
+          # DFU firmware (MCUboot + app)
+          for board in nrf52832 nrf52833 nrf54l15; do
+            dir="result-firmware-${board}-dfu"
+            cp "$dir/zephyr.elf" "release/everytag-${board}-dfu-${TAG}.elf"
+            if [ -f "$dir/zephyr.signed.hex" ]; then
+              cp "$dir/zephyr.signed.hex" "release/everytag-${board}-dfu-${TAG}.signed.hex"
+            fi
+            if [ -f "$dir/merged.hex" ]; then
+              cp "$dir/merged.hex" "release/everytag-${board}-dfu-${TAG}.merged.hex"
+            fi
+            cp "$dir/size.txt" "release/everytag-${board}-dfu-${TAG}-size.txt"
+          done
+
+          ls -la release/
+
+      - name: Generate release notes
+        run: |
+          TAG=${GITHUB_REF_NAME}
+          # Flash sizes per SoC (total chip flash in KB)
+          declare -A FLASH_KB=( [nrf52810]=192 [nrf52832]=512 [nrf52833]=512 [nrf54l15]=1524 )
+
+          cat > release/RELEASE_NOTES.md <<'HEADER'
+          ### Flash usage
+
+          | SoC | Release | Dev | Available | Release usage |
+          |-----|--------:|----:|----------:|--------------:|
+          HEADER
+          sed -i 's/^          //' release/RELEASE_NOTES.md
+
+          for board in nrf52810 nrf52832 nrf52833 nrf54l15; do
+            read -r text data _ < <(tail -1 "release/everytag-${board}-${TAG}-size.txt")
+            rel_kb=$(( (text + data + 512) / 1024 ))
+            read -r text data _ < <(tail -1 "release/everytag-${board}-dev-${TAG}-size.txt")
+            dev_kb=$(( (text + data + 512) / 1024 ))
+            avail_kb=${FLASH_KB[$board]}
+            pct=$(( rel_kb * 100 / avail_kb ))
+            echo "| ${board} | ${rel_kb} KB | ${dev_kb} KB | ${avail_kb} KB | ${pct}% |" >> release/RELEASE_NOTES.md
+          done
+
+          cat >> release/RELEASE_NOTES.md <<'NOTES'
+
+          ### Files
+
+          - `*-<board>-<tag>.hex` — **Release** firmware (production, no logging). Flash via SWD.
+          - `*-<board>-dev-<tag>.hex` — **Dev** firmware (logging + RTT console). Use for debugging/bring-up via J-Link.
+          - `*-<board>-dfu-<tag>.merged.hex` — MCUboot + app (initial SWD flash for DFU-capable boards)
+          - `*-<board>-dfu-<tag>.signed.hex` — Signed app image (for OTA updates)
+
+          Built with Nix from `flake.lock`-pinned toolchain and NCS modules.
+          NOTES
+          sed -i 's/^          //' release/RELEASE_NOTES.md
+
+      - name: Create GitHub Release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          TAG=${GITHUB_REF_NAME}
+          gh release create "$TAG" \
+            --title "Everytag $TAG" \
+            --notes-file release/RELEASE_NOTES.md \
+            release/everytag-*.hex \
+            release/everytag-*.elf \
+            release/everytag-*-size.txt
