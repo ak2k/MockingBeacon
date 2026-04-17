@@ -580,6 +580,26 @@
               '';
             };
 
+            fuzz = mkApp {
+              name = "everytag-fuzz";
+              runtimeInputs = [
+                pkgs.cmake
+                pkgs.clang
+              ];
+              text = ''
+                src="''${1:-.}"
+                cmake -S "$src/tests/fuzz" -B build-fuzz \
+                  -DCMAKE_CXX_COMPILER=clang++
+                cmake --build build-fuzz
+                secs="''${2:-30}"
+                for t in build-fuzz/fuzz_*; do
+                  echo "=== $(basename "$t") ($secs s) ==="
+                  "$t" -max_total_time="$secs"
+                done
+                echo "All fuzz targets clean"
+              '';
+            };
+
             cppcheck = mkApp {
               name = "everytag-cppcheck";
               runtimeInputs = [ pkgs.cppcheck ];
