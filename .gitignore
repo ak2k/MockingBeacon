@@ -9,3 +9,9 @@ tests/host/build/
 tests/*/build/
 result*
 .pre-commit-config.yaml
+
+# Local sbomnix artifacts (default output when run without output flags)
+http_cache.sqlite
+sbom.cdx.json
+sbom.spdx.json
+sbom.csv
