@@ -71,6 +71,9 @@ ap.add_argument("-m", "--movethreshold", help="Accelerometer threshold (0=off)")
 ap.add_argument("-p", "--txpower", help="TX power (0=low, 1=normal, 2=high)")
 ap.add_argument("-k", "--keyfile", help="Binary public keys file")
 ap.add_argument("-f", "--fmdnkey", help="Google FMDN key (hex)")
+ap.add_argument(
+    "-u", "--dfu", action="store_true", help="Enter DFU mode after disconnect"
+)
 
 args = vars(ap.parse_args())
 
@@ -134,5 +137,10 @@ if args.get("newmacid") is not None:
 
 if args.get("newauth") is not None:
     write(peripheral, UUID_AUTH, args["newauth"].encode())
+
+if args.get("dfu"):
+    # Send reserved DFU trigger (0xDFDF0001) via status characteristic.
+    # Firmware sets pauseUpload=1, enabling SMP service after disconnect.
+    write_int32(peripheral, UUID_STATUS, 0xDFDF0001)
 
 peripheral.disconnect()

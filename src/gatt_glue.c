@@ -12,53 +12,53 @@
 #include "myboards.h"
 
 // ---- Glue pointers (set by glue_init) ----
-static void *g_settings_manager = NULL;
-static void *g_state_machine = NULL;
+static void* g_settings_manager = NULL;
+static void* g_state_machine = NULL;
 
-void glue_init(void *settings_manager, void *state_machine) {
+void glue_init(void* settings_manager, void* state_machine) {
     g_settings_manager = settings_manager;
     g_state_machine = state_machine;
 }
 
 // ---- UUID definitions (from settings.c) ----
 
-static const struct bt_uuid_128 fmdn_uuid = BT_UUID_INIT_128(
-    BT_UUID_128_ENCODE(0x8c5debdb, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
+static const struct bt_uuid_128 fmdn_uuid =
+    BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x8c5debdb, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
 
-static const struct bt_uuid_128 switchAirtag_uuid = BT_UUID_INIT_128(
-    BT_UUID_128_ENCODE(0x8c5debdc, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
+static const struct bt_uuid_128 switchAirtag_uuid =
+    BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x8c5debdc, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
 
-static const struct bt_uuid_128 period_uuid = BT_UUID_INIT_128(
-    BT_UUID_128_ENCODE(0x8c5debdd, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
+static const struct bt_uuid_128 period_uuid =
+    BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x8c5debdd, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
 
-static const struct bt_uuid_128 key_uuid = BT_UUID_INIT_128(
-    BT_UUID_128_ENCODE(0x8c5debde, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
+static const struct bt_uuid_128 key_uuid =
+    BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x8c5debde, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
 
-static const struct bt_uuid_128 auth_uuid = BT_UUID_INIT_128(
-    BT_UUID_128_ENCODE(0x8c5debdf, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
+static const struct bt_uuid_128 auth_uuid =
+    BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x8c5debdf, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
 
-static const struct bt_uuid_128 changeInterval_uuid = BT_UUID_INIT_128(
-    BT_UUID_128_ENCODE(0x8c5debe0, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
+static const struct bt_uuid_128 changeInterval_uuid =
+    BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x8c5debe0, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
 
-static const struct bt_uuid_128 txPower_uuid = BT_UUID_INIT_128(
-    BT_UUID_128_ENCODE(0x8c5debe1, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
+static const struct bt_uuid_128 txPower_uuid =
+    BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x8c5debe1, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
 
-static const struct bt_uuid_128 fmdnKey_uuid = BT_UUID_INIT_128(
-    BT_UUID_128_ENCODE(0x8c5debe2, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
+static const struct bt_uuid_128 fmdnKey_uuid =
+    BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x8c5debe2, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
 
-static const struct bt_uuid_128 timeOffset_uuid = BT_UUID_INIT_128(
-    BT_UUID_128_ENCODE(0x8c5debe3, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
+static const struct bt_uuid_128 timeOffset_uuid =
+    BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x8c5debe3, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
 
-static const struct bt_uuid_128 settingsMAC_uuid = BT_UUID_INIT_128(
-    BT_UUID_128_ENCODE(0x8c5debe4, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
+static const struct bt_uuid_128 settingsMAC_uuid =
+    BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x8c5debe4, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
 
-static const struct bt_uuid_128 status_uuid = BT_UUID_INIT_128(
-    BT_UUID_128_ENCODE(0x8c5debe5, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
+static const struct bt_uuid_128 status_uuid =
+    BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x8c5debe5, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
 
-static const struct bt_uuid_128 accel_uuid = BT_UUID_INIT_128(
-    BT_UUID_128_ENCODE(0x8c5debe6, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
+static const struct bt_uuid_128 accel_uuid =
+    BT_UUID_INIT_128(BT_UUID_128_ENCODE(0x8c5debe6, 0xad8d, 0x4810, 0xa31f, 0x53862e79ee77));
 
-#define BEACON_SERVICE_UUID_VAL \
+#define BEACON_SERVICE_UUID_VAL                                                                    \
     BT_UUID_128_ENCODE(0x5cfce313, 0xa7e3, 0x45c3, 0x933d, 0x418b8100da7f)
 
 static const struct bt_uuid_128 beacon_svc_uuid = BT_UUID_INIT_128(BEACON_SERVICE_UUID_VAL);
@@ -74,7 +74,7 @@ int updateKeysAtDisconnect = 0;
 
 // ---- GAP connection callbacks ----
 
-static void connected(struct bt_conn *conn, uint8_t err) {
+static void connected(struct bt_conn* conn, uint8_t err) {
     allowedChange = 0;
     if (!err) {
         connectedGatt = 1;
@@ -84,7 +84,7 @@ static void connected(struct bt_conn *conn, uint8_t err) {
     }
 }
 
-static void disconnected(struct bt_conn *conn, uint8_t reason) {
+static void disconnected(struct bt_conn* conn, uint8_t reason) {
     connectedGatt = 0;
     authorizedGatt = 0;
     allowedChange = 0;
@@ -119,13 +119,14 @@ BT_CONN_CB_DEFINE(conn_callbacks) = {
 
 // ---- GATT write callbacks (thin wrappers calling C++ bridge) ----
 
-static ssize_t chrc_write_auth(struct bt_conn *conn,
-    const struct bt_gatt_attr *attr, const void *buf,
-    uint16_t len, uint16_t offset, uint8_t flags) {
-    (void)conn; (void)attr; (void)offset; (void)flags;
+static ssize_t chrc_write_auth(struct bt_conn* conn, const struct bt_gatt_attr* attr,
+                               const void* buf, uint16_t len, uint16_t offset, uint8_t flags) {
+    (void)conn;
+    (void)attr;
+    (void)offset;
+    (void)flags;
     int rc = beacon_glue_handle_auth(g_settings_manager, buf, len);
     if (rc > 0) {
-        pauseUpload = 1;
         allowedChange = 1;
         authorizedGatt = 1;
     } else {
@@ -136,10 +137,12 @@ static ssize_t chrc_write_auth(struct bt_conn *conn,
     return len;
 }
 
-static ssize_t chrc_write_key(struct bt_conn *conn,
-    const struct bt_gatt_attr *attr, const void *buf,
-    uint16_t len, uint16_t offset, uint8_t flags) {
-    (void)conn; (void)attr; (void)offset; (void)flags;
+static ssize_t chrc_write_key(struct bt_conn* conn, const struct bt_gatt_attr* attr,
+                              const void* buf, uint16_t len, uint16_t offset, uint8_t flags) {
+    (void)conn;
+    (void)attr;
+    (void)offset;
+    (void)flags;
     if (!allowedChange)
         return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
     int rc = beacon_glue_handle_key(g_settings_manager, buf, len);
@@ -154,10 +157,12 @@ static ssize_t chrc_write_key(struct bt_conn *conn,
     return len;
 }
 
-static ssize_t chrc_write_period(struct bt_conn *conn,
-    const struct bt_gatt_attr *attr, const void *buf,
-    uint16_t len, uint16_t offset, uint8_t flags) {
-    (void)conn; (void)attr; (void)offset; (void)flags;
+static ssize_t chrc_write_period(struct bt_conn* conn, const struct bt_gatt_attr* attr,
+                                 const void* buf, uint16_t len, uint16_t offset, uint8_t flags) {
+    (void)conn;
+    (void)attr;
+    (void)offset;
+    (void)flags;
     if (!allowedChange)
         return len;
     beacon_glue_handle_period(g_settings_manager, buf, len);
@@ -166,10 +171,12 @@ static ssize_t chrc_write_period(struct bt_conn *conn,
     return len;
 }
 
-static ssize_t chrc_write_fmdn(struct bt_conn *conn,
-    const struct bt_gatt_attr *attr, const void *buf,
-    uint16_t len, uint16_t offset, uint8_t flags) {
-    (void)conn; (void)attr; (void)offset; (void)flags;
+static ssize_t chrc_write_fmdn(struct bt_conn* conn, const struct bt_gatt_attr* attr,
+                               const void* buf, uint16_t len, uint16_t offset, uint8_t flags) {
+    (void)conn;
+    (void)attr;
+    (void)offset;
+    (void)flags;
     if (!allowedChange)
         return len;
     beacon_glue_handle_fmdn(g_settings_manager, buf, len);
@@ -178,10 +185,12 @@ static ssize_t chrc_write_fmdn(struct bt_conn *conn,
     return len;
 }
 
-static ssize_t chrc_write_airtag(struct bt_conn *conn,
-    const struct bt_gatt_attr *attr, const void *buf,
-    uint16_t len, uint16_t offset, uint8_t flags) {
-    (void)conn; (void)attr; (void)offset; (void)flags;
+static ssize_t chrc_write_airtag(struct bt_conn* conn, const struct bt_gatt_attr* attr,
+                                 const void* buf, uint16_t len, uint16_t offset, uint8_t flags) {
+    (void)conn;
+    (void)attr;
+    (void)offset;
+    (void)flags;
     if (!allowedChange)
         return len;
     beacon_glue_handle_airtag(g_settings_manager, buf, len);
@@ -190,10 +199,13 @@ static ssize_t chrc_write_airtag(struct bt_conn *conn,
     return len;
 }
 
-static ssize_t chrc_write_changeInterval(struct bt_conn *conn,
-    const struct bt_gatt_attr *attr, const void *buf,
-    uint16_t len, uint16_t offset, uint8_t flags) {
-    (void)conn; (void)attr; (void)offset; (void)flags;
+static ssize_t chrc_write_changeInterval(struct bt_conn* conn, const struct bt_gatt_attr* attr,
+                                         const void* buf, uint16_t len, uint16_t offset,
+                                         uint8_t flags) {
+    (void)conn;
+    (void)attr;
+    (void)offset;
+    (void)flags;
     if (!allowedChange)
         return len;
     beacon_glue_handle_change_interval(g_settings_manager, buf, len);
@@ -202,10 +214,12 @@ static ssize_t chrc_write_changeInterval(struct bt_conn *conn,
     return len;
 }
 
-static ssize_t chrc_write_txPower(struct bt_conn *conn,
-    const struct bt_gatt_attr *attr, const void *buf,
-    uint16_t len, uint16_t offset, uint8_t flags) {
-    (void)conn; (void)attr; (void)offset; (void)flags;
+static ssize_t chrc_write_txPower(struct bt_conn* conn, const struct bt_gatt_attr* attr,
+                                  const void* buf, uint16_t len, uint16_t offset, uint8_t flags) {
+    (void)conn;
+    (void)attr;
+    (void)offset;
+    (void)flags;
     if (!allowedChange)
         return len;
     beacon_glue_handle_tx_power(g_settings_manager, buf, len);
@@ -213,10 +227,12 @@ static ssize_t chrc_write_txPower(struct bt_conn *conn,
     return len;
 }
 
-static ssize_t chrc_write_fmdnKey(struct bt_conn *conn,
-    const struct bt_gatt_attr *attr, const void *buf,
-    uint16_t len, uint16_t offset, uint8_t flags) {
-    (void)conn; (void)attr; (void)offset; (void)flags;
+static ssize_t chrc_write_fmdnKey(struct bt_conn* conn, const struct bt_gatt_attr* attr,
+                                  const void* buf, uint16_t len, uint16_t offset, uint8_t flags) {
+    (void)conn;
+    (void)attr;
+    (void)offset;
+    (void)flags;
     if (!allowedChange)
         return len;
     beacon_glue_handle_fmdn_key(g_settings_manager, buf, len);
@@ -227,9 +243,8 @@ static ssize_t chrc_write_fmdnKey(struct bt_conn *conn,
 
 static int64_t timeValue;
 
-static ssize_t chrc_read_timeOffset(struct bt_conn *conn,
-    const struct bt_gatt_attr *attr, void *buf,
-    uint16_t len, uint16_t offset) {
+static ssize_t chrc_read_timeOffset(struct bt_conn* conn, const struct bt_gatt_attr* attr,
+                                    void* buf, uint16_t len, uint16_t offset) {
     (void)conn;
     if (len < sizeof(int64_t))
         return BT_GATT_ERR(BT_ATT_ERR_INVALID_ATTRIBUTE_LEN);
@@ -240,10 +255,13 @@ static ssize_t chrc_read_timeOffset(struct bt_conn *conn,
     return bt_gatt_attr_read(conn, attr, buf, len, offset, &timeValue, sizeof(timeValue));
 }
 
-static ssize_t chrc_write_timeOffset(struct bt_conn *conn,
-    const struct bt_gatt_attr *attr, const void *buf,
-    uint16_t len, uint16_t offset, uint8_t flags) {
-    (void)conn; (void)attr; (void)offset; (void)flags;
+static ssize_t chrc_write_timeOffset(struct bt_conn* conn, const struct bt_gatt_attr* attr,
+                                     const void* buf, uint16_t len, uint16_t offset,
+                                     uint8_t flags) {
+    (void)conn;
+    (void)attr;
+    (void)offset;
+    (void)flags;
     if (!allowedChange)
         return len;
     beacon_glue_handle_time_offset_write(g_settings_manager, buf, len);
@@ -251,10 +269,13 @@ static ssize_t chrc_write_timeOffset(struct bt_conn *conn,
     return len;
 }
 
-static ssize_t chrc_write_settingsMAC(struct bt_conn *conn,
-    const struct bt_gatt_attr *attr, const void *buf,
-    uint16_t len, uint16_t offset, uint8_t flags) {
-    (void)conn; (void)attr; (void)offset; (void)flags;
+static ssize_t chrc_write_settingsMAC(struct bt_conn* conn, const struct bt_gatt_attr* attr,
+                                      const void* buf, uint16_t len, uint16_t offset,
+                                      uint8_t flags) {
+    (void)conn;
+    (void)attr;
+    (void)offset;
+    (void)flags;
     if (!allowedChange)
         return len;
     beacon_glue_handle_settings_mac(g_settings_manager, buf, len);
@@ -262,21 +283,36 @@ static ssize_t chrc_write_settingsMAC(struct bt_conn *conn,
     return len;
 }
 
-static ssize_t chrc_write_status(struct bt_conn *conn,
-    const struct bt_gatt_attr *attr, const void *buf,
-    uint16_t len, uint16_t offset, uint8_t flags) {
-    (void)conn; (void)attr; (void)offset; (void)flags;
+static ssize_t chrc_write_status(struct bt_conn* conn, const struct bt_gatt_attr* attr,
+                                 const void* buf, uint16_t len, uint16_t offset, uint8_t flags) {
+    (void)conn;
+    (void)attr;
+    (void)offset;
+    (void)flags;
     if (!allowedChange)
         return len;
+    // Reserved value: 0xDFDF0001 = explicit DFU request. Sets pauseUpload
+    // so handle_settings_mode_exit() enters FirmwareUpload state. Any other
+    // status value is a normal settings write (clears pauseUpload).
+    if (len == sizeof(int32_t)) {
+        int32_t val = 0;
+        memcpy(&val, buf, sizeof(val));
+        if (val == (int32_t)0xDFDF0001) {
+            pauseUpload = 1;
+            return len;
+        }
+    }
     beacon_glue_handle_status(g_settings_manager, buf, len);
     pauseUpload = 0;
     return len;
 }
 
-static ssize_t chrc_write_accel(struct bt_conn *conn,
-    const struct bt_gatt_attr *attr, const void *buf,
-    uint16_t len, uint16_t offset, uint8_t flags) {
-    (void)conn; (void)attr; (void)offset; (void)flags;
+static ssize_t chrc_write_accel(struct bt_conn* conn, const struct bt_gatt_attr* attr,
+                                const void* buf, uint16_t len, uint16_t offset, uint8_t flags) {
+    (void)conn;
+    (void)attr;
+    (void)offset;
+    (void)flags;
     if (!allowedChange)
         return len;
     beacon_glue_handle_accel(g_settings_manager, buf, len);
@@ -287,7 +323,7 @@ static ssize_t chrc_write_accel(struct bt_conn *conn,
 
 // ---- Authorization callbacks ----
 
-static bool write_authorize(struct bt_conn *conn, const struct bt_gatt_attr *attr) {
+static bool write_authorize(struct bt_conn* conn, const struct bt_gatt_attr* attr) {
     (void)conn;
     if (authorizedGatt)
         return true;
@@ -296,8 +332,9 @@ static bool write_authorize(struct bt_conn *conn, const struct bt_gatt_attr *att
     return false;
 }
 
-static bool read_authorize(struct bt_conn *conn, const struct bt_gatt_attr *attr) {
-    (void)conn; (void)attr;
+static bool read_authorize(struct bt_conn* conn, const struct bt_gatt_attr* attr) {
+    (void)conn;
+    (void)attr;
     return true;
 }
 
@@ -310,44 +347,31 @@ static const struct bt_gatt_authorization_cb auth_callbacks = {
 
 BT_GATT_SERVICE_DEFINE(
     beacon_svc, BT_GATT_PRIMARY_SERVICE(&beacon_svc_uuid),
-    BT_GATT_CHARACTERISTIC(&auth_uuid.uuid,
-        BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE,
-        NULL, chrc_write_auth, NULL),
-    BT_GATT_CHARACTERISTIC(&key_uuid.uuid,
-        BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE,
-        NULL, chrc_write_key, NULL),
-    BT_GATT_CHARACTERISTIC(&period_uuid.uuid,
-        BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE,
-        NULL, chrc_write_period, NULL),
-    BT_GATT_CHARACTERISTIC(&fmdn_uuid.uuid,
-        BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE,
-        NULL, chrc_write_fmdn, NULL),
-    BT_GATT_CHARACTERISTIC(&switchAirtag_uuid.uuid,
-        BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE,
-        NULL, chrc_write_airtag, NULL),
-    BT_GATT_CHARACTERISTIC(&changeInterval_uuid.uuid,
-        BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE,
-        NULL, chrc_write_changeInterval, NULL),
-    BT_GATT_CHARACTERISTIC(&txPower_uuid.uuid,
-        BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE,
-        NULL, chrc_write_txPower, NULL),
-    BT_GATT_CHARACTERISTIC(&fmdnKey_uuid.uuid,
-        BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE,
-        NULL, chrc_write_fmdnKey, NULL),
-    BT_GATT_CHARACTERISTIC(&timeOffset_uuid.uuid,
-        BT_GATT_CHRC_WRITE | BT_GATT_CHRC_READ,
-        BT_GATT_PERM_WRITE | BT_GATT_PERM_READ,
-        chrc_read_timeOffset, chrc_write_timeOffset, &timeValue),
-    BT_GATT_CHARACTERISTIC(&settingsMAC_uuid.uuid,
-        BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE,
-        NULL, chrc_write_settingsMAC, NULL),
-    BT_GATT_CHARACTERISTIC(&status_uuid.uuid,
-        BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE,
-        NULL, chrc_write_status, NULL),
-    BT_GATT_CHARACTERISTIC(&accel_uuid.uuid,
-        BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE,
-        NULL, chrc_write_accel, NULL),
-);
+    BT_GATT_CHARACTERISTIC(&auth_uuid.uuid, BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE, NULL,
+                           chrc_write_auth, NULL),
+    BT_GATT_CHARACTERISTIC(&key_uuid.uuid, BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE, NULL,
+                           chrc_write_key, NULL),
+    BT_GATT_CHARACTERISTIC(&period_uuid.uuid, BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE, NULL,
+                           chrc_write_period, NULL),
+    BT_GATT_CHARACTERISTIC(&fmdn_uuid.uuid, BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE, NULL,
+                           chrc_write_fmdn, NULL),
+    BT_GATT_CHARACTERISTIC(&switchAirtag_uuid.uuid, BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE, NULL,
+                           chrc_write_airtag, NULL),
+    BT_GATT_CHARACTERISTIC(&changeInterval_uuid.uuid, BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE, NULL,
+                           chrc_write_changeInterval, NULL),
+    BT_GATT_CHARACTERISTIC(&txPower_uuid.uuid, BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE, NULL,
+                           chrc_write_txPower, NULL),
+    BT_GATT_CHARACTERISTIC(&fmdnKey_uuid.uuid, BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE, NULL,
+                           chrc_write_fmdnKey, NULL),
+    BT_GATT_CHARACTERISTIC(&timeOffset_uuid.uuid, BT_GATT_CHRC_WRITE | BT_GATT_CHRC_READ,
+                           BT_GATT_PERM_WRITE | BT_GATT_PERM_READ, chrc_read_timeOffset,
+                           chrc_write_timeOffset, &timeValue),
+    BT_GATT_CHARACTERISTIC(&settingsMAC_uuid.uuid, BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE, NULL,
+                           chrc_write_settingsMAC, NULL),
+    BT_GATT_CHARACTERISTIC(&status_uuid.uuid, BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE, NULL,
+                           chrc_write_status, NULL),
+    BT_GATT_CHARACTERISTIC(&accel_uuid.uuid, BT_GATT_CHRC_WRITE, BT_GATT_PERM_WRITE, NULL,
+                           chrc_write_accel, NULL), );
 
 // ---- Settings advertisement data (C99 compound literals) ----
 
@@ -357,7 +381,7 @@ static const struct bt_data ad[] = {
 };
 
 // Disconnect callback function
-static void disconnect_cb(struct bt_conn *conn, void *data) {
+static void disconnect_cb(struct bt_conn* conn, void* data) {
     (void)data;
     (void)bt_conn_disconnect(conn, BT_HCI_ERR_REMOTE_USER_TERM_CONN);
 }
@@ -378,11 +402,10 @@ void start_settings_adv(void) {
     // (30-60 ms) per Zephyr include/zephyr/bluetooth/bluetooth.h. Preserves
     // USE_IDENTITY so the controller's configured MAC (set via set_mac) is
     // used rather than a random address.
-    err = bt_le_adv_start(BT_LE_ADV_PARAM(
-            BT_LE_ADV_OPT_USE_IDENTITY | BT_LE_ADV_OPT_CONN,
-            BT_GAP_ADV_FAST_INT_MIN_1,
-            BT_GAP_ADV_FAST_INT_MAX_1, NULL),
-        ad, ARRAY_SIZE(ad), NULL, 0);
+    err =
+        bt_le_adv_start(BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY | BT_LE_ADV_OPT_CONN,
+                                        BT_GAP_ADV_FAST_INT_MIN_1, BT_GAP_ADV_FAST_INT_MAX_1, NULL),
+                        ad, ARRAY_SIZE(ad), NULL, 0);
     if (err) {
         printk("Settings Advertising failed to start (err %d)\n", err);
         return;
