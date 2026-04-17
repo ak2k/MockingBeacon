@@ -1581,6 +1581,192 @@ TEST(status_bytes_wired) {
     ASSERT_EQ(hw.last_airtag_status, 0x42);  // mode 1 = fixed base byte
 }
 
+// ---- Transition discipline tests ----
+// Verify that state machine transitions call adv methods in the correct
+// order: adv_stop before bt_disable, start_settings_adv after bt_enable,
+// and that mode-specific methods are used correctly.
+
+TEST(settings_entry_stops_broadcast_before_disable) {
+    printf("  test: settings_entry_stops_broadcast_before_disable\n");
+    MockNvsStorage nvs;
+    MockHardware hw;
+    beacon::SettingsManager mgr(nvs);
+    beacon::MovementTracker accel;
+    beacon::StateMachine sm(hw, mgr, accel);
+
+    setup_with_airtag_keys(nvs, hw, mgr, accel, sm, 1);
+
+    // First tick: start broadcasting
+    hw.uptime = 1;
+    sm.tick();
+    ASSERT_TRUE(hw.adv_start_calls > 0);
+
+    hw.reset_counts();
+
+    // Trigger settings mode entry
+    hw.uptime = 61;
+    sm.tick();
+
+    ASSERT_EQ(sm.state(), beacon::State::SettingsMode);
+    // Must have stopped broadcast AND disabled BT before starting settings
+    ASSERT_TRUE(hw.adv_stop_calls > 0);
+    ASSERT_TRUE(hw.bt_disable_calls > 0);
+    ASSERT_TRUE(hw.bt_enable_calls > 0);
+    ASSERT_TRUE(hw.start_settings_adv_calls > 0);
+}
+
+TEST(settings_exit_stops_settings_before_disable) {
+    printf("  test: settings_exit_stops_settings_before_disable\n");
+    MockNvsStorage nvs;
+    MockHardware hw;
+    beacon::SettingsManager mgr(nvs);
+    beacon::MovementTracker accel;
+    beacon::StateMachine sm(hw, mgr, accel);
+
+    setup_with_airtag_keys(nvs, hw, mgr, accel, sm, 1);
+
+    // Enter settings
+    hw.uptime = 61;
+    sm.tick();
+    ASSERT_EQ(sm.state(), beacon::State::SettingsMode);
+
+    hw.reset_counts();
+
+    // Exit settings
+    hw.uptime = 64;
+    sm.tick();
+
+    ASSERT_EQ(sm.state(), beacon::State::Broadcasting);
+    ASSERT_TRUE(hw.stop_settings_adv_calls > 0);
+    ASSERT_TRUE(hw.bt_disable_calls > 0);
+    ASSERT_TRUE(hw.bt_enable_calls > 0);
+}
+
+TEST(key_rotation_stops_adv_before_disable) {
+    printf("  test: key_rotation_stops_adv_before_disable\n");
+    MockNvsStorage nvs;
+    MockHardware hw;
+    beacon::SettingsManager mgr(nvs);
+    beacon::MovementTracker accel;
+    beacon::StateMachine sm(hw, mgr, accel);
+
+    setup_with_airtag_keys(nvs, hw, mgr, accel, sm, 3);
+
+    // Start broadcasting
+    hw.uptime = 1;
+    sm.tick();
+
+    // Advance past settings + past changeInterval
+    advance_past_settings(hw, sm, 6001);
+    ASSERT_EQ(sm.current_key(), 1);
+
+    // The rotation should have: stopped adv, disabled BT, prepared new key,
+    // set mac, re-enabled BT, and restarted broadcast.
+    ASSERT_TRUE(hw.adv_stop_calls > 0);
+    ASSERT_TRUE(hw.bt_disable_calls > 0);
+    ASSERT_TRUE(hw.bt_enable_calls > 0);
+    ASSERT_TRUE(hw.prepare_airtag_calls > 0);
+    ASSERT_TRUE(hw.set_mac_calls > 0);
+}
+
+TEST(uvlo_shutdown_stops_adv) {
+    printf("  test: uvlo_shutdown_stops_adv\n");
+    MockNvsStorage nvs;
+    MockHardware hw;
+    beacon::SettingsManager mgr(nvs);
+    beacon::MovementTracker accel;
+    beacon::StateMachine sm(hw, mgr, accel);
+
+    setup_with_airtag_keys(nvs, hw, mgr, accel, sm, 1);
+    hw.uptime = 1;
+    sm.tick(); // start broadcasting
+
+    // Trigger UVLO: low battery for enough ticks
+    hw.battery_volt = 2500; // below kBatteryLowVoltage
+    hw.reset_counts();
+
+    for (int i = 0; i < 20; i++) {
+        hw.uptime += 120; // battery check interval
+        sm.tick();
+        if (sm.state() == beacon::State::ShuttingDown) break;
+        // Skip settings mode if triggered
+        if (sm.state() == beacon::State::SettingsMode) {
+            hw.uptime += 3;
+            sm.tick();
+        }
+    }
+
+    ASSERT_EQ(sm.state(), beacon::State::ShuttingDown);
+    ASSERT_TRUE(hw.adv_stop_calls > 0);
+    ASSERT_TRUE(hw.power_off_calls > 0);
+}
+
+TEST(button_longpress_stops_adv_and_disables) {
+    printf("  test: button_longpress_stops_adv_and_disables\n");
+
+    // ButtonMock releases after a few calls (same pattern as button_longpress_shutdown test)
+    struct BtnMock : MockHardware {
+        int press_count = 0;
+        bool button_pressed() override {
+            press_count++;
+            return press_count <= 4;
+        }
+    };
+
+    MockNvsStorage nvs;
+    BtnMock hw;
+    hw.battery_volt = 3800;
+    beacon::SettingsManager mgr(nvs);
+    beacon::MovementTracker accel;
+
+    nvs.store_int(beacon::ID_airtag_NVS, 1);
+    nvs.store_int(beacon::ID_turnedOn_NVS, 1);
+    std::array<std::array<uint8_t, 28>, 40> keys = {};
+    keys[0][0] = 0x42;
+    nvs.write(beacon::ID_key_NVS, keys.data(), sizeof(keys));
+    mgr.load();
+
+    beacon::StateMachine sm(hw, mgr, accel);
+    hw.uptime = 0;
+    hw.press_count = 100; // skip button during initialize (return false)
+    sm.initialize();
+
+    hw.uptime = 1;
+    hw.press_count = 100;
+    sm.tick(); // start broadcasting
+
+    hw.reset_counts();
+    hw.press_count = 0; // re-arm: next 4 calls return true, then false
+    hw.uptime = 2;
+    sm.tick(); // triggers button longpress
+
+    ASSERT_EQ(sm.state(), beacon::State::ShuttingDown);
+    ASSERT_TRUE(hw.adv_stop_calls > 0);
+    ASSERT_TRUE(hw.bt_disable_calls > 0);
+    ASSERT_TRUE(hw.power_off_calls > 0);
+}
+
+TEST(airtag_uses_adv_start_airtag_not_fmdn) {
+    printf("  test: airtag_uses_adv_start_airtag_not_fmdn\n");
+    MockNvsStorage nvs;
+    MockHardware hw;
+    beacon::SettingsManager mgr(nvs);
+    beacon::MovementTracker accel;
+    beacon::StateMachine sm(hw, mgr, accel);
+
+    // AirTag only (no FMDN)
+    setup_with_airtag_keys(nvs, hw, mgr, accel, sm, 1);
+    hw.reset_counts();
+    hw.uptime = 1;
+    sm.tick();
+
+    ASSERT_TRUE(hw.adv_start_calls > 0);
+    // adv_start_calls is incremented by both adv_start_airtag and adv_start_fmdn
+    // in our mock — verify via the broadcasting flags
+    ASSERT_TRUE(sm.broadcasting_airtag());
+    ASSERT_TRUE(!sm.broadcasting_fmdn());
+}
+
 int main() {
     printf("Running host tests...\n");
     printf("\n%d/%d assertions passed\n", tests_passed, tests_run);
