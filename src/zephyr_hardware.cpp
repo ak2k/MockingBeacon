@@ -197,20 +197,20 @@ void ZephyrHardware::bt_disable() {
     ::bt_disable();
 }
 
-int ZephyrHardware::adv_start(bool connectable, int interval_min, int interval_max, bool use_fmdn) {
-    if (connectable) {
-        return -EINVAL;
-    }
+int ZephyrHardware::adv_start_airtag(int interval_min, int interval_max) {
     adv_is_settings = false;
-    uint32_t options = BT_LE_ADV_OPT_USE_IDENTITY;
-    if (use_fmdn) {
-        return ::bt_le_adv_start(BT_LE_ADV_PARAM(options, static_cast<uint32_t>(interval_min),
-                                                 static_cast<uint32_t>(interval_max), NULL),
-                                 adv_fmdn, ADV_FMDN_COUNT, NULL, 0);
-    }
-    return ::bt_le_adv_start(BT_LE_ADV_PARAM(options, static_cast<uint32_t>(interval_min),
+    return ::bt_le_adv_start(BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY,
+                                             static_cast<uint32_t>(interval_min),
                                              static_cast<uint32_t>(interval_max), NULL),
                              adv_airtag, ADV_AIRTAG_COUNT, NULL, 0);
+}
+
+int ZephyrHardware::adv_start_fmdn(int interval_min, int interval_max) {
+    adv_is_settings = false;
+    return ::bt_le_adv_start(BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY,
+                                             static_cast<uint32_t>(interval_min),
+                                             static_cast<uint32_t>(interval_max), NULL),
+                             adv_fmdn, ADV_FMDN_COUNT, NULL, 0);
 }
 
 int ZephyrHardware::adv_stop() {

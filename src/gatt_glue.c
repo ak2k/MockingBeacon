@@ -125,6 +125,10 @@ static ssize_t chrc_write_auth(struct bt_conn *conn,
     (void)conn; (void)attr; (void)offset; (void)flags;
     int rc = beacon_glue_handle_auth(g_settings_manager, buf, len);
     if (rc > 0) {
+        // pauseUpload=1 here is the DFU trigger: auth + disconnect without
+        // writing a setting = "request firmware upload." Every settings write
+        // and time read clears it. See handle_settings_mode_exit() in
+        // beacon_state.cpp — it checks pause_upload_ to enter FirmwareUpload.
         pauseUpload = 1;
         allowedChange = 1;
         authorizedGatt = 1;

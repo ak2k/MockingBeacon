@@ -16,12 +16,11 @@ class IHardware {
     /// Disable Bluetooth subsystem (required before changing MAC address).
     virtual void bt_disable() = 0;
 
-    /// Start BLE advertising.
-    /// @param connectable  true for settings mode (connectable), false for broadcast
-    /// @param interval_min minimum interval in BLE units (1 unit = 0.625 ms)
-    /// @param interval_max maximum interval in BLE units
-    /// @param use_fmdn  true to advertise FMDN data, false for AirTag data
-    virtual int adv_start(bool connectable, int interval_min, int interval_max, bool use_fmdn) = 0;
+    /// Start AirTag non-connectable advertising.
+    virtual int adv_start_airtag(int interval_min, int interval_max) = 0;
+    /// Start FMDN non-connectable advertising.
+    virtual int adv_start_fmdn(int interval_min, int interval_max) = 0;
+    /// Stop all advertising (broadcast + settings).
     virtual int adv_stop() = 0;
     /// Update in-flight advertisement payload (AirTag Offline Finding format).
     virtual int adv_update_airtag() = 0;

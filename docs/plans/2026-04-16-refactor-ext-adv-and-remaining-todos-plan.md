@@ -122,8 +122,9 @@ debugging this during the refactor.
 
 ### Phase 0: Pre-work (half day)
 
-- [ ] Fix `pauseUpload` bug (gatt_glue.c:128 — move to settings write path)
-- [ ] Verify fix with existing Bumble tests
+- [x] Investigate `pauseUpload` "bug" — intentional DFU trigger, not a bug.
+  Auth sets it; every write/read clears it. Auth+disconnect = DFU request.
+  Added explanatory comment. No code change needed.
 
 ### Phase 1: ext-adv migration (2-3 days)
 

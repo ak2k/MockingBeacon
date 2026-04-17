@@ -801,7 +801,11 @@ class MockHardware : public beacon::IHardware {
         return bt_enable_result;
     }
     void bt_disable() override { bt_disable_calls++; }
-    int adv_start(bool /*connectable*/, int /*imin*/, int /*imax*/, bool /*use_fmdn*/) override {
+    int adv_start_airtag(int /*imin*/, int /*imax*/) override {
+        adv_start_calls++;
+        return 0;
+    }
+    int adv_start_fmdn(int /*imin*/, int /*imax*/) override {
         adv_start_calls++;
         return 0;
     }
