@@ -84,10 +84,10 @@ void StateMachine::broadcast() {
         int mult = cfg.mult_period;
         if (broadcasting_airtag_) {
             hw_.set_mac(ble_addr_);
-            hw_.adv_start(false, kBroadcastIntervalMin * mult, kBroadcastIntervalMax * mult, false);
+            hw_.adv_start_airtag(kBroadcastIntervalMin * mult, kBroadcastIntervalMax * mult);
             broadcasting_anything_ = true;
         } else if (broadcasting_fmdn_) {
-            hw_.adv_start(false, kBroadcastIntervalMin * mult, kBroadcastIntervalMax * mult, true);
+            hw_.adv_start_fmdn(kBroadcastIntervalMin * mult, kBroadcastIntervalMax * mult);
             broadcasting_anything_ = true;
         }
     }
