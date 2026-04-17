@@ -6,7 +6,7 @@
 > **What changed:**
 > - NCS 3.2.4 / Zephyr 4.2 (staged migration from 2.9.2 preserved `.recycled` advertising lifecycle and RAM budgets on nRF52810)
 > - C++ modules with explicit state machine and `IHardware` abstraction — pure computation is fully testable off-target
-> - 317 host-native test assertions (ASan/UBSan) verify byte-identical output vs the original C code
+> - 317 host-native test assertions (ASan/UBSan) covering pure computation
 > - BLE advertisement payloads verified end-to-end via [BabbleSim](https://babblesim.github.io/) simulation (3-key rotation over simulated radio, MCUmgr SMP echo for DFU transport)
 > - BLE client integration tests against a virtual GATT server ([Bumble](https://google.github.io/bumble/)) — all 15 `conn_beacon.py` CLI options exercised with auth enforcement
 > - ZMS persistence test: write → remount → read roundtrip on native_sim flash
@@ -18,11 +18,11 @@
 > **Quick start:**
 > ```
 > nix build .#firmware          # cross-compile for all boards
-> nix run .#test                # host-native tests (290 assertions)
+> nix run .#test                # host-native tests (317 assertions)
 > nix run .#lint                # clang-format check
 > ```
 
-The firmware advertises as both an **Apple AirTag** (Offline Finding protocol, up to 40 public keys rotating at default 10 minute intervals for tracker anonymity) and a **Google Find My Device Network (FMDN)** beacon (one non-rotating Eddystone-EID key). If no keys are loaded, it falls back to a plain **iBeacon** carrying battery voltage. It runs on nRF52/54 chips using Zephyr and is optimized for microampere-range power consumption. The MCU's watchdog ensures it keeps running until the battery dies.
+The firmware advertises as an **Apple AirTag** using the Offline Finding protocol (up to 40 public keys rotating at default 10 minute intervals for tracker anonymity), alongside an **Eddystone-EID-format secondary beacon** with a single static 20-byte identifier. If no AirTag keys are loaded, it falls back to a plain **iBeacon** carrying battery voltage. Full **Google Find My Device Network (FMDN)** integration — ephemeral-ID rotation, Google account provisioning — is planned, not shipped; the Eddystone-EID beacon is the advertising foundation for that future work. Runs on nRF52/54 chips using Zephyr, optimized for microampere-range power consumption; the MCU's watchdog ensures it keeps running until the battery dies.
 
 All settings (keys, TX power, broadcast interval, etc.) can be reconfigured over BLE without reflashing — a Python script and Android app are included. To minimize power consumption, the firmware accepts BLE connections only for 2 seconds every minute, gated by an 8-byte auth code. Signed firmware updates (MCUmgr SMP over BLE) are supported on boards with ≥512 KB flash.
 
