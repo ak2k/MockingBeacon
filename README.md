@@ -4,8 +4,9 @@
 > Original upstream: [vasimv/Everytag](https://github.com/vasimv/Everytag)
 >
 > **What changed:**
+> - NCS 3.2.4 / Zephyr 4.2 (staged migration from 2.9.2 preserved `.recycled` advertising lifecycle and RAM budgets on nRF52810)
 > - C++ modules with explicit state machine and `IHardware` abstraction — pure computation is fully testable off-target
-> - 290 host-native test assertions (ASan/UBSan) verify byte-identical output vs the original C code
+> - 317 host-native test assertions (ASan/UBSan) verify byte-identical output vs the original C code
 > - BLE advertisement payloads verified end-to-end via [BabbleSim](https://babblesim.github.io/) simulation (3-key rotation over simulated radio, MCUmgr SMP echo for DFU transport)
 > - BLE client integration tests against a virtual GATT server ([Bumble](https://google.github.io/bumble/)) — all 15 `conn_beacon.py` CLI options exercised with auth enforcement
 > - ZMS persistence test: write → remount → read roundtrip on native_sim flash
@@ -21,9 +22,9 @@
 > nix run .#lint                # clang-format check
 > ```
 
-The firmware emulates Apple AirTag (up to 40 public keys rotating at default 10 minutes interval) and Google Find My Device (one non-rotating key). It runs on nRF52/54 chips using Zephyr and is optimized for microampere-range power consumption. The MCU's watchdog ensures it keeps running until the battery dies.
+The firmware advertises as both an **Apple AirTag** (Offline Finding protocol, up to 40 public keys rotating at default 10 minute intervals for tracker anonymity) and a **Google Find My Device Network (FMDN)** beacon (one non-rotating Eddystone-EID key). If no keys are loaded, it falls back to a plain **iBeacon** carrying battery voltage. It runs on nRF52/54 chips using Zephyr and is optimized for microampere-range power consumption. The MCU's watchdog ensures it keeps running until the battery dies.
 
-All settings (keys, TX power, broadcast interval, etc.) can be reconfigured over BLE without reflashing — a Python script and Android app are included. To minimize power consumption, the firmware accepts BLE connections only for 2 seconds every minute, with simple password protection.
+All settings (keys, TX power, broadcast interval, etc.) can be reconfigured over BLE without reflashing — a Python script and Android app are included. To minimize power consumption, the firmware accepts BLE connections only for 2 seconds every minute, gated by an 8-byte auth code. Signed firmware updates (MCUmgr SMP over BLE) are supported on boards with ≥512 KB flash.
 
 Additional features:
 - **Clock tracking** — if the board has a 32.768 kHz crystal, the firmware counts time and periodically saves it to flash so the clock survives reboots with minimal drift
