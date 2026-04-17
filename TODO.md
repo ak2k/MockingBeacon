@@ -1,25 +1,18 @@
 # TODO
 
-## Upgrade to nRF Connect SDK v3.x
+## Deferred NCS 3.2.4 migration fold-ins
 
-Currently on NCS v2.9.2 (Zephyr 3.7.99). NCS 3.x is a major release
-with breaking changes. Latest is v3.2.4 at time of writing.
+Migration completed 2026-04-16 via 6 sequential PRs (#6–#10 + phase-4).
+See `docs/plans/2026-04-16-refactor-ncs-3.2.4-upgrade-plan.md` for full
+plan + appendix. These items were deferred from the migration:
 
-Scope:
-- Bump `west.yml` sdk-nrf revision → `v3.2.4`
-- `nix run .#update-lockfile` to regenerate west2nix.toml
-- Fix Kconfig deprecations (3.x has moved several options, renamed
-  some, removed others)
-- Fix Zephyr API churn (3.x drops some legacy Zephyr APIs)
-- MCUboot partition layout may change — existing devices with
-  2.9-built MCUboot can't OTA to a 3.x-built signed image without
-  SWD recovery. Plan for fleet coordination if that matters.
-- Verify nRF54L15 hw accel PSA Crypto (introduced in 2.9, possibly
-  improved in 3.x)
-- Re-run full test suite + BabbleSim + release matrix
-
-Budget: 2–4 hours, depending on API churn.
-
+- `bt_hci_err_to_str(reason)` in disconnect log (`src/gatt_glue.c`
+  `disconnected()`) — improves debug output. Low effort.
+- `BUILD_ASSERT(IS_ENABLED(CONFIG_BT_HAS_HCI_VS))` at top of
+  `src/zephyr_hardware.cpp` HCI command block — compile-time guard
+  against using VS commands without the VS subsystem.
+- Minor log cleanup: remove redundant printk prefixes where Zephyr's
+  LOG macros already add module names.
 
 ## Bumble-vs-firmware-in-bsim end-to-end test infrastructure
 

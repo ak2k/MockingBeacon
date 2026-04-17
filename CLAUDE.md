@@ -3,6 +3,7 @@
 ## Prerequisites
 Run `nix develop` to enter the dev shell with all dependencies.
 Run `cd .. && west init -l Everytag && west update --narrow -o=--depth=1` to fetch Zephyr + NCS modules.
+# Migrating from a 2.9.2 workspace: rm -rf ../zephyr ../nrf ../modules ../bootloader ../tools && west update
 
 ## Flake apps (no nix develop needed)
 nix build .#firmware    # cross-compile all boards in parallel (nrf52810 + nrf54l15)
@@ -44,10 +45,11 @@ nix build .#firmware-nrf54l15-dfu
 # Run: uv run --with bumble --with pytest --with pytest-asyncio pytest tests/ble_client/ -v
 
 ## Binary size (nrf52810)
-# C baseline: text=151968, data=2872, bss=19930
+# C baseline (NCS 2.9.2): text=151968, data=2872, bss=19930
 # C++ migration: text=152340 (+372 bytes, +0.2%)
 # C++ overhaul:  text=152920 (+952 bytes, +0.6%)
-# Current (+ ZMS, MAC logging, nrf54l15 guards): text=154544 (+2576, +1.7%)
+# + ZMS, MAC logging, nrf54l15 guards: text=154544 (+2576, +1.7%)
+# NCS 3.2.4 migration (+ .recycled wq, stack pins): text=154576, data=2912, bss=21376 (+1.7% text vs C baseline)
 
 ## Supported boards
 # Custom boards (in boards/arm/, need -DBOARD_ROOT=$(pwd)):

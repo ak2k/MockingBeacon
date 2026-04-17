@@ -1,7 +1,7 @@
 ---
 title: NCS 2.9.2 → 3.2.4 firmware upgrade (staged)
 type: refactor
-status: active
+status: completed
 date: 2026-04-16
 deepened: 2026-04-16
 companion: docs/plans/2026-04-16-ncs-3.2.4-research-appendix.md
