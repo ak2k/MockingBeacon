@@ -540,6 +540,7 @@
                 # Out-of-source build so this works both from a live checkout
                 # and from a read-only /nix/store path (checks.default).
                 src="''${1:-.}"
+                rm -rf build
                 cmake -S "$src/tests/host" -B build \
                   -DCMAKE_CXX_COMPILER=clang++ \
                   -DCMAKE_C_COMPILER=clang
