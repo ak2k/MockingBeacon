@@ -1,6 +1,7 @@
 // gatt_glue.c -- BT_GATT_SERVICE_DEFINE + connection callbacks (pure C)
 #include <zephyr/bluetooth/bluetooth.h>
 #include <zephyr/bluetooth/gatt.h>
+#include <zephyr/bluetooth/hci.h>
 #include <zephyr/bluetooth/uuid.h>
 #include <zephyr/bluetooth/controller.h>
 #include <zephyr/sys/printk.h>
@@ -87,8 +88,7 @@ static void disconnected(struct bt_conn *conn, uint8_t reason) {
     connectedGatt = 0;
     authorizedGatt = 0;
     allowedChange = 0;
-    printk("Disconnected (reason 0x%02x)\n", reason);
-    (void)reason;
+    printk("Disconnected (reason 0x%02x / %s)\n", reason, bt_hci_err_to_str(reason));
     // Keys write at disconnect is handled by the bridge functions
     if (updateKeysAtDisconnect) {
         beacon_glue_handle_key(g_settings_manager, NULL, 0);

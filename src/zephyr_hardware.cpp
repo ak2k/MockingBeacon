@@ -235,6 +235,8 @@ void ZephyrHardware::set_mac(const uint8_t* addr) {
 }
 
 void ZephyrHardware::set_tx_power(int level) {
+    BUILD_ASSERT(IS_ENABLED(CONFIG_BT_HCI_VS),
+                 "set_tx_power requires vendor-specific HCI commands");
     int pwr_level;
     switch (level) {
     case 0:

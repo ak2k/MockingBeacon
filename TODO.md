@@ -1,50 +1,27 @@
 # TODO
 
-## Deferred NCS 3.2.4 migration fold-ins
+## bsim connect/disconnect lifecycle test
 
-Migration completed 2026-04-16 via 6 sequential PRs (#6–#10 + phase-4).
-See `docs/plans/2026-04-16-refactor-ncs-3.2.4-upgrade-plan.md` for full
-plan + appendix. These items were deferred from the migration:
+Add a bsim test with two nrf52_bsim executables: one running the
+firmware (peripheral), one acting as a GATT central (standard Zephyr
+bsim pattern — no Python/Bumble needed). The central:
+- Connects, discovers services, disconnects — 20 iterations with 200ms
+  dwell. Asserts the peripheral re-advertises between iterations (proves
+  `.recycled` wiring works at the firmware level).
+- Asserts auth-state isolation: after one client authorizes and
+  disconnects, a fresh connection must NOT inherit prior auth.
 
-- `bt_hci_err_to_str(reason)` in disconnect log (`src/gatt_glue.c`
-  `disconnected()`) — improves debug output. Low effort.
-- `BUILD_ASSERT(IS_ENABLED(CONFIG_BT_HAS_HCI_VS))` at top of
-  `src/zephyr_hardware.cpp` HCI command block — compile-time guard
-  against using VS commands without the VS subsystem.
-- Minor log cleanup: remove redundant printk prefixes where Zephyr's
-  LOG macros already add module names.
+Effort: ~half day. Extend existing `tests/bsim/` with a central role.
 
-## Bumble-vs-firmware-in-bsim end-to-end test infrastructure
+## bsim key-rotation-during-connection race test
 
-Phase 1β added `tests/ble_client/test_recycled_lifecycle.py` which exercises
-rapid reconnect + auth-state isolation via the Python `BeaconGattServer` mock.
-This validates the test harness side, not the firmware-side `.recycled` wiring.
+Schedule the central's connection to coincide with the firmware's
+key-rotation timer (BabbleSim gives simulated-time control). Assert no
+double-start or stale-mode advertising after the rotation completes
+during an active connection.
 
-Plan §1h originally called for "Bumble virtual BLE against `nrf52_bsim`
-firmware" — a Bumble Python client connecting to firmware running in
-BabbleSim's virtual BT controller. Existing `tests/bsim/` runs firmware
-adv+scanner in two BabbleSim processes but has no GATT-client peer.
-
-To close: build a bsim test that:
-- Compiles firmware as `nrf52_bsim` (already supported by `tests/bsim`).
-- Spawns a Python Bumble client + an HCI bridge to the BabbleSim phy
-  (e.g., via Zephyr's `tests/bsim/bumble` integration if it lands, or
-  custom HCI socket bridge).
-- Iterates 20 connect/disconnect cycles, asserts adv resumes between.
-- Asserts auth-state isolation across clients.
-
-Estimated effort: 1-2 days of bsim infrastructure work. Defer until
-either hardware arrives (preferred) or this test infra is needed for
-another reason. Tracked here so it doesn't drop off the radar.
-
-## Connect/disconnect-during-key-rotation race test
-
-Plan §1h gate item 2: schedule a connection right after
-`beacon_state.cpp:378` key-rotation transition, ensure no double-start
-or stale-mode advertising. Requires firmware-side trigger to perform
-key rotation while a connection is in progress, which the current
-test harness doesn't expose. Same blocker as the bsim Bumble item
-above. Defer.
+Effort: ~half day. Depends on the connect/disconnect test above for
+the central scaffolding.
 
 ## Hardware DFU swap validation post-NCS-3.2.4-migration
 
