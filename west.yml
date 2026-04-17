@@ -6,7 +6,7 @@ manifest:
     - name: sdk-nrf
       remote: nrfconnect
       path: nrf
-      revision: v3.1.0
+      revision: v3.2.4
       import: true
   self:
     path: everytag

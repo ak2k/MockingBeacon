@@ -379,6 +379,12 @@
             name = "everytag-bsim-test";
             src = ./.;
             nativeBuildInputs = commonBuildInputs;
+            # glibc 2.42+ rejects _FORTIFY_SOURCE without optimization. Zephyr's
+            # bsim/native_sim targets compile some files at -O0 (debug stubs); Nix
+            # stdenv injects _FORTIFY_SOURCE=2 via hardening flags. Disable fortify
+            # for the entire bsim derivation since these are test binaries, not
+            # shipped firmware.
+            hardeningDisable = [ "fortify" ];
             dontUseCmakeConfigure = true;
             dontUseWestConfigure = true;
             configurePhase = westConfigurePhase;
@@ -400,7 +406,9 @@
               cp $BSIM/lib/* $RUNDIR/lib/ 2>/dev/null || true
 
               # Build BLE adv test (nrf52_bsim)
+              # -O2 required: glibc 2.42+ rejects _FORTIFY_SOURCE without optimization.
               cmake -GNinja -B build-bsim \
+                -DCMAKE_BUILD_TYPE=MinSizeRel \
                 -DBOARD=nrf52_bsim \
                 -DZEPHYR_TOOLCHAIN_VARIANT=host \
                 -DBSIM_COMPONENTS_PATH="$BSIM_COMPONENTS_PATH" \
@@ -411,6 +419,7 @@
 
               # Build BLE adv test (nrf54l15bsim)
               cmake -GNinja -B build-bsim-54l \
+                -DCMAKE_BUILD_TYPE=MinSizeRel \
                 -DBOARD=nrf54l15bsim/nrf54l15/cpuapp \
                 -DZEPHYR_TOOLCHAIN_VARIANT=host \
                 -DBSIM_COMPONENTS_PATH="$BSIM_COMPONENTS_PATH" \
@@ -421,6 +430,7 @@
 
               # Build SMP echo test (nrf52_bsim)
               cmake -GNinja -B build-bsim-dfu \
+                -DCMAKE_BUILD_TYPE=MinSizeRel \
                 -DBOARD=nrf52_bsim \
                 -DZEPHYR_TOOLCHAIN_VARIANT=host \
                 -DBSIM_COMPONENTS_PATH="$BSIM_COMPONENTS_PATH" \
@@ -450,6 +460,7 @@
               # Build + run ZMS persistence test (native_sim, no BLE needed)
               echo "=== ZMS persistence test (native_sim) ==="
               cmake -GNinja -B $SRCDIR/build-zms \
+                -DCMAKE_BUILD_TYPE=MinSizeRel \
                 -DBOARD=native_sim \
                 -DZEPHYR_TOOLCHAIN_VARIANT=host \
                 -DWEST_PYTHON=${pythonEnv}/bin/python3 \
