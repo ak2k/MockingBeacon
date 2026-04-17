@@ -122,11 +122,9 @@
         # which strips logging + RTT + GPIO (~21 KB flash savings).
         # DFU builds add dfu.conf for MCUmgr/MCUboot.
         extraConfList =
-          { release, dfu, extAdv ? false }:
+          { release, dfu }:
           pkgs.lib.concatStringsSep ";" (
-            pkgs.lib.optional release "prj-lowpower.conf"
-            ++ pkgs.lib.optional dfu "dfu.conf"
-            ++ pkgs.lib.optional extAdv "ext-adv.conf"
+            pkgs.lib.optional release "prj-lowpower.conf" ++ pkgs.lib.optional dfu "dfu.conf"
           );
 
         # Plain cmake build (no sysbuild, no MCUboot) for small-flash boards.
@@ -136,11 +134,10 @@
             board ? "kkm_p1_nrf52810",
             boardRoot ? true,
             release ? false,
-            extAdv ? false,
           }:
           let
             extra = extraConfList {
-              inherit release extAdv;
+              inherit release;
               dfu = false;
             };
           in
@@ -184,11 +181,10 @@
             board,
             boardRoot ? false,
             release ? true,
-            extAdv ? false,
           }:
           let
             extra = extraConfList {
-              inherit release extAdv;
+              inherit release;
               dfu = true;
             };
           in
@@ -232,42 +228,36 @@
             board = "kkm_p1_nrf52810";
             boardRoot = true;
             dfu = false;
-            extAdv = false; # 24 KB RAM — SDC multirole overflows by ~2 KB
           }
           {
             short = "nrf52832";
             board = "nrf52dk/nrf52832";
             boardRoot = false;
             dfu = true;
-            extAdv = true;
           }
           {
             short = "nrf52833";
             board = "nrf52833dk/nrf52833";
             boardRoot = false;
             dfu = true;
-            extAdv = true;
           }
           {
             short = "nrf52840";
             board = "nrf52840dk/nrf52840";
             boardRoot = false;
-            dfu = true;
-            extAdv = true;
+            dfu = true; # 1 MB flash, plenty of room
           }
           {
             short = "thingy52";
             board = "thingy52/nrf52832";
             boardRoot = false;
-            dfu = true;
-            extAdv = true;
+            dfu = true; # same nRF52832 SoC as nrf52dk/nrf52832
           }
           {
             short = "nrf54l15";
             board = "nrf54l15dk/nrf54l15/cpuapp";
             boardRoot = false;
             dfu = true;
-            extAdv = true;
           }
         ];
 
@@ -281,14 +271,14 @@
                 name = "firmware-${b.short}";
                 value = mkFirmware {
                   name = "everytag-firmware-${b.short}";
-                  inherit (b) board boardRoot extAdv;
+                  inherit (b) board boardRoot;
                 };
               }
               {
                 name = "firmware-${b.short}-release";
                 value = mkFirmware {
                   name = "everytag-firmware-${b.short}-release";
-                  inherit (b) board boardRoot extAdv;
+                  inherit (b) board boardRoot;
                   release = true;
                 };
               }
@@ -298,14 +288,14 @@
                 name = "firmware-${b.short}-dfu";
                 value = mkFirmwareDfu {
                   name = "everytag-firmware-${b.short}-dfu";
-                  inherit (b) board boardRoot extAdv;
+                  inherit (b) board boardRoot;
                 };
               }
               {
                 name = "firmware-${b.short}-dfu-dev";
                 value = mkFirmwareDfu {
                   name = "everytag-firmware-${b.short}-dfu-dev";
-                  inherit (b) board boardRoot extAdv;
+                  inherit (b) board boardRoot;
                   release = false;
                 };
               }

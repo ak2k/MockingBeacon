@@ -106,11 +106,6 @@ namespace {
 bool adv_is_settings = false;
 bool adv_enabled = true;
 
-#if defined(CONFIG_BT_EXT_ADV)
-struct bt_le_ext_adv* broadcast_adv_set;
-bool broadcast_set_created = false;
-#endif
-
 K_THREAD_STACK_DEFINE(adv_wq_stack_area, 1024);
 struct k_work_q adv_wq;
 struct k_work adv_restart_work;
@@ -202,74 +197,23 @@ void ZephyrHardware::bt_disable() {
     ::bt_disable();
 }
 
-#if defined(CONFIG_BT_EXT_ADV)
-
-static int ext_adv_start(const struct bt_data* ad, size_t ad_len, uint32_t interval_min,
-                         uint32_t interval_max) {
-    int err;
-    if (!broadcast_set_created) {
-        struct bt_le_adv_param param = {};
-        param.options = BT_LE_ADV_OPT_USE_IDENTITY;
-        param.interval_min = interval_min;
-        param.interval_max = interval_max;
-        err = bt_le_ext_adv_create(&param, NULL, &broadcast_adv_set);
-        if (err) {
-            printk("ext_adv_create failed (err %d)\n", err);
-            return err;
-        }
-        broadcast_set_created = true;
-    } else {
-        struct bt_le_adv_param param = {};
-        param.options = BT_LE_ADV_OPT_USE_IDENTITY;
-        param.interval_min = interval_min;
-        param.interval_max = interval_max;
-        err = bt_le_ext_adv_update_param(broadcast_adv_set, &param);
-        if (err && err != -EALREADY) {
-            printk("ext_adv_update_param failed (err %d)\n", err);
-        }
-    }
-    err = bt_le_ext_adv_set_data(broadcast_adv_set, ad, ad_len, NULL, 0);
-    if (err) {
-        printk("ext_adv_set_data failed (err %d)\n", err);
-        return err;
-    }
-    return bt_le_ext_adv_start(broadcast_adv_set, BT_LE_EXT_ADV_START_DEFAULT);
-}
-
-#endif // CONFIG_BT_EXT_ADV
-
 int ZephyrHardware::adv_start_airtag(int interval_min, int interval_max) {
     adv_is_settings = false;
-#if defined(CONFIG_BT_EXT_ADV)
-    return ext_adv_start(adv_airtag, ADV_AIRTAG_COUNT, static_cast<uint32_t>(interval_min),
-                         static_cast<uint32_t>(interval_max));
-#else
-    return ::bt_le_adv_start(BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY,
-                                             static_cast<uint32_t>(interval_min),
-                                             static_cast<uint32_t>(interval_max), NULL),
-                             adv_airtag, ADV_AIRTAG_COUNT, NULL, 0);
-#endif
+    return ::bt_le_adv_start(
+        BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY, static_cast<uint32_t>(interval_min),
+                         static_cast<uint32_t>(interval_max), NULL),
+        adv_airtag, ADV_AIRTAG_COUNT, NULL, 0);
 }
 
 int ZephyrHardware::adv_start_fmdn(int interval_min, int interval_max) {
     adv_is_settings = false;
-#if defined(CONFIG_BT_EXT_ADV)
-    return ext_adv_start(adv_fmdn, ADV_FMDN_COUNT, static_cast<uint32_t>(interval_min),
-                         static_cast<uint32_t>(interval_max));
-#else
-    return ::bt_le_adv_start(BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY,
-                                             static_cast<uint32_t>(interval_min),
-                                             static_cast<uint32_t>(interval_max), NULL),
-                             adv_fmdn, ADV_FMDN_COUNT, NULL, 0);
-#endif
+    return ::bt_le_adv_start(
+        BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY, static_cast<uint32_t>(interval_min),
+                         static_cast<uint32_t>(interval_max), NULL),
+        adv_fmdn, ADV_FMDN_COUNT, NULL, 0);
 }
 
 int ZephyrHardware::adv_stop() {
-#if defined(CONFIG_BT_EXT_ADV)
-    if (broadcast_set_created) {
-        bt_le_ext_adv_stop(broadcast_adv_set);
-    }
-#endif
     int err = ::bt_le_adv_stop();
     adv_is_settings = false;
     return err;
@@ -520,12 +464,8 @@ void ZephyrHardware::broadcast_ibeacon(int batt_voltage) {
     std::memcpy(iBeacon_data, adv_ibeacon[1].data, adv_ibeacon[1].data_len);
     adv_ibeacon[1].data = iBeacon_data;
     iBeacon_data[24] = static_cast<uint8_t>((batt_voltage + 50) / 100);
-#if defined(CONFIG_BT_EXT_ADV)
-    int err = ext_adv_start(adv_ibeacon, ADV_IBEACON_COUNT, 11200, 12800);
-#else
     int err = ::bt_le_adv_start(BT_LE_ADV_PARAM(BT_LE_ADV_OPT_USE_IDENTITY, 11200, 12800, NULL),
                                 adv_ibeacon, ADV_IBEACON_COUNT, NULL, 0);
-#endif
     if (err) {
         printk("iBeacon advertising start failed (err %d)\n", err);
     }
