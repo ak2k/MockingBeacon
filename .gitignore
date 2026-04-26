@@ -15,3 +15,7 @@ http_cache.sqlite
 sbom.cdx.json
 sbom.spdx.json
 sbom.csv
+
+# Local Claude Code permission allowlist (per-machine, per-user;
+# accumulated across sessions in this checkout).
+.claude/settings.local.json

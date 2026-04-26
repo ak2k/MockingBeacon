@@ -75,3 +75,22 @@ nix build .#firmware-nrf54l15-dfu
 # To regenerate after changing west.yml:
 #   cd .. && west update && cd MockingBeacon
 #   uv run scripts/west2nix.py -o west2nix.toml
+
+
+<!-- BEGIN BEADS INTEGRATION v:1 profile:minimal hash:ca08a54f -->
+## Beads Issue Tracker
+
+This project uses **bd (beads)** for tracked work items. Discover available
+work, claim, and close in the standard bd loop. `bd prime` for the full
+workflow context. Beads complement (not replace) the project's existing
+`TODO.md` (design roadmap) and `docs/plans/` (phased design docs).
+
+### Quick Reference
+
+```bash
+bd ready              # Find available work
+bd show <id>          # View issue details
+bd update <id> --claim  # Claim work
+bd close <id>         # Complete work
+```
+<!-- END BEADS INTEGRATION -->
