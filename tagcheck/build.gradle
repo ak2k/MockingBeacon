@@ -1,6 +1,0 @@
-plugins {
-    // This defines the plugin versions for sub-modules to use
-    // Do NOT apply them here with "apply true"
-    alias(libs.plugins.android.application) apply false
-    alias(libs.plugins.kotlin.android) apply false
-}

@@ -24,7 +24,7 @@
 
 The firmware advertises as an **Apple AirTag** using the Offline Finding protocol (up to 40 public keys rotating at default 10 minute intervals for tracker anonymity), alongside an **Eddystone-EID-format secondary beacon** with a single static 20-byte identifier. If no AirTag keys are loaded, it falls back to a plain **iBeacon** carrying battery voltage. Full **Google Find My Device Network (FMDN)** integration — ephemeral-ID rotation, Google account provisioning — is planned, not shipped; the Eddystone-EID beacon is the advertising foundation for that future work. Runs on nRF52/54 chips using Zephyr, optimized for microampere-range power consumption; the MCU's watchdog ensures it keeps running until the battery dies.
 
-All settings (keys, TX power, broadcast interval, etc.) can be reconfigured over BLE without reflashing — a Python script and Android app are included. To minimize power consumption, the firmware accepts BLE connections only for 2 seconds every minute, gated by an 8-byte auth code. Signed firmware updates (MCUmgr SMP over BLE) are supported on boards with ≥512 KB flash.
+All settings (keys, TX power, broadcast interval, etc.) can be reconfigured over BLE without reflashing — `conn_beacon.py` (Python 3) drives the configuration protocol. To minimize power consumption, the firmware accepts BLE connections only for 2 seconds every minute, gated by an 8-byte auth code. Signed firmware updates (MCUmgr SMP over BLE) are supported on boards with ≥512 KB flash.
 
 Additional features:
 - **Clock tracking** — if the board has a 32.768 kHz crystal, the firmware counts time and periodically saves it to flash so the clock survives reboots with minimal drift
@@ -140,7 +140,7 @@ DFU builds ship with MCUboot's default dev signing key. This means anyone can bu
 
 ## Changing settings via BLE
 
-Every minute the beacon switches into settings mode for 2 seconds (configurable). Settings can be changed using `conn_beacon.py` (Python 3) or the Android app in `tagcheck/`.
+Every minute the beacon switches into settings mode for 2 seconds (configurable). Settings can be changed using `conn_beacon.py` (Python 3).
 
 All operations require password authentication (default: `abcdefgh`, changeable via settings mode).
 
@@ -213,7 +213,7 @@ The beacon uses its factory MAC address for iBeacon and settings broadcasts.
 
 ## Android app
 
-See `tagcheck/` for an Android app that can scan for beacons, change settings, and upload firmware. It is an Android Studio project — you can build it yourself or use the included APK.
+A clean-sheet Android companion app is planned but not yet implemented — see [`docs/plans/2026-04-25-android-app-rewrite-plan.md`](docs/plans/2026-04-25-android-app-rewrite-plan.md). The earlier inherited `tagcheck/` reference implementation has been removed (Activity-era patterns, no CI, never released as an APK); use `conn_beacon.py` and `flash_beacon.sh` for now.
 
 ## Credits and project history
 
