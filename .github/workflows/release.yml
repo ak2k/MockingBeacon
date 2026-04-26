@@ -105,14 +105,14 @@ jobs:
           mkdir -p artifacts
 
           # size.txt and zephyr-version.txt are produced by every firmware target
-          cp result/size.txt "artifacts/everytag-${LABEL}-${TAG}-size.txt"
+          cp result/size.txt "artifacts/mockingbeacon-${LABEL}-${TAG}-size.txt"
           cp result/zephyr-version.txt artifacts/zephyr-version.txt
 
           # .hex exists for non-DFU; DFU builds produce signed.hex + merged.hex
-          [ -f result/zephyr.hex ] && cp result/zephyr.hex "artifacts/everytag-${LABEL}-${TAG}.hex"
-          [ -f result/zephyr.elf ] && cp result/zephyr.elf "artifacts/everytag-${LABEL}-${TAG}.elf"
-          [ -f result/zephyr.signed.hex ] && cp result/zephyr.signed.hex "artifacts/everytag-${LABEL}-${TAG}.signed.hex"
-          [ -f result/merged.hex ] && cp result/merged.hex "artifacts/everytag-${LABEL}-${TAG}.merged.hex"
+          [ -f result/zephyr.hex ] && cp result/zephyr.hex "artifacts/mockingbeacon-${LABEL}-${TAG}.hex"
+          [ -f result/zephyr.elf ] && cp result/zephyr.elf "artifacts/mockingbeacon-${LABEL}-${TAG}.elf"
+          [ -f result/zephyr.signed.hex ] && cp result/zephyr.signed.hex "artifacts/mockingbeacon-${LABEL}-${TAG}.signed.hex"
+          [ -f result/merged.hex ] && cp result/merged.hex "artifacts/mockingbeacon-${LABEL}-${TAG}.merged.hex"
 
           ls -la artifacts/
 
@@ -164,17 +164,17 @@ jobs:
           # vuln scanners, and supply-chain audits actually need for
           # bare-metal firmware — it's the code compiled into the binary.
           nix shell nixpkgs#sbomnix -c sbomnix .#firmware --buildtime \
-            --cdx=sbom/everytag-${TAG}-buildtime.cdx.json \
-            --spdx=sbom/everytag-${TAG}-buildtime.spdx.json \
-            --csv=sbom/everytag-${TAG}-buildtime-sbom.csv
+            --cdx=sbom/mockingbeacon-${TAG}-buildtime.cdx.json \
+            --spdx=sbom/mockingbeacon-${TAG}-buildtime.spdx.json \
+            --csv=sbom/mockingbeacon-${TAG}-buildtime-sbom.csv
 
           # Runtime scope: the firmware store path's closure. Trivially
           # small for bare-metal (no dynamic linking on device), but
           # standard to ship for SBOM compliance (EO 14028).
           nix shell nixpkgs#sbomnix -c sbomnix .#firmware \
-            --cdx=sbom/everytag-${TAG}-runtime.cdx.json \
-            --spdx=sbom/everytag-${TAG}-runtime.spdx.json \
-            --csv=sbom/everytag-${TAG}-runtime-sbom.csv
+            --cdx=sbom/mockingbeacon-${TAG}-runtime.cdx.json \
+            --spdx=sbom/mockingbeacon-${TAG}-runtime.spdx.json \
+            --csv=sbom/mockingbeacon-${TAG}-runtime-sbom.csv
 
           ls -la sbom/
 
@@ -215,9 +215,9 @@ jobs:
             echo "|-----|--------:|----:|----------:|--------------:|"
             for board in nrf52810 nrf52832 nrf52833 nrf52840 nrf54l15 thingy52; do
               avail_kb=${FLASH_KB[$board]}
-              read -r text data _ < <(tail -1 "release/everytag-${board}-${TAG}-size.txt")
+              read -r text data _ < <(tail -1 "release/mockingbeacon-${board}-${TAG}-size.txt")
               rel_kb=$(( (text + data + 512) / 1024 ))
-              read -r text data _ < <(tail -1 "release/everytag-${board}-dev-${TAG}-size.txt")
+              read -r text data _ < <(tail -1 "release/mockingbeacon-${board}-dev-${TAG}-size.txt")
               dev_kb=$(( (text + data + 512) / 1024 ))
               pct=$(( rel_kb * 100 / avail_kb ))
               echo "| ${board} | ${rel_kb} KB | ${dev_kb} KB | ${avail_kb} KB | ${pct}% |"
@@ -229,9 +229,9 @@ jobs:
             echo "|-----|--------:|----:|---------:|--------------:|"
             for board in nrf52832 nrf52833 nrf52840 nrf54l15 thingy52; do
               slot_kb=${DFU_SLOT_KB[$board]}
-              read -r text data _ < <(tail -1 "release/everytag-${board}-dfu-${TAG}-size.txt")
+              read -r text data _ < <(tail -1 "release/mockingbeacon-${board}-dfu-${TAG}-size.txt")
               rel_kb=$(( (text + data + 512) / 1024 ))
-              read -r text data _ < <(tail -1 "release/everytag-${board}-dfu-dev-${TAG}-size.txt")
+              read -r text data _ < <(tail -1 "release/mockingbeacon-${board}-dfu-dev-${TAG}-size.txt")
               dev_kb=$(( (text + data + 512) / 1024 ))
               pct=$(( rel_kb * 100 / slot_kb ))
               echo "| ${board} | ${rel_kb} KB | ${dev_kb} KB | ${slot_kb} KB | ${pct}% |"
@@ -243,7 +243,7 @@ jobs:
             echo "- \`*-<board>-dev-<tag>.hex\` — **Dev** firmware (logging + RTT console). Use for debugging/bring-up via J-Link."
             echo "- \`*-<board>-dfu-<tag>.merged.hex\` — MCUboot + app (initial SWD flash for DFU-capable boards)"
             echo "- \`*-<board>-dfu-<tag>.signed.hex\` — Signed app image (for OTA updates)"
-            echo "- \`everytag-<tag>.cdx.json\` / \`.spdx.json\` / \`.csv\` — Software Bill of Materials"
+            echo "- \`mockingbeacon-<tag>.cdx.json\` / \`.spdx.json\` / \`.csv\` — Software Bill of Materials"
 
             if [ -n "$PREV_TAG" ]; then
               echo
@@ -264,11 +264,11 @@ jobs:
           # zephyr-version.txt is internal bookkeeping; don't attach to release
           rm -f release/zephyr-version.txt
           gh release create "$TAG" \
-            --title "Everytag $TAG" \
+            --title "MockingBeacon $TAG" \
             --notes-file release/RELEASE_NOTES.md \
-            release/everytag-*.hex \
-            release/everytag-*.elf \
-            release/everytag-*-size.txt \
-            sbom/everytag-*.cdx.json \
-            sbom/everytag-*.spdx.json \
-            sbom/everytag-*.csv
+            release/mockingbeacon-*.hex \
+            release/mockingbeacon-*.elf \
+            release/mockingbeacon-*-size.txt \
+            sbom/mockingbeacon-*.cdx.json \
+            sbom/mockingbeacon-*.spdx.json \
+            sbom/mockingbeacon-*.csv
