@@ -529,4 +529,4 @@ path = "modules/lib/zcbor"
 hash = "sha256-PIxfJfj0WztvsBZPTybkyQ+XImU8b83UtYQwt02CVuc="
 
 [manifest.self]
-path = "wt-phase3"
+path = "mockingbeacon"
