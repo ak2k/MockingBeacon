@@ -6,7 +6,7 @@ manifest:
     - name: sdk-nrf
       remote: nrfconnect
       path: nrf
-      revision: v3.2.4
+      revision: v3.3.0
       import: true
   self:
     path: mockingbeacon
