@@ -55,6 +55,13 @@
 #define USE_BUTTON
 #endif
 
+#ifdef CONFIG_BOARD_HOLYIOT_25055
+// Holyiot 25055 v1.0: tact button S1 on P1.14, RGB LED, piezo buzzer
+// on P1.6. No accelerometer populated on V1.0 (signals routed but
+// LIS2DH12 not mounted). No I2C peripherals.
+#define USE_BUTTON
+#endif
+
 #ifdef CONFIG_BOARD_WB_20241125
 // The board has BQ2512A as switching regulator and requires shutdown via shipping mode
 #define HAS_I2C_BQ25121A

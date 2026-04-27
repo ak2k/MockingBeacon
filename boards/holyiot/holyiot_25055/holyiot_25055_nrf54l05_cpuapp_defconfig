@@ -1,0 +1,24 @@
+# SPDX-License-Identifier: Apache-2.0
+
+# UART debug console (TXD=P1.04, RXD=P1.05)
+CONFIG_SERIAL=y
+CONFIG_CONSOLE=y
+CONFIG_UART_CONSOLE=y
+
+# GPIO drivers for LEDs, button, buzzer
+CONFIG_GPIO=y
+
+# MPU
+CONFIG_ARM_MPU=y
+
+# Newlib NANO not available for nRF54L family — full newlib is needed.
+# Force =n here in defconfig so the project's prj.conf =y can be overridden
+# (Kconfig `default n` would NOT override an explicit =y; defconfig does).
+CONFIG_NEWLIB_LIBC_NANO=n
+
+# Note: CONFIG_FLASH_HAS_EXPLICIT_ERASE cannot be set here — it's a
+# select-only Kconfig auto-enabled by flash drivers that need explicit
+# erase (e.g., SPI NOR). The 25055 has no external flash, only on-chip
+# RRAM (FLASH_HAS_NO_EXPLICIT_ERASE only). The resulting Zephyr flash.h
+# inline-with-unused-parameter is handled at the project CMakeLists
+# level via -Wno-unused-parameter on the CXX target.

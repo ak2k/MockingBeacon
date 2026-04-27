@@ -35,10 +35,17 @@ target_compile_options(app PRIVATE
 # Note: -Wpedantic omitted because Zephyr headers use C99 compound literals
 # and named variadic macros which are invalid in strict C++.
 # -Wcast-align, -Wconversion, -Wsign-conversion relaxed for Zephyr internal macros.
+# -Wno-unused-parameter: Zephyr's flash.h:113 (flash_params_get_erase_cap)
+# has a static inline whose body conditionally uses parameter `p` — when
+# only FLASH_HAS_NO_EXPLICIT_ERASE is set (RRAM-only boards like the
+# Holyiot 25055/nRF54L05, which have no external NOR flash), the fallback
+# branch doesn't reference `p`. Treating that as a project-level error
+# would block all RRAM-only board ports.
 target_compile_options(app PRIVATE
     $<$<COMPILE_LANGUAGE:CXX>:
         -Wall -Wextra -Werror
         -Wno-missing-field-initializers
+        -Wno-unused-parameter
         -fno-threadsafe-statics -fno-use-cxa-atexit
     >
 )

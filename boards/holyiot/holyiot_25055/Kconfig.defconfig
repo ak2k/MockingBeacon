@@ -1,0 +1,23 @@
+# SPDX-License-Identifier: Apache-2.0
+
+config HW_STACK_PROTECTION
+	default ARCH_HAS_STACK_PROTECTION
+
+if BOARD_HOLYIOT_25055
+
+# nRF54L05 storage backend is RRAM, not flash.
+config SOC_FLASH_NRF_RRAM
+	default y
+
+# RAM power library not available for nRF54L family.
+config RAM_POWER_DOWN_LIBRARY
+	default n
+
+config RAM_POWER_ADJUST_ON_HEAP_RESIZE
+	default n
+
+# Newlib NANO not available for nRF54L; full newlib works.
+config NEWLIB_LIBC_NANO
+	default n
+
+endif # BOARD_HOLYIOT_25055

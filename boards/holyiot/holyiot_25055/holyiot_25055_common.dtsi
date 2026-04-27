@@ -1,0 +1,155 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Common board features for the Holyiot 25055 (round nRF54L05 beacon).
+ *
+ * Pin assignments verified against schematic 25055-B1-S-SCH.pdf (V1.0):
+ *   LED_R   = P2.09  (LED1 pin 1, via R7 1K)
+ *   LED_G   = P1.13  (LED1 pin 4, via R8 1K)  — note: AIN6
+ *   LED_B   = P2.07  (LED1 pin 3, via R2 1K)
+ *   BUTTON  = P1.14  (S1, with 100K pull-up R3 to VCC) — note: AIN7
+ *   BEEP    = P1.06  (piezo buzzer driver) — note: AIN2; unique to 25055
+ *
+ * Accelerometer: SDI/SDO/SCK/CS/INT1/INT2 nets are routed on the PCB but
+ * V1.0 of the 25055 does NOT populate the LIS2DH12 chip (verified by
+ * board photo + product description). The signals are exposed for a
+ * future-rev variant. Do not add an accelerometer child node here.
+ */
+
+#include "holyiot_25055-pinctrl.dtsi"
+
+/ {
+	leds {
+		compatible = "gpio-leds";
+
+		/*
+		 * Multiple node labels per node:
+		 *   `led0:` is the firmware contract (DT_NODELABEL(led0) in
+		 *   src/zephyr_hardware.cpp:68 — required when CONFIG_GPIO=y).
+		 *   `led_red:` is the upstream-Holyiot-style descriptive label.
+		 */
+		led0: led_red: led_r {
+			gpios = <&gpio2 9 GPIO_ACTIVE_LOW>;
+			label = "LED R";
+		};
+
+		led_green: led_g {
+			gpios = <&gpio1 13 GPIO_ACTIVE_LOW>;
+			label = "LED G";
+		};
+
+		led_blue: led_b {
+			gpios = <&gpio2 7 GPIO_ACTIVE_LOW>;
+			label = "LED B";
+		};
+
+		buzzer: buzzer {
+			gpios = <&gpio1 6 GPIO_ACTIVE_HIGH>;
+			label = "BEEP";
+		};
+	};
+
+	buttons {
+		compatible = "gpio-keys";
+
+		button0: button_0 {
+			gpios = <&gpio1 14 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+			label = "KEY";
+			zephyr,code = <INPUT_KEY_0>;
+		};
+	};
+
+	aliases {
+		led0 = &led_red;
+		led1 = &led_green;
+		led2 = &led_blue;
+		led0-red = &led_red;
+		led0-green = &led_green;
+		led0-blue = &led_blue;
+		sw0 = &button0;
+		watchdog0 = &wdt31;
+		mcuboot-led0 = &led_red;
+		mcuboot-button0 = &button0;
+		/*
+		 * No accel0 alias — 25055 V1.0 has no LIS2DH12 populated.
+		 * Everytag firmware's movement-tracking status-byte telemetry
+		 * will report "no movement" on this board.
+		 */
+	};
+};
+
+&uart20 {
+	current-speed = <115200>;
+	pinctrl-0 = <&uart20_default>;
+	pinctrl-1 = <&uart20_sleep>;
+	pinctrl-names = "default", "sleep";
+	status = "okay";
+};
+
+&cpuapp_sram {
+	status = "okay";
+};
+
+&lfxo {
+	load-capacitors = "internal";
+	load-capacitance-femtofarad = <16000>;
+	status = "okay";
+};
+
+&hfxo {
+	load-capacitors = "internal";
+	load-capacitance-femtofarad = <15000>;
+	status = "okay";
+};
+
+&regulators {
+	status = "okay";
+};
+
+&vregmain {
+	status = "okay";
+	regulator-initial-mode = <NRF5X_REG_MODE_DCDC>;
+};
+
+&grtc {
+	owned-channels = <0 1 2 3 4 5 6 7 8 9 10 11>;
+	/* Channels 7-11 reserved for Zero Latency IRQs, 3-4 for FLPR */
+	child-owned-channels = <3 4 7 8 9 10 11>;
+	status = "okay";
+};
+
+&gpio0 {
+	status = "okay";
+};
+
+&gpio1 {
+	status = "okay";
+};
+
+&gpio2 {
+	status = "okay";
+};
+
+&gpiote20 {
+	status = "okay";
+};
+
+&gpiote30 {
+	status = "okay";
+};
+
+&wdt31 {
+	status = "okay";
+};
+
+&radio {
+	status = "okay";
+};
+
+&temp {
+	status = "okay";
+};
+
+&clock {
+	status = "okay";
+};

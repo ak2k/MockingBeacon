@@ -1,0 +1,27 @@
+/*
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+#include <nordic/nrf54l05_cpuapp.dtsi>
+#include "holyiot_25055_common.dtsi"
+
+/ {
+	model = "HOLYIOT 25055 nRF54L05 Application";
+	compatible = "holyiot,holyiot_25055-nrf54l05-cpuapp";
+
+	chosen {
+		zephyr,console = &uart20;
+		zephyr,shell-uart = &uart20;
+		zephyr,uart-mcumgr = &uart20;
+		zephyr,bt-mon-uart = &uart20;
+		zephyr,bt-c2h-uart = &uart20;
+		zephyr,flash-controller = &rram_controller;
+		zephyr,flash = &cpuapp_rram;
+		zephyr,code-partition = &slot0_partition;
+		zephyr,sram = &cpuapp_sram;
+	};
+};
+
+/* Default L05 partition layout (mcuboot 64K + slot0 200K + slot1 200K + storage 36K = 500K). */
+#include <nordic/nrf54l05_partition.dtsi>
